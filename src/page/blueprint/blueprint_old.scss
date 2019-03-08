@@ -1,0 +1,21 @@
+.blueprint {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    margin: 24px;
+    background-color: #F4F7FC;
+    border-radius: 4px;
+    border: 1px solid #ECEAF3;
+}
+
+.blueprint-operate {
+    flex: 0 0 132px;
+    padding: 12px 0px 0px 0px;
+    border-right: 1px solid #ECEAF3;
+}
+
+.blueprint-img {
+    flex: 1 1 auto;
+    padding: 16px;
+    overflow: auto;
+}

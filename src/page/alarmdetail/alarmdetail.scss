@@ -1,0 +1,26 @@
+.alarmdetail-seach{
+    padding: 14px 24px;
+}
+
+.alarmdetail-content {
+    padding: 0px 24px 60px 24px;
+}
+
+.alarmdetail-table-confirmed,
+.alarmdetail-table-unconfirmed {
+    width: 60px;
+    height: 24px;
+    line-height: 24px;
+    background: #ECEAF3;
+    text-align: center;
+    font-size: 14px;
+    color: #3C4463;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.14);
+}
+
+.alarmdetail-table-unconfirmed {
+    background: #5D3AB3;
+    color: #fff;
+    cursor: pointer;
+}

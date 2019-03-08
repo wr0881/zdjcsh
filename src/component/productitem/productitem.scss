@@ -1,0 +1,22 @@
+.product-item {
+    padding: 32px 48px;
+}
+
+.product-item:hover {
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0px 2px 8px 0px rgba(18, 21, 33, 0.16);
+}
+
+.product-item-title {
+    font-size: 24px;
+    font-weight: 400;
+    color: rgba(18, 21, 33, 1);
+}
+
+.product-item-dec {
+    margin-top: 16px;
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(60, 68, 99, 1);
+    line-height: 20px;
+}

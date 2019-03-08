@@ -1,0 +1,319 @@
+@import 'common/css/variable.scss';
+//header 头部
+.home-header {
+    position: relative;
+    min-width: 1200px;
+    height: $header-height;
+    background: #fff;
+    border-bottom: 1px solid rgb(236, 234, 243);
+}
+
+.home-header-content {
+    padding: 0px 40px;
+}
+
+.home-header-logo {
+    @include vertical-center;
+    float: left;
+    width: 180px;
+    height: $header-height;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.home-header-operate {
+    float: left;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: start;
+    margin-left: 48px;
+}
+
+.home-header-nav {
+    position: relative;
+    min-width: 128px;
+    height: $header-height;
+    text-align: center;
+    cursor: pointer;
+}
+
+.home-header-nav:hover {
+    background: #ECEAF3;
+    border-bottom: 3px solid #4611CD;
+}
+
+.home-header-nav-text {
+    width: 100%;
+    height: 100%;
+    line-height: $header-height;
+    text-align: center;
+}
+
+.home-header-nav-text span {
+    font-size: 16px;
+    font-weight: 400;
+    color: #121521;
+}
+
+.home-header-nav-panel {
+    display: none;
+    position: absolute;
+    top: $header-height;
+    left: 0px;
+    z-index: 9999;
+    background: #fff;
+    box-shadow: 0px 2px 8px 0px rgba(60, 68, 99, 0.16);
+}
+
+.home-header-nav:hover .home-header-nav-panel {
+    display: block;
+}
+
+.yunfuwu {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-around;
+    width: 424px;
+    height: 303px;
+    text-align: left;
+}
+
+.yunfuwu>div {
+    width: 176px;
+}
+
+.yunfuwu-title {
+    padding: 24px 0px 12px 0px;
+    font-size: 16px;
+    font-weight: 400;
+    color: rgba(18, 21, 33, 1);
+}
+
+.yunfuwu-content {
+    float: left;
+    min-width: 50%;
+}
+
+.yunfuwu-content>div {
+    padding: 12px 0px;
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(60, 68, 99, 1);
+}
+
+.yunfuwu-content>div:hover {
+    color: #5D3AB3;
+    text-decoration: underline;
+}
+
+.zhichi {
+    padding: 23px 24x;
+    width: 128px;
+}
+
+.zhichi>div {
+    padding: 12px 0px;
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(60, 68, 99, 1);
+}
+
+.zhichi>div:hover {
+    color: #5D3AB3;
+    text-decoration: underline;
+}
+
+.home-header-content span {
+    font-size: 16px;
+    font-weight: 400;
+    color: rgba(18, 21, 33, 1);
+}
+
+.home-header-login>div {
+    float: right;
+    height: $header-height;
+    text-align: center;
+}
+
+.home-user{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.home-user-content {
+    position: relative;
+    min-width: 144px;
+    height: 40px;
+    overflow: hidden;
+}
+
+.user-avatar {
+    float: left;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.user-info{
+    float: left;
+    .user-name {
+        margin-left: 10px;
+        height: 20px;
+        line-height: 20px;
+        text-align: left;
+        font-size: 14px;
+        font-weight: 400;
+        color: rgba(18, 21, 33, 1);
+    }
+    .user-type {
+        margin-left: 10px;
+        margin-top: 4px;
+        padding: 0px 5px;
+        height: 17px;
+        line-height: 17px;
+        background: rgba(255, 186, 71, 1);
+        border-radius: 2px;
+        font-size: 12px;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 1);
+    }
+}
+
+.user-icon {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    float: left;
+    padding: 0 10px;
+    height: 100%;
+}
+
+.user-content {
+    padding: 24px;
+    width: 160px;
+    text-align: left;
+}
+
+.user-content-item>div {
+    padding: 12px 0px;
+    line-height: 20px;
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(60, 68, 99, 1);
+}
+
+.user-content>div:first-child {
+    padding-bottom: 12px;
+    line-height: 22px;
+    font-size: 16px;
+    font-weight: 400;
+    color: rgba(18, 21, 33, 1);
+    border-bottom: 1px solid #ECEAF3;
+}
+
+.user-content>div:last-child {
+    padding-top: 12px;
+    line-height: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(18, 21, 33, 1);
+    border-top: 1px solid #ECEAF3;
+}
+
+.user-content-item>div:hover {
+    color: #5D3AB3;
+    text-decoration: underline;
+}
+
+.version {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.version-content {
+    height: 24px;
+    line-height: 24px;
+    border-radius: 3px;
+    border: 1px solid #7D85A6;
+}
+
+.version-title {
+    display: inline-block;
+    padding-left: 6px;
+    vertical-align: top;
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(18, 21, 33, 1);
+}
+
+.version-icon {
+    display: inline-block;
+    margin: 6px 6px;
+    width: 12px;
+    height: 12px;
+}
+
+//userInfo
+.user-info-title,
+.user-change-pwd {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+    color: #121521;
+}
+
+.user-info-item {
+    margin-bottom: 24px;
+    font-size: 14px;
+    color: #3C4463;
+}
+
+.user-info-item>span:first-child {
+    display: inline-block;
+    min-width: 60px;
+    text-align: center;
+}
+
+.user-change-pwd-item {
+    padding-left: 10px;
+    height: 60px;
+    border-bottom: 1px solid #ECEAF3;
+}
+
+.user-change-pwd-item>input {
+    outline: none;
+    height: 100%;
+    color: #8E92A3;
+    line-height: 22px;
+    border: none;
+}
+
+.user-change-pwd-msg {
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    color: red;
+}
+
+.user-change-pwd-btn {
+    width: 100%;
+    height: 56px;
+    line-height: 56px;
+    text-align: center;
+    color: #fff;
+    background: #5D3AB3;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.user-change-pwd-btn:hover {
+    opacity: .8;
+}

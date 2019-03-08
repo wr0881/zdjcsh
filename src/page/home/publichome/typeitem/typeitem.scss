@@ -1,0 +1,50 @@
+.typeitem {
+    padding: 8px 15px;
+    width: 205px;
+    height: 100px;
+    background-color: #858DC9;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.typeitem:hover {
+    background-color: #7456BE;
+    color: #fff;
+}
+
+.typeitem-logo {
+    float: left;
+    width: 40px;
+    height: 40px;
+}
+
+.typeitem-title {
+    float: left;
+    margin: 10px 0 0 10px;
+    width: 96px;
+    height: 22px;
+    line-height: 22px;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.typeitem-icon {
+    float: right;
+    margin-top: 12px;
+    width: 16px;
+    height: 16px;
+}
+
+.typeitem-projectdec {
+    display: flex;
+    margin-top: 67px;
+    height: 17px;
+    line-height: 17px;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.typeitem-projectdec>div {
+    width: 50%;
+}

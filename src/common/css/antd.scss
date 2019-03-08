@@ -1,0 +1,27 @@
+//banner样式
+#root {
+    .banner-user {
+        height: 100%;
+    }
+    .banner-user-elem {
+        text-align: center;
+        color: #fff;
+        position: relative;
+        overflow: hidden;
+    }
+    .banner-anim-elem .bg {
+        width: 100%;
+        height: 300px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: #fff;
+        overflow: hidden;
+    }
+}
+
+//Modal info
+.ant-modal-confirm-body .ant-modal-confirm-content {
+    margin-left: 0px;
+    margin-top: 18px;
+}

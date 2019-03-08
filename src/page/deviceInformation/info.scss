@@ -1,0 +1,47 @@
+.deviceInformation-operate {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    height: 90px;
+}
+
+.deviceInformation-search-name>span,
+.deviceInformation-search-type>span {
+    margin-left: 65px;
+    margin-right: 16px;
+    font-size: 16px;
+    color: #3C4463;
+}
+
+.deviceInformation-search-name>input,
+.deviceInformation-search-type>input {
+    padding: 10px;
+    outline: none;
+    font-size: 16px;
+    color: #8E92A3;
+    border: 1px solid #DFDDEC;
+    border-radius: 4px;
+}
+
+.deviceInformation-search-name>input:focus,
+.deviceInformation-search-type>input:focus {
+    color: #3C4463;
+}
+
+.deviceInformation-search-btn {
+    margin-left: 80px;
+    padding: 8px 48px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #5D3AB3;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.deviceInformation-search-btn:hover {
+    opacity: .8;
+}
+
+.deviceInformation-content{
+    padding: 0px 24px 60px 24px;
+}

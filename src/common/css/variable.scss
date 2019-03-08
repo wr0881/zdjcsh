@@ -1,0 +1,7 @@
+$header-height:60px;
+$sider-width:200px;
+@mixin vertical-center {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+}

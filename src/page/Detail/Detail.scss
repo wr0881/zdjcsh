@@ -1,0 +1,48 @@
+$title-height:36px;
+.detail {
+    padding-top: 24px;
+}
+
+.detail-content-title {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    min-width: 1400px;
+    height: $title-height;
+    background-color: #FAFBFF;
+    box-shadow: 0px 1px 0px 0px #ECEAF3;
+}
+
+.detail-content-title a {
+    color: #8E92A3;
+}
+
+.detail-content-title a:hover {
+    color: #8E92A3;
+}
+
+.detail-content-title-item {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    padding: 0px 10px;
+    height: $title-height;
+    cursor: pointer;
+}
+
+.detail-content-title-item>div:first-child {
+    width: 24px;
+    height: 24px;
+}
+
+.detail-content-title-item>div:last-child {
+    margin-left: 10px;
+}
+
+.detail-content-title-item-active {
+    color: #5D3AB3 !important;
+}
+
+.detail-content-title-item-active .detail-content-title-item {
+    border-bottom: 2px solid #5D3AB3;
+}

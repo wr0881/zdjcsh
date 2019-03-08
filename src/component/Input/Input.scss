@@ -1,0 +1,23 @@
+.p-input {
+    position: relative;
+}
+
+.p-input>input {
+    padding: 10px 30px 10px 10px;
+    outline: none;
+    font-size: 16px;
+    color: #8E92A3;
+    border: 1px solid #DFDDEC;
+    border-radius: 4px;
+}
+
+.p-input>input:focus {
+    color: #3C4463;
+}
+
+.p-input>span {
+    position: absolute;
+    top: 0px;
+    right: 10px;
+    cursor: pointer;
+}

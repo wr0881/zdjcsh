@@ -1,0 +1,63 @@
+$card-title-height:48px;
+.vertical-center {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.text-overflow-ellipsis{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+//组件定义
+.card {
+    height: 100%;
+    background-color: #fff;
+    border-radius: 8px;
+    border: 1px solid #ECEAF3;
+    overflow: hidden;
+}
+
+.card-title {
+    height: $card-title-height;
+    background: #FAFBFF;
+    border-bottom: 1px solid #ECEAF3;
+    overflow: hidden;
+}
+
+.card-title-icon {
+    float: left;
+    padding: 0 16px 0 24px;
+    min-width: 8px;
+    height: 100%;
+}
+
+.card-title-icon-content{
+    @extend .vertical-center;
+}
+
+.card-title-text {
+    @extend .text-overflow-ellipsis;
+    float: left;
+    height: $card-title-height;
+    line-height: $card-title-height;
+    font-size: 18px;
+    font-weight: 400;
+    color: #121521;
+}
+
+.card-title-operate{
+    float: right;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    padding-right: 24px;
+    height: $card-title-height;
+}
+
+.card-content {
+    position: relative;
+    height: calc(100% - #{$card-title-height});
+}

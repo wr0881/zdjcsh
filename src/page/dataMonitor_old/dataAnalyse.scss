@@ -1,0 +1,131 @@
+.dataAnalyse-wrapper {
+    width: 100%;
+    height: 632px;
+}
+
+.dataAnalyse-chart-wrapper {
+    float: left;
+    width: 900px;
+    height: 100%;
+    background-color: #fff;
+}
+
+.dataAnalyse-operate-wrapper {
+    float: left;
+    width: 300px;
+    height: 100%;
+    background-color: #FAFBFF;
+    border-left: 1px solid #ECEAF3;
+}
+
+.dataAnalyse-type-wrapper {
+    margin: 30px 40px 40px;
+    height: 33px;
+}
+
+.dataAnalyse-type-name {
+    float: left;
+    height: 30px;
+    line-height: 30px;
+    font-size: 24px;
+    color: rgba(0, 0, 0, 0.85);
+}
+
+.dataAnalyse-type-btnGrounp {
+    float: right;
+}
+
+.dataAnalyse-type-btnGrounp>span {
+    display: inline-block; // width: 105px;
+    padding: 0px 15px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    color: #3C4463;
+    border: 1px solid #D9D8E0;
+    cursor: pointer;
+}
+
+.dataAnalyse-type-btnGrounp>span:first-child {
+    border-radius: 4px 0px 0px 4px;
+}
+
+.dataAnalyse-type-btnGrounp>span:last-child {
+    border-radius: 0px 4px 4px 0px;
+}
+
+// .dataAnalyse-type-btn-active {
+//     color: #5D3AB3 !important;
+//     background-color: #E9E3F6 !important;
+//     border: 1px solid #5D3AB3 !important;
+// }
+
+.dataAnalyse-chart {
+    width: 100%;
+    height: 400px;
+}
+
+.dataAnalyse-operate-title {
+    padding-top: 44px;
+    padding-left: 28px;
+    font-size: 16px;
+    color: #3C4463;
+}
+
+.dataAnalyse-operate-content {
+    padding-top: 10px;
+    padding-left: 28px;
+    font-size: 16px;
+    color: #3C4463;
+}
+
+.dataAnalyse-operate-select {
+    margin: 15px 28px;
+}
+
+.dataAnalyse-operate-btn {
+    margin-top: 19px;
+    padding-left: 28px;
+}
+
+.dataAnalyse-operate-btn>span {
+    display: inline-block;
+    width: 102px;
+    height: 37px;
+    line-height: 37px;
+    text-align: center;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 1px solid #937BCF;
+    cursor: pointer;
+}
+
+.dataAnalyse-operate-btn1 {
+    margin-right: 16px;
+    color: #937BCF;
+    background-color: #ECEAF3;
+}
+
+.dataAnalyse-operate-btn2 {
+    color: #fff;
+    background-color: #937BCF;
+}
+
+//antd 样式
+.dataAnalyse-wrapper .ant-checkbox-group .ant-checkbox-wrapper {
+    float: left;
+    min-width: 50%;
+    margin-right: 0px;
+    margin-bottom: 6px;
+    color: #3C4463;
+}
+.dataAnalyse-wrapper .ant-checkbox-wrapper+.ant-checkbox-wrapper {
+    margin-left: 0px;
+}
+
+//通道样式
+#passway{
+    float: left;
+    margin-left: 80px;
+    line-height: 32px;
+}

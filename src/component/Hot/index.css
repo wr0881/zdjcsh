@@ -1,0 +1,69 @@
+.hot-wrapper {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.hot-content {
+    position: relative;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.hot-wrapper img {
+    border: none;
+}
+
+.dot {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+}
+
+.dot .item1 {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    z-index: 2;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.dot .item2 {
+    position: absolute;
+    z-index: 1;
+    border-radius: 50%;
+    animation-name: 'ripple';
+    /*动画属性名，也就是我们前面keyframes定义的动画名*/
+    animation-duration: 1.5s;
+    /*动画持续时间*/
+    animation-timing-function: ease;
+    /*动画频率，和transition-timing-function是一样的*/
+    animation-delay: 0s;
+    /*动画延迟时间*/
+    animation-iteration-count: infinite;
+    /*定义循环资料，infinite为无限次*/
+    animation-direction: normal;
+    /*定义动画方式*/
+}
+
+@keyframes ripple {
+    0% {
+        left: 25px;
+        top: 25px;
+        opcity: 75;
+        width: 0;
+        height: 0;
+    }
+    100% {
+        left: 0px;
+        top: 0px;
+        opacity: 0;
+        width: 50px;
+        height: 50px;
+    }
+}

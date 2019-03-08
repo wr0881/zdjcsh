@@ -1,0 +1,134 @@
+.dataMonitor-wrapper {
+    width: 100%;
+    min-height: calc(100vh - 310px);
+}
+
+.point-map-wrapper {
+    padding: 10px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.point-detail-operate {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0px 24px;
+    height: 60px;
+    background-color: #FAFBFF;
+    border: 1px solid #ECEAF3;
+}
+
+.point-detail-operate>span {
+    margin-right: 16px;
+}
+
+.point-detail-operate-timeselect {
+    margin-left: 16px;
+    width: 76px;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    color: #fff;
+    background: #937BCF;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.14);
+    cursor: pointer;
+}
+
+.point-detail-content {
+    position: relative;
+    padding: 24px;
+    overflow: hidden;
+}
+
+.point-detail-table-wrapper {
+    float: left;
+    width: 45%;
+}
+
+.point-detail-table1 {
+    overflow: hidden;
+}
+
+.point-detail-table1-item {
+    float: left;
+    width: 50%;
+    border: 1px solid #DFDDEC;
+    overflow: hidden;
+}
+
+.point-detail-table1-item>span {
+    float: left;
+    display: block;
+    width: 50%;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+}
+
+.point-detail-table1-item>span:nth-child(1) {
+    background-color: #F4F7FC;
+    border-right: 1px solid #DFDDEC;
+}
+
+.point-detail-table2 {
+    margin-top: 16px;
+    overflow: hidden;
+}
+
+.point-detail-table2-item {
+    float: left;
+    width: 25%;
+    border: 1px solid #DFDDEC;
+}
+
+.point-detail-table2-item>span {
+    display: block;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+}
+
+.point-detail-table2-item>span:nth-child(1) {
+    background-color: #F4F7FC;
+    border-bottom: 1px solid #DFDDEC;
+}
+
+.point-detail-table3 {
+    overflow: hidden;
+}
+
+.point-detail-table3-item {
+    float: left;
+    width: 100%;
+    border: 1px solid #DFDDEC;
+    overflow: hidden;
+}
+
+.point-detail-table3-item>span {
+    float: left;
+    display: block;
+    width: 50%;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+}
+
+.point-detail-table3-item>span:nth-child(1) {
+    background-color: #F4F7FC;
+    border-right: 1px solid #DFDDEC;
+}
+
+.point-detail-chart-wrapper {
+    float: left;
+    width: 55%;
+    padding-left: 16px;
+    height: 310px;
+}
+
+.point-detail-chart {
+    width: 100%;
+    height: 288px;
+}
