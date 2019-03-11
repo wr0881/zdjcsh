@@ -12,6 +12,9 @@ const { RangePicker } = DatePicker;
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
 
 const Option = Select.Option;
+  
+function handleBlur() {
+}
 
 @observer
 class PointDetail extends Component {
@@ -21,51 +24,14 @@ class PointDetail extends Component {
             selsectTime: [],
             chart1: null,
             chart2: null,
-            spinState: false
-        }
-        
+            spinState: false,           
+        }       
     }
-    // handleSearch = (keywords) => {
-    //     //调用接口前清空数据
-    //     this.setState({
-    //         list: [],
-    //         spinState: true
-    //     })        
-    //     //请求后端搜索接口
-    //     axios('/sector/querySensorData', {
-    //         keywords,
-    //     }).then(res => {
-    //         const { code, data } = res.data; 
-    //         console.log(data.sensorNumbers);
-    //         if (code === 0) {
-    //             this.setState({
-    //                 list: data.sensorNumbers,
-    //                 spinState: false
-    //             })
-    //         }
-    //     })
-    // }
     render() {
         const { pointDetailData } = monitorpage;
-        const { list } = this.state;
         return (
             <div className="point-detail-wrapper">
-                <div className="point-detail-operate">
-                    <span>传感器编号</span>  
-                    <Select
-                        showSearch
-                        key={Math.random()}
-                        placeholder="请选择..."
-                        style={{ width:160 }}
-                        filterOption={false}
-                        onSearch={this.handleSearch}
-                    >
-                        {
-                            list.map((item,index)=>(
-                                <Option key={index} value={item}>{item}</Option>
-                            ))
-                        }
-                    </Select>
+                <div className="point-detail-operate">                   
                     <div style={{ display: 'inline-block', width: '20px' }}></div>
                     <span>时间区间</span>
                     <RangePicker showTime format={dateFormat}
@@ -154,6 +120,20 @@ class PointDetail extends Component {
                         width:680,
                         display: this.state.isShowChart ? 'block' : 'none'
                     }}>
+                        <span>深度</span>  
+                        <Select
+                            showSearch
+                            style={{ width: 200 }}
+                            placeholder="请选择..."
+                            optionFilterProp="children"
+                            //onChange={handleChange}
+                            //onFocus={handleFocus}
+                            onBlur={handleBlur}
+                        >
+                            <Option value="deep1">1.5m</Option>
+                            <Option value="deep2">2m</Option>
+                            <Option value="deep3">2.5m</Option>
+                        </Select>
                         <div>
                             <div className="point-detail-chart" ref='chart2'></div>
                         </div>
@@ -168,7 +148,8 @@ class PointDetail extends Component {
             const selectPoint = toJS(monitorpage.selectPoint);
             if (JSON.stringify(selectPoint) !== '{}') {
                 this.getPointDetailData();
-                this.getEchartData();
+                this.getEchartData1();
+                this.getEchartData2();
             }
         });
         this.setState({ destroyAutorun });
@@ -285,14 +266,13 @@ class PointDetail extends Component {
                 axisLine: {
                     show:true,
                     lineStyle: {
-                        type: 'dashed',
                         color: '#E9E9E9'
                     }
                 },
                 axisLabel: {
                     color: '#545454'
                 },
-                data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+                data: []
             },
             yAxis: {
                 type: 'value',
@@ -314,12 +294,12 @@ class PointDetail extends Component {
             },
             series: [
                 {
-                    name: '累计变化量X',
+                    name: 'DeepX',
                     type: 'line',
                     data: [120, 132, 101, 134, 90, 230, 210]
                 },
                 {
-                    name: '累计变化量Y',
+                    name: 'DeepY',
                     type: 'line',
                     data: [220, 182, 191, 234, 290, 330, 310]
                 }
@@ -356,7 +336,7 @@ class PointDetail extends Component {
             }
         })
     }
-    getEchartData() {
+    getEchartData1() {
         const selectPoint = toJS(monitorpage.selectPoint);
         const { selsectTime } = this.state;
         axios.get('/sector/querySensorData', {
@@ -370,10 +350,12 @@ class PointDetail extends Component {
         }).then(res => {
             const { code, msg, data } = res.data; 
             if (code === 0) {
-                console.log(data.sensorNumbers);             
-                this.setState({ isShowChart: true })
-                this.setEchartLine(data);
-                console.log("test111111");
+                console.log(data.sensorNumbers); 
+                //this.setDepth(data);           
+                this.setState({ 
+                    isShowChart: true,
+                })
+                this.setEchartLine1(data);
             } else {
                 this.setState({ isShowChart: false })
                 message.info(msg);
@@ -382,19 +364,45 @@ class PointDetail extends Component {
         console.log(pagedata.sector.sectorId);
         console.log(selectPoint.monitorType);
         console.log(selectPoint.monitorPointNumber);
-        
     }
-
-    setEchartLine(data) {
-        const { chart1,chart2 } = this.state;
-        let time = [], totalChangeX = [], totalChangeY = [], Depth = [];
+    getEchartData2() {
+        const selectPoint = toJS(monitorpage.selectPoint);
+        const { selsectTime } = this.state;
+        axios.get('/data/queryDeepData', {
+            params: {
+                sectorId: pagedata.sector.sectorId,
+                monitorType: selectPoint.monitorType,
+                monitorPointNumber: selectPoint.monitorPointNumber,
+                beginTime: selsectTime[0] ? selsectTime[0].format(dateFormat) : getTime('day')[0],
+                endTime: selsectTime[1] ? selsectTime[1].format(dateFormat) : getTime('day')[1],
+            }
+        }).then(res => {
+            const { code, msg, data } = res.data; 
+            if (code === 0) { 
+                this.setEchartLine2(data);
+            } else {
+                message.info(msg);
+            }
+        })
+        console.log(pagedata.sector.sectorId);
+        console.log(selectPoint.monitorType);
+        console.log(selectPoint.monitorPointNumber);
+    }
+    // setDepth(data){
+    //     const deepArr = data.deepDatas;
+    //     console.log(deepArr);       
+    //     deepArr.map((item,index)=>{
+    //         return <Option key={index}>{item.sensorDeep}</Option>
+    //     });
+    // }
+    setEchartLine1(data) {
+        const { chart1 } = this.state;
+        let totalChangeX = [], totalChangeY = [], Depth = [];
         data.deepDatas.forEach(v => {
-            time.push(v.createDate);
             Depth.push(v.sensorDeep+'m');
             totalChangeX.push(v.totalChangeX);
             totalChangeY.push(v.totalChangeY);
         });
-        console.log(data.deepDatas);
         console.log(Depth);
         chart1 && chart1.setOption({
             xAxis: {
@@ -415,24 +423,31 @@ class PointDetail extends Component {
                 }
             ]
         });
+        chart1.resize();
+    }
+    setEchartLine2(data) {
+        const { chart2 } = this.state;
+        let time = [], measuredDataX = [];
+        data.measuredDataX.forEach(v => {
+            time.push(v.createDate);
+            measuredDataX.push(v.date);
+            //measuredDataY.push(v.totalChangeY);
+        });
+        console.log(data.measuredDataX)
+        console.log(time);
+        console.log(measuredDataX);
         chart2 && chart2.setOption({
             xAxis: {
                 data: time
             },
             series: [
                 {
-                    name: '累计变化量X',
+                    name: 'DeepX',
                     type: 'line',
-                    data: totalChangeX
-                },
-                {
-                    name: '累计变化量Y',
-                    type: 'line',
-                    data: totalChangeY
-                },
+                    data: measuredDataX
+                }
             ]
         })
-        chart1.resize();
         chart2.resize();
     }
 }
