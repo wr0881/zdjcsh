@@ -10,11 +10,7 @@ import { getTime } from 'common/js/util.js';
 
 const { RangePicker } = DatePicker;
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
-
 const Option = Select.Option;
-  
-function handleBlur() {
-}
 
 @observer
 class PointDetail extends Component {
@@ -24,14 +20,15 @@ class PointDetail extends Component {
             selsectTime: [],
             chart1: null,
             chart2: null,
-            spinState: false,           
-        }       
+            spinState: false
+        }
     }
+
     render() {
         const { pointDetailData } = monitorpage;
         return (
             <div className="point-detail-wrapper">
-                <div className="point-detail-operate">                   
+                <div className="point-detail-operate">
                     <div style={{ display: 'inline-block', width: '20px' }}></div>
                     <span>时间区间</span>
                     <RangePicker showTime format={dateFormat}
@@ -67,7 +64,7 @@ class PointDetail extends Component {
                             <div className="point-detail-table3-item">
                                 <span>采集器通道</span>
                                 <span>{pointDetailData.terminalChannel || '暂无数据'}</span>
-                            </div>                            
+                            </div>
                             <div className="point-detail-table3-item">
                                 <span>检测指标</span>
                                 <span>{pointDetailData.monitorTypeName || '暂无数据'}</span>
@@ -79,7 +76,7 @@ class PointDetail extends Component {
                             <div className="point-detail-table3-item">
                                 <span>深度</span>
                                 <span>{pointDetailData.sensorDeepInfo || '暂无数据'}</span>
-                            </div>                            
+                            </div>
                             <div className="point-detail-table3-item">
                                 <span>一级告警</span>
                                 <span>{pointDetailData.oneMinValue || '暂无数据'}</span>
@@ -93,20 +90,6 @@ class PointDetail extends Component {
                                 <span>{pointDetailData.threeMinValue || '暂无数据'}</span>
                             </div>
                         </div>
-                        {/* <div className="point-detail-table2" id="detailData2">
-                            <div className="point-detail-table2-item">
-                                <span>初始时间</span>
-                                <span>{pointDetailData.firstTime || '暂无数据'}</span>
-                            </div>
-                            <div className="point-detail-table2-item">
-                                <span>初始值X</span>
-                                <span>{pointDetailData.firstDataX || '暂无数据'}</span>
-                            </div>
-                            <div className="point-detail-table2-item">
-                                <span>初始值Y</span>
-                                <span>{pointDetailData.firstDataY || '暂无数据'}</span>
-                            </div>
-                        </div> */}
                     </div>
                     <div className="point-detail-chart-wrapper" style={{
                         width:520,
@@ -120,19 +103,16 @@ class PointDetail extends Component {
                         width:680,
                         display: this.state.isShowChart ? 'block' : 'none'
                     }}>
-                        <span>深度</span>  
+                        <span>深度</span>
                         <Select
                             showSearch
+                            className="deep"
                             style={{ width: 200 }}
                             placeholder="请选择..."
-                            optionFilterProp="children"
-                            //onChange={handleChange}
-                            //onFocus={handleFocus}
-                            onBlur={handleBlur}
+                            defaultValue='lmp03'
+                            onChange={this.handleChange}
                         >
-                            <Option value="deep1">1.5m</Option>
-                            <Option value="deep2">2m</Option>
-                            <Option value="deep3">2.5m</Option>
+                            {this.state.deepOption}
                         </Select>
                         <div>
                             <div className="point-detail-chart" ref='chart2'></div>
@@ -297,11 +277,6 @@ class PointDetail extends Component {
                     name: 'DeepX',
                     type: 'line',
                     data: [120, 132, 101, 134, 90, 230, 210]
-                },
-                {
-                    name: 'DeepY',
-                    type: 'line',
-                    data: [220, 182, 191, 234, 290, 330, 310]
                 }
             ]
         };
@@ -323,16 +298,13 @@ class PointDetail extends Component {
                 monitorPointNumber: selectPoint.monitorPointNumber
             }
         }).then(res => {
-            const { code, msg, data } = res.data;
-            console.log(code);
-            //console.log(data);
+            const { code, data } = res.data;
             if (code === 0 || code === 2) {
                 if (data) {
                     monitorpage.pointDetailData = data;
                 }
             } else {
                 monitorpage.pointDetailData = {};
-                console.log('/sector/queryTerminalAndSensor code: ', code, msg);
             }
         })
     }
@@ -348,11 +320,10 @@ class PointDetail extends Component {
                 endTime: selsectTime[1] ? selsectTime[1].format(dateFormat) : getTime('day')[1],
             }
         }).then(res => {
-            const { code, msg, data } = res.data; 
+            const { code, msg, data } = res.data;
             if (code === 0) {
-                console.log(data.sensorNumbers); 
-                //this.setDepth(data);           
-                this.setState({ 
+                this.setDepth(data);
+                this.setState({
                     isShowChart: true,
                 })
                 this.setEchartLine1(data);
@@ -361,9 +332,6 @@ class PointDetail extends Component {
                 message.info(msg);
             }
         })
-        console.log(pagedata.sector.sectorId);
-        console.log(selectPoint.monitorType);
-        console.log(selectPoint.monitorPointNumber);
     }
     getEchartData2() {
         const selectPoint = toJS(monitorpage.selectPoint);
@@ -373,28 +341,31 @@ class PointDetail extends Component {
                 sectorId: pagedata.sector.sectorId,
                 monitorType: selectPoint.monitorType,
                 monitorPointNumber: selectPoint.monitorPointNumber,
+                sensorNumber: 'lmp03',
                 beginTime: selsectTime[0] ? selsectTime[0].format(dateFormat) : getTime('day')[0],
                 endTime: selsectTime[1] ? selsectTime[1].format(dateFormat) : getTime('day')[1],
             }
         }).then(res => {
-            const { code, msg, data } = res.data; 
-            if (code === 0) { 
+            const { code, msg, data } = res.data;
+            //console.log(data);
+            if (code === 0) {
                 this.setEchartLine2(data);
             } else {
                 message.info(msg);
             }
         })
-        console.log(pagedata.sector.sectorId);
-        console.log(selectPoint.monitorType);
-        console.log(selectPoint.monitorPointNumber);
     }
-    // setDepth(data){
-    //     const deepArr = data.deepDatas;
-    //     console.log(deepArr);       
-    //     deepArr.map((item,index)=>{
-    //         return <Option key={index}>{item.sensorDeep}</Option>
-    //     });
-    // }
+    setDepth(data){
+        const deepArr = data.sensorNumbers;
+        let deepOption = [];
+        deepArr.map((item,index)=>(
+            deepOption.push(
+                <Option className='deepOption' key={index} value={item}>{item}</Option>
+            )           
+        ));
+        this.setState({deepOption});
+        
+    }
     setEchartLine1(data) {
         const { chart1 } = this.state;
         let totalChangeX = [], totalChangeY = [], Depth = [];
@@ -403,7 +374,6 @@ class PointDetail extends Component {
             totalChangeX.push(v.totalChangeX);
             totalChangeY.push(v.totalChangeY);
         });
-        console.log(Depth);
         chart1 && chart1.setOption({
             xAxis: {
                 data: Depth
@@ -433,9 +403,6 @@ class PointDetail extends Component {
             measuredDataX.push(v.date);
             //measuredDataY.push(v.totalChangeY);
         });
-        console.log(data.measuredDataX)
-        console.log(time);
-        console.log(measuredDataX);
         chart2 && chart2.setOption({
             xAxis: {
                 data: time
