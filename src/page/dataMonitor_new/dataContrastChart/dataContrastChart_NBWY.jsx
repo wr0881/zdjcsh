@@ -182,7 +182,8 @@ class DataContrastChart extends Component {
         let legend = [], dataAryX = [], dataAryY = [];
         const { chart,selsectWay } = this.state;
         console.log('这个是X通道:',dataAryX);
-        const contrastChartData = toJS(monitorpage.contrastChartData)
+        const contrastChartData = toJS(monitorpage.contrastChartData1);
+        console.log(contrastChartData);
         contrastChartData.forEach(v => {
             legend.push(v.monitorPointNumber);
             dataAryX.push({
@@ -200,7 +201,7 @@ class DataContrastChart extends Component {
                 data: v.totalChangeY
             }); 
         });
-        console.log(contrastChartData);
+
         if(selsectWay==="x"){
             chart.setOption({
                 legend: {

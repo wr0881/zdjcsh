@@ -108,9 +108,8 @@ class PointDetail extends Component {
                             showSearch
                             className="deep"
                             style={{ width: 200 }}
-                            placeholder="请选择..."
-                            defaultValue='lmp03'
                             onChange={this.handleChange}
+                            defaultValue=""
                         >
                             {this.state.deepOption}
                         </Select>
@@ -321,21 +320,42 @@ class PointDetail extends Component {
             }
         }).then(res => {
             const { code, msg, data } = res.data;
-            if (code === 0) {
-                this.setDepth(data);
+            if (code === 0) {                
                 this.setState({
                     isShowChart: true,
                 })
                 this.setEchartLine1(data);
+                this.setDepth(data);
             } else {
                 this.setState({ isShowChart: false })
                 message.info(msg);
             }
         })
     }
+    setDepth(data){
+        const deepArr = data.sensorNumbers;
+        //console.log(deepArr);
+        let deepOption = [];
+        deepArr.map((item,i)=>(
+            deepOption.push(
+                <Option className="" key={i} value={item}>{item}</Option>
+            )           
+        ));
+        this.setState({deepOption});   
+        //console.log(this.state.deepOption[0].props.value);  
+        const defaultValue1 = this.state.deepOption[0].props.value;
+        //alert(defaultValue1);  
+    }
+    handleChange = (value) =>{
+        console.log(value);
+        this.setState(value);
+        this.getEchartData2();
+        console.log("获取各深度图表！！！！！");
+    }
     getEchartData2() {
         const selectPoint = toJS(monitorpage.selectPoint);
         const { selsectTime } = this.state;
+        
         axios.get('/data/queryDeepData', {
             params: {
                 sectorId: pagedata.sector.sectorId,
@@ -354,17 +374,6 @@ class PointDetail extends Component {
                 message.info(msg);
             }
         })
-    }
-    setDepth(data){
-        const deepArr = data.sensorNumbers;
-        let deepOption = [];
-        deepArr.map((item,index)=>(
-            deepOption.push(
-                <Option className='deepOption' key={index} value={item}>{item}</Option>
-            )           
-        ));
-        this.setState({deepOption});
-        
     }
     setEchartLine1(data) {
         const { chart1 } = this.state;
