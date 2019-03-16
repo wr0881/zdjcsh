@@ -91,7 +91,7 @@ class DataContrastChart extends Component {
         this.initChart();
 
         autorun(() => {
-            const contrastChartData = toJS(monitorpage.contrastChartData);
+            const contrastChartData = toJS(monitorpage.contrastChartData1);
             if (contrastChartData.length !== 0) {
                 this.initChart();
                 this.setEchartData();
@@ -99,7 +99,7 @@ class DataContrastChart extends Component {
         })
     }
     componentWillUnmount(){
-        monitorpage.contrastChartData = [];
+        monitorpage.contrastChartData1 = [];
     }
     initChart() {
         const chart = echarts.init(this.refs.chart);
@@ -181,9 +181,8 @@ class DataContrastChart extends Component {
     setEchartData() {
         let legend = [], dataAryX = [], dataAryY = [];
         const { chart,selsectWay } = this.state;
-        console.log('这个是X通道:',dataAryX);
-        const contrastChartData = toJS(monitorpage.contrastChartData1);
-        console.log(contrastChartData);
+        const contrastChartData = toJS(monitorpage.contrastChartData);
+        console.log("生成的图表:",contrastChartData);
         contrastChartData.forEach(v => {
             legend.push(v.monitorPointNumber);
             dataAryX.push({
@@ -201,7 +200,7 @@ class DataContrastChart extends Component {
                 data: v.totalChangeY
             }); 
         });
-
+        console.log(dataAryY);
         if(selsectWay==="x"){
             chart.setOption({
                 legend: {

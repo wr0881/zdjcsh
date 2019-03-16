@@ -93,7 +93,7 @@ class PointDetail extends Component {
                     </div>
                     <div className="point-detail-chart-wrapper" style={{
                         width:520,
-                        display: this.state.isShowChart ? 'block' : 'none'
+                        display: this.state.isShowChart1 ? 'block' : 'none'
                     }}>
                         <div>
                             <div className="point-detail-chart" ref='chart1'></div>
@@ -101,7 +101,7 @@ class PointDetail extends Component {
                     </div>
                     <div className="point-detail-chart-wrapper" style={{
                         width:680,
-                        display: this.state.isShowChart ? 'block' : 'none'
+                        display: this.state.isShowChart2 ? 'block' : 'none'
                     }}>
                         <span>深度</span>
                         <Select
@@ -109,9 +109,9 @@ class PointDetail extends Component {
                             className="deep"
                             style={{ width: 200 }}
                             onChange={this.handleChange}
-                            defaultValue=""
+                            defaultValue="lmp03"
                         >
-                            {this.state.deepOption}
+                            {this.state.options}
                         </Select>
                         <div>
                             <div className="point-detail-chart" ref='chart2'></div>
@@ -123,12 +123,12 @@ class PointDetail extends Component {
     }
     componentDidMount() {
         this.initChart();
+        this.setDepth();
         let destroyAutorun = autorun(() => {
             const selectPoint = toJS(monitorpage.selectPoint);
             if (JSON.stringify(selectPoint) !== '{}') {
                 this.getPointDetailData();
-                this.getEchartData1();
-                this.getEchartData2();
+                this.getEchartData();
             }
         });
         this.setState({ destroyAutorun });
@@ -307,7 +307,7 @@ class PointDetail extends Component {
             }
         })
     }
-    getEchartData1() {
+    getEchartData() {
         const selectPoint = toJS(monitorpage.selectPoint);
         const { selsectTime } = this.state;
         axios.get('/sector/querySensorData', {
@@ -320,42 +320,17 @@ class PointDetail extends Component {
             }
         }).then(res => {
             const { code, msg, data } = res.data;
-            if (code === 0) {                
-                this.setState({
-                    isShowChart: true,
-                })
+            if (code === 0) {            
+                this.setState({ isShowChart1: true });
                 this.setEchartLine1(data);
-                this.setDepth(data);
+                //this.setDepth(data);
+                //this.handleChange(data);
+                console.log("test!!!!!!!");
             } else {
-                this.setState({ isShowChart: false })
+                this.setState({ isShowChart1: false })
                 message.info(msg);
             }
         })
-    }
-    setDepth(data){
-        const deepArr = data.sensorNumbers;
-        //console.log(deepArr);
-        let deepOption = [];
-        deepArr.map((item,i)=>(
-            deepOption.push(
-                <Option className="" key={i} value={item}>{item}</Option>
-            )           
-        ));
-        this.setState({deepOption});   
-        //console.log(this.state.deepOption[0].props.value);  
-        const defaultValue1 = this.state.deepOption[0].props.value;
-        //alert(defaultValue1);  
-    }
-    handleChange = (value) =>{
-        console.log(value);
-        this.setState(value);
-        this.getEchartData2();
-        console.log("获取各深度图表！！！！！");
-    }
-    getEchartData2() {
-        const selectPoint = toJS(monitorpage.selectPoint);
-        const { selsectTime } = this.state;
-        
         axios.get('/data/queryDeepData', {
             params: {
                 sectorId: pagedata.sector.sectorId,
@@ -369,12 +344,80 @@ class PointDetail extends Component {
             const { code, msg, data } = res.data;
             //console.log(data);
             if (code === 0) {
+                this.setState({ isShowChart2: true });
                 this.setEchartLine2(data);
             } else {
+                this.setState({ isShowChart2: false });
                 message.info(msg);
             }
         })
     }
+    setDepth(){
+        const selectPoint = toJS(monitorpage.selectPoint);
+        const { selsectTime } = this.state;
+        axios.get('/sector/querySensorData', {
+            params: {
+                sectorId: pagedata.sector.sectorId,
+                monitorType: selectPoint.monitorType,
+                monitorPointNumber: selectPoint.monitorPointNumber,
+                beginTime: selsectTime[0] ? selsectTime[0].format(dateFormat) : getTime('day')[0],
+                endTime: selsectTime[1] ? selsectTime[1].format(dateFormat) : getTime('day')[1],
+            }
+        }).then(res => {
+            const { code, msg, data } = res.data;
+            if (code === 0) {
+                const deepArr = data.sensorNumbers;
+                const options = deepArr.map(item=><Option />);
+                this.setState({options});
+            }else {
+                message.info(msg);
+            }
+        })
+    }
+    // setDepth(data){
+    //     const deepArr = data.sensorNumbers;
+    //     //console.log(deepArr);
+    //     let deepOption = [];
+    //     deepArr.map((item,i)=>(
+    //         deepOption.push(
+    //             <Option className="deepSelect" key={i} value={item}>{item}</Option>
+    //         )           
+    //     ));
+    //     //this.setState({deepOption});  
+    //     console.log(deepOption);  
+    // }
+    handleChange(data){
+        const selectOption = data.sensorNumbers;
+        this.setState(selectOption);
+        //console.log('the current state is:',this.state);
+        this.getEchartData2();
+        //console.log("获取各深度图表！！！！！");
+    }
+    // getEchartData2() {
+    //     const selectPoint = toJS(monitorpage.selectPoint);
+    //     const { selsectTime } = this.state;
+    //     //console.log(deepOption);
+    //     axios.get('/data/queryDeepData', {
+    //         params: {
+    //             sectorId: pagedata.sector.sectorId,
+    //             monitorType: selectPoint.monitorType,
+    //             monitorPointNumber: selectPoint.monitorPointNumber,
+    //             sensorNumber: 'lmp03',
+    //             beginTime: selsectTime[0] ? selsectTime[0].format(dateFormat) : getTime('day')[0],
+    //             endTime: selsectTime[1] ? selsectTime[1].format(dateFormat) : getTime('day')[1],
+    //         }
+    //     }).then(res => {
+    //         const { code, msg, data } = res.data;
+    //         //console.log(data);
+    //         if (code === 0) {
+    //             this.setState({ isShowChart2: true });
+    //             this.setEchartLine2(data);
+    //         } else {
+    //             this.setState({ isShowChart2: false });
+    //             message.info(msg);
+    //         }
+    //     })
+    // }
     setEchartLine1(data) {
         const { chart1 } = this.state;
         let totalChangeX = [], totalChangeY = [], Depth = [];

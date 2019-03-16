@@ -178,6 +178,7 @@ class DataContrastChart extends Component {
         let legend = [], dataAryX = [], dataAryY = [], dataAryZ = [];
         const { chart,selsectWay } = this.state;
         const contrastChartData = toJS(monitorpage.contrastChartData);
+        console.log("生成的图表数据",contrastChartData);
         contrastChartData.forEach(v => {
             legend.push(v.monitorPointNumber);
             dataAryX.push({

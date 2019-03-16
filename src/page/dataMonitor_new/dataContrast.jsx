@@ -27,7 +27,7 @@ class DataContrast extends Component {
     }
     render() {
         const monitorTypeName = toJS(monitorpage.monitorTypeName);
-        console.log(monitorTypeName)
+        //console.log(monitorTypeName)
         return (
             <div className="dataAnalyse-wrapper">
                 {monitorTypeName === 28 ?
