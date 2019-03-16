@@ -14,35 +14,25 @@ class DataContrastChart extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selsectWay: 'x'
+            selsectWay: 'X'
         }
-    }
-    handleChange(e){
-        this.setState({
-            radioValue:e.target.value
-        })
     }
     render() {
         return (
             <div className="dataAnalyse-chart-wrapper">
                 <div className="dataAnalyse-type-wrapper">
                     <div className="dataAnalyse-type-name">{pageData.sector.sectorName}</div>
-                    <div id="passway">
-                        <div className="dataAnalyse-type-btnGrounp">
-                            <RadioGroup
-                                key={Math.random()}
-                                name = "selectWay"
-                                defaultValue={this.state.selsectWay}
-                                onChange={e => {
-                                    this.setState({ selsectWay: e.target.value })
-                                }}    
-                            >
-                                <RadioButton value="x">X</RadioButton>
-                                <RadioButton value="y">Y</RadioButton>
-                            </RadioGroup>                       
-                        </div>
-                    </div>
                     <div className="dataAnalyse-type-btnGrounp">
+                        <RadioGroup key={Math.random()}
+                            defaultValue={this.state.selsectWay}
+                            onChange={e => {
+                                this.setState({ selsectWay: e.target.value })
+                            }}
+                        >
+                            <RadioButton value="X" >X</RadioButton>
+                            <RadioButton value="Y">Y</RadioButton>
+                        </RadioGroup>
+                        <div style={{ display: 'inline-block', width: '50px' }} />
                         <RadioGroup key={Math.random()} defaultValue={monitorpage.pointdataType}
                             onChange={e => {
                                 monitorpage.pointdataType = e.target.value;
@@ -53,16 +43,16 @@ class DataContrastChart extends Component {
                             }}
                         >
                             <RadioButton value="totalChange">累计变化量</RadioButton>
-                            <RadioButton value="singleChange" disabled>单次变化量</RadioButton>
-                            <RadioButton value="speedChange" disabled>变化速率</RadioButton>
+                            <RadioButton value="singleChange">单次变化量</RadioButton>
+                            <RadioButton value="speedChange">变化速率</RadioButton>
                         </RadioGroup>
                     </div>
                 </div>
 
-                <div style={{ display: toJS(monitorpage.contrastChartData).length ? 'block' : 'none' }}>
+                <div style={{ display: toJS(monitorpage.contrastChartData) ? 'block' : 'none' }}>
                     <div className='dataAnalyse-chart' ref='chart'></div>
                 </div>
-                <div style={{ display: toJS(monitorpage.contrastChartData).length ? 'none' : 'block', height: '400px' }}>
+                <div style={{ display: toJS(monitorpage.contrastChartData) ? 'none' : 'block', height: '400px' }}>
                     <span style={{ margin: '50px' }}>暂无数据信息，请选择测点!</span>
                 </div>
 
@@ -89,9 +79,8 @@ class DataContrastChart extends Component {
     }
     componentDidMount() {
         this.initChart();
-
         autorun(() => {
-            const contrastChartData = toJS(monitorpage.contrastChartData1);
+            const contrastChartData = toJS(monitorpage.contrastChartData);
             if (contrastChartData.length !== 0) {
                 this.initChart();
                 this.setEchartData();
@@ -99,7 +88,7 @@ class DataContrastChart extends Component {
         })
     }
     componentWillUnmount(){
-        monitorpage.contrastChartData1 = [];
+        monitorpage.contrastChartData = [];
     }
     initChart() {
         const chart = echarts.init(this.refs.chart);
@@ -142,7 +131,7 @@ class DataContrastChart extends Component {
                 data: []
             },
             xAxis: {
-                type: 'time',
+                type: 'category',
                 boundaryGap: false,
                 axisLine: {
                     lineStyle: {
@@ -179,44 +168,30 @@ class DataContrastChart extends Component {
     }
     
     setEchartData() {
-        let legend = [], dataAryX = [], dataAryY = [];
-        const { chart,selsectWay } = this.state;
+        let legend = [], dataAry = [];
+        const { chart, selsectWay } = this.state;
         const contrastChartData = toJS(monitorpage.contrastChartData);
-        console.log("生成的图表:",contrastChartData);
+        console.log("对比图表数据:",contrastChartData);
+        const pointdataType = monitorpage.pointdataType + selsectWay;
+
+        console.log(contrastChartData);
         contrastChartData.forEach(v => {
             legend.push(v.monitorPointNumber);
-            dataAryX.push({
+            dataAry.push({
                 name: v.monitorPointNumber,
                 type: 'line',
                 smooth: true,
                 symbol: "none",
-                data: v.totalChangeX
+                data: v[pointdataType]
             });
-            dataAryY.push({
-                name: v.monitorPointNumber,
-                type: 'line',
-                smooth: true,
-                symbol: "none",
-                data: v.totalChangeY
-            }); 
         });
-        console.log(dataAryY);
-        if(selsectWay==="x"){
-            chart.setOption({
-                legend: {
-                    data: legend
-                },               
-                series: dataAryX
-            });
-        }
-        if(selsectWay==="y"){
-            chart.setOption({
-                legend: {
-                    data: legend
-                },               
-                series: dataAryY
-            });
-        }
+        console.log(dataAry);
+        chart.setOption({
+            legend: {
+                data: legend
+            },               
+            series: dataAry
+        });
         setTimeout(() => {
             chart.resize();
         }, 100);

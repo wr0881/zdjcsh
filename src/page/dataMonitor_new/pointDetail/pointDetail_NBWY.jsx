@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import { autorun, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import echarts from 'echarts';
-import { DatePicker, message, Select } from 'antd';
-import pagedata from 'store/page.js';
+import { DatePicker, Select, Button } from 'antd';
 import monitorpage from 'store/monitorpage.js';
-import { getTime } from 'common/js/util.js';
 
 const { RangePicker } = DatePicker;
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
@@ -20,8 +17,8 @@ class PointDetail extends Component {
             selsectTime: [],
             chart1: null,
             chart2: null,
-            spinState: false
         }
+
     }
 
     render() {
@@ -31,18 +28,27 @@ class PointDetail extends Component {
                 <div className="point-detail-operate">
                     <div style={{ display: 'inline-block', width: '20px' }}></div>
                     <span>时间区间</span>
-                    <RangePicker showTime format={dateFormat}
+                    <RangePicker showTime format={dateFormat} defaultValue={monitorpage.selsectTime}
                         onOk={v => {
-                            this.setState({ selsectTime: v });
+                            monitorpage.selsectTime = v;
                         }}
                     />
-                    <div className="point-detail-operate-timeselect"
-                    >查看</div>
-                    <div className="point-detail-operate-timeselect"
+                    <Button
+                        type='primary'
+                        loading={monitorpage.timeselectLoading}
+                        onClick={() => {
+                            monitorpage.timeselectLoading = true;
+                            monitorpage.getMapEchartData();
+                            monitorpage.getMapEchartDataNBWY();
+                        }}
+                    >查看</Button>
+                    <Button
+                        type='primary'
+                        style={{ marginLeft: '20px' }}
                         onClick={_ => {
                             monitorpage.dataContrastVisible = true;
                         }}
-                    >数据对比</div>
+                    >数据对比</Button>
                 </div>
                 <div style={{ display: JSON.stringify(toJS(monitorpage.selectPoint)) === '{}' ? 'block' : 'none', height: '400px' }}>
                     <div style={{ height: '50px' }}></div>
@@ -51,7 +57,7 @@ class PointDetail extends Component {
                 <div className="point-detail-content" style={{
                     display: JSON.stringify(toJS(monitorpage.selectPoint)) === '{}' ? 'none' : 'block'
                 }}>
-                    <div className="point-detail-table-wrapper" style={{ width:280 }}>
+                    <div className="point-detail-table-wrapper" style={{ width: 280 }}>
                         <div className="point-detail-table3">
                             <div className="point-detail-table3-item">
                                 <span>测点名称</span>
@@ -92,26 +98,28 @@ class PointDetail extends Component {
                         </div>
                     </div>
                     <div className="point-detail-chart-wrapper" style={{
-                        width:520,
-                        display: this.state.isShowChart1 ? 'block' : 'none'
+                        width: 520,
+                        display: monitorpage.isShowMapChart ? 'block' : 'none'
                     }}>
                         <div>
                             <div className="point-detail-chart" ref='chart1'></div>
                         </div>
                     </div>
                     <div className="point-detail-chart-wrapper" style={{
-                        width:680,
-                        display: this.state.isShowChart2 ? 'block' : 'none'
+                        width: 680,
+                        display: monitorpage.isShowMapChartNBWY ? 'block' : 'none'
                     }}>
                         <span>深度</span>
                         <Select
                             showSearch
                             className="deep"
                             style={{ width: 200 }}
-                            onChange={this.handleChange}
-                            defaultValue="lmp03"
+                            onChange={v => { monitorpage.selectDeep = v }}
+                            value={monitorpage.selectDeep}
                         >
-                            {this.state.options}
+                            {monitorpage.mapEchartData.sensorNumbers && monitorpage.mapEchartData.sensorNumbers.map(item => {
+                                return <Option className="deepSelect" key={item} value={item}>{item}</Option>
+                            })}
                         </Select>
                         <div>
                             <div className="point-detail-chart" ref='chart2'></div>
@@ -123,18 +131,20 @@ class PointDetail extends Component {
     }
     componentDidMount() {
         this.initChart();
-        this.setDepth();
         let destroyAutorun = autorun(() => {
-            const selectPoint = toJS(monitorpage.selectPoint);
-            if (JSON.stringify(selectPoint) !== '{}') {
-                this.getPointDetailData();
-                this.getEchartData();
+            const mapEchartData = toJS(monitorpage.mapEchartData);
+            const mapEchartDataNBWY = toJS(monitorpage.mapEchartDataNBWY);
+            if (JSON.stringify(mapEchartData) !== '{}') {
+                this.setEchartLine(mapEchartData);
+            }
+            if (JSON.stringify(mapEchartDataNBWY) !== '{}') {
+                this.setEchartLineNBWY(mapEchartDataNBWY);
             }
         });
-        this.setState({ destroyAutorun });
+        this.destroyAutorun = destroyAutorun;
     }
     componentWillUnmount() {
-        this.state.destroyAutorun();
+        this.destroyAutorun && this.destroyAutorun();
     }
     initChart() {
         const chart1 = echarts.init(this.refs.chart1);
@@ -236,14 +246,14 @@ class PointDetail extends Component {
                 containLabel: true
             },
             legend: {
-                data: [],
+                data: ['深度X通道', '深度Y通道'],
                 //selectedMode: 'single'
             },
             xAxis: {
                 type: 'category',
                 boundaryGap: false,
                 axisLine: {
-                    show:true,
+                    show: true,
                     lineStyle: {
                         color: '#E9E9E9'
                     }
@@ -288,141 +298,40 @@ class PointDetail extends Component {
             chart2.resize();
         });
     }
-    getPointDetailData() {
-        const selectPoint = toJS(monitorpage.selectPoint);
-        axios.get('/sector/queryTerminalAndSensor', {
-            params: {
-                sectorId: pagedata.sector.sectorId,
-                monitorType: selectPoint.monitorType,
-                monitorPointNumber: selectPoint.monitorPointNumber
-            }
-        }).then(res => {
-            const { code, data } = res.data;
-            if (code === 0 || code === 2) {
-                if (data) {
-                    monitorpage.pointDetailData = data;
-                }
-            } else {
-                monitorpage.pointDetailData = {};
-            }
-        })
-    }
-    getEchartData() {
-        const selectPoint = toJS(monitorpage.selectPoint);
-        const { selsectTime } = this.state;
-        axios.get('/sector/querySensorData', {
-            params: {
-                sectorId: pagedata.sector.sectorId,
-                monitorType: selectPoint.monitorType,
-                monitorPointNumber: selectPoint.monitorPointNumber,
-                beginTime: selsectTime[0] ? selsectTime[0].format(dateFormat) : getTime('day')[0],
-                endTime: selsectTime[1] ? selsectTime[1].format(dateFormat) : getTime('day')[1],
-            }
-        }).then(res => {
-            const { code, msg, data } = res.data;
-            if (code === 0) {            
-                this.setState({ isShowChart1: true });
-                this.setEchartLine1(data);
-                //this.setDepth(data);
-                //this.handleChange(data);
-                console.log("test!!!!!!!");
-            } else {
-                this.setState({ isShowChart1: false })
-                message.info(msg);
-            }
-        })
-        axios.get('/data/queryDeepData', {
-            params: {
-                sectorId: pagedata.sector.sectorId,
-                monitorType: selectPoint.monitorType,
-                monitorPointNumber: selectPoint.monitorPointNumber,
-                sensorNumber: 'lmp03',
-                beginTime: selsectTime[0] ? selsectTime[0].format(dateFormat) : getTime('day')[0],
-                endTime: selsectTime[1] ? selsectTime[1].format(dateFormat) : getTime('day')[1],
-            }
-        }).then(res => {
-            const { code, msg, data } = res.data;
-            //console.log(data);
-            if (code === 0) {
-                this.setState({ isShowChart2: true });
-                this.setEchartLine2(data);
-            } else {
-                this.setState({ isShowChart2: false });
-                message.info(msg);
-            }
-        })
-    }
-    setDepth(){
-        const selectPoint = toJS(monitorpage.selectPoint);
-        const { selsectTime } = this.state;
-        axios.get('/sector/querySensorData', {
-            params: {
-                sectorId: pagedata.sector.sectorId,
-                monitorType: selectPoint.monitorType,
-                monitorPointNumber: selectPoint.monitorPointNumber,
-                beginTime: selsectTime[0] ? selsectTime[0].format(dateFormat) : getTime('day')[0],
-                endTime: selsectTime[1] ? selsectTime[1].format(dateFormat) : getTime('day')[1],
-            }
-        }).then(res => {
-            const { code, msg, data } = res.data;
-            if (code === 0) {
-                const deepArr = data.sensorNumbers;
-                const options = deepArr.map(item=><Option />);
-                this.setState({options});
-            }else {
-                message.info(msg);
-            }
-        })
-    }
-    // setDepth(data){
-    //     const deepArr = data.sensorNumbers;
-    //     //console.log(deepArr);
-    //     let deepOption = [];
-    //     deepArr.map((item,i)=>(
-    //         deepOption.push(
-    //             <Option className="deepSelect" key={i} value={item}>{item}</Option>
-    //         )           
-    //     ));
-    //     //this.setState({deepOption});  
-    //     console.log(deepOption);  
-    // }
-    handleChange(data){
-        const selectOption = data.sensorNumbers;
-        this.setState(selectOption);
-        //console.log('the current state is:',this.state);
-        this.getEchartData2();
-        //console.log("获取各深度图表！！！！！");
-    }
-    // getEchartData2() {
+    // getDepth(){
     //     const selectPoint = toJS(monitorpage.selectPoint);
     //     const { selsectTime } = this.state;
-    //     //console.log(deepOption);
-    //     axios.get('/data/queryDeepData', {
+    //     axios.get('/sector/querySensorData', {
     //         params: {
     //             sectorId: pagedata.sector.sectorId,
     //             monitorType: selectPoint.monitorType,
     //             monitorPointNumber: selectPoint.monitorPointNumber,
-    //             sensorNumber: 'lmp03',
     //             beginTime: selsectTime[0] ? selsectTime[0].format(dateFormat) : getTime('day')[0],
     //             endTime: selsectTime[1] ? selsectTime[1].format(dateFormat) : getTime('day')[1],
     //         }
     //     }).then(res => {
     //         const { code, msg, data } = res.data;
-    //         //console.log(data);
+    //         console.log(data);
     //         if (code === 0) {
-    //             this.setState({ isShowChart2: true });
-    //             this.setEchartLine2(data);
-    //         } else {
-    //             this.setState({ isShowChart2: false });
+    //             const deepArr = data.sensorNumbers;
+    //             let deepOption = [];
+    //             deepArr.map((item,i)=>(
+    //                 deepOption.push(
+    //                     <Option className="deepSelect" key={i} value={item}>{item}</Option>
+    //                 )           
+    //             ));
+    //             this.setState({deepOption});
+    //         }else {
     //             message.info(msg);
     //         }
     //     })
     // }
-    setEchartLine1(data) {
+    setEchartLine(data) {
         const { chart1 } = this.state;
         let totalChangeX = [], totalChangeY = [], Depth = [];
+        console.log(data);
         data.deepDatas.forEach(v => {
-            Depth.push(v.sensorDeep+'m');
+            Depth.push(v.sensorDeep + 'm');
             totalChangeX.push(v.totalChangeX);
             totalChangeY.push(v.totalChangeY);
         });
@@ -447,13 +356,16 @@ class PointDetail extends Component {
         });
         chart1.resize();
     }
-    setEchartLine2(data) {
+    setEchartLineNBWY(data) {
         const { chart2 } = this.state;
-        let time = [], measuredDataX = [];
+        let time = [], measuredDataX = [], measuredDataY = [];
+        console.log(data);
         data.measuredDataX.forEach(v => {
             time.push(v.createDate);
             measuredDataX.push(v.date);
-            //measuredDataY.push(v.totalChangeY);
+        });
+        data.measuredDataY.forEach(v => {
+            measuredDataY.push(v.date);
         });
         chart2 && chart2.setOption({
             xAxis: {
@@ -461,9 +373,14 @@ class PointDetail extends Component {
             },
             series: [
                 {
-                    name: 'DeepX',
+                    name: '深度X通道',
                     type: 'line',
                     data: measuredDataX
+                },
+                {
+                    name: '深度Y通道',
+                    type: 'line',
+                    data: measuredDataY
                 }
             ]
         })

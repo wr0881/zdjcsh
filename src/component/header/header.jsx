@@ -28,7 +28,7 @@ class Header extends Component {
             <div className='home-header'>
                 <div className="home-header-content">
                     <div className="home-header-logo" onClick={_ => { this.props.history.push('/home') }}>
-                        <img src={logo} style={{ width: 'auto', height: '42px' }} alt="" />
+                        <img src={logo} style={{ width:'100%',height: '100%' }} alt="" />
                     </div>
                     <div className="home-header-operate">
                         {/* 云服务 */}

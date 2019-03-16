@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { autorun, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import echarts from 'echarts';
-import { Radio } from 'antd';
+import { Checkbox, Radio } from 'antd';
 import pageData from 'store/page.js';
 import monitorpage from 'store/monitorpage.js';
 
@@ -26,7 +26,7 @@ class DataContrastChart extends Component {
                         <div className="dataAnalyse-type-btnGrounp">
                             <RadioGroup
                                 key={Math.random()}
-                                name = "selectWay"
+                                name = "selecyWay"
                                 defaultValue={this.state.selsectWay}
                                 onChange={e => {
                                     this.setState({ selsectWay: e.target.value })
@@ -178,7 +178,6 @@ class DataContrastChart extends Component {
         let legend = [], dataAryX = [], dataAryY = [], dataAryZ = [];
         const { chart,selsectWay } = this.state;
         const contrastChartData = toJS(monitorpage.contrastChartData);
-        console.log("生成的图表数据",contrastChartData);
         contrastChartData.forEach(v => {
             legend.push(v.monitorPointNumber);
             dataAryX.push({

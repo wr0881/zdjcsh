@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
 import { autorun, toJS } from 'mobx';
 import { observer } from 'mobx-react';
-import { Checkbox, Radio } from 'antd';
+import { Checkbox, Radio, Button } from 'antd';
 import DataContrastChart_NM from './dataContrastChart/dataContrastChart_NM';
 import DataContrastChart_SLYL from './dataContrastChart/dataContrastChart_SLYL';
 import DataContrastChart_GTGC from './dataContrastChart/dataContrastChart_GTGC';
 import DataContrastChart_KSW from './dataContrastChart/dataContrastChart_KSW';
 import DataContrastChart_YL from './dataContrastChart/dataContrastChart_YL';
 import DataContrastChart_SPWY from './dataContrastChart/dataContrastChart_SPWY';
+import DataContrastChart_SBWY from './dataContrastChart/dataContrastChart_SBWY';
 import DataContrastChart_GPS from './dataContrastChart/dataContrastChart_GPS';
 import DataContrastChart_NBWY from './dataContrastChart/dataContrastChart_NBWY';
 import monitorpage from 'store/monitorpage.js';
 
 const CheckboxGroup = Checkbox.Group;
+const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
 @observer
@@ -27,24 +29,27 @@ class DataContrast extends Component {
     }
     render() {
         const monitorTypeName = toJS(monitorpage.monitorTypeName);
-        //console.log(monitorTypeName)
+        console.log(monitorTypeName)
         return (
             <div className="dataAnalyse-wrapper">
-                {monitorTypeName === 28 ?
-                    <DataContrastChart_SPWY /> :
-                    monitorTypeName === 'SLYL' ?
+                {
+                    monitorTypeName === 55 ?
                         <DataContrastChart_SLYL /> :
-                        monitorTypeName === 'GTGC' ?
+                        monitorTypeName === 56 ?
                             <DataContrastChart_GTGC /> :
-                            monitorTypeName === 'KSW' ?
+                            monitorTypeName === 57 ?
                                 <DataContrastChart_KSW /> :
-                                monitorTypeName === 'YL' ?
+                                monitorTypeName === 59 ?
                                     <DataContrastChart_YL /> :
-                                    monitorTypeName === 52 ?
-                                        <DataContrastChart_GPS /> :
-                                        monitorTypeName === 66 ?
-                                            <DataContrastChart_NBWY /> :
-                                            <DataContrastChart_NM />
+                                    monitorTypeName === 21 ?
+                                        <DataContrastChart_SPWY /> :
+                                        monitorTypeName == 52 ?
+                                            <DataContrastChart_GPS /> :
+                                            // monitorTypeName === 26 ?
+                                            //     <DataContrastChart_SBWY /> :
+                                            monitorTypeName === 66 || monitorTypeName === 26 ?
+                                                <DataContrastChart_NBWY /> :
+                                                <DataContrastChart_NM />
                 }
                 <div className="dataAnalyse-operate-wrapper">
                     <div className="dataAnalyse-operate-title">选择指标:</div>
@@ -72,10 +77,24 @@ class DataContrast extends Component {
                         </CheckboxGroup>
                     </div>
                     <div className="dataAnalyse-operate-btn">
-                        <span className="dataAnalyse-operate-btn1">重置</span>
-                        <span className="dataAnalyse-operate-btn2"
-                            onClick={() => { monitorpage.getEchartData() }}
-                        >对比</span>
+                        <Button
+                            style={{ width: '100px', height: '35px' }}
+                            onClick={() => {
+                                monitorpage.monitorTypeName = null;
+                                monitorpage.selectPointName = null;
+                                monitorpage.pointNameData = [];
+                                monitorpage.contrastChartData = [];
+                            }}
+                        >重置</Button>
+                        <Button
+                            style={{ marginLeft: '30px', width: '100px', height: '35px' }}
+                            type='primary'
+                            loading={monitorpage.getEchartDataLoading}
+                            onClick={() => {
+                                monitorpage.getEchartDataLoading = true;
+                                monitorpage.getEchartData();
+                            }}
+                        >对比</Button>
                     </div>
                 </div>
             </div>
@@ -89,6 +108,11 @@ class DataContrast extends Component {
                 monitorpage.getPointName();
             }
         })
+    }
+    componentWillUnmount() {
+        monitorpage.monitorTypeName = null;
+        monitorpage.selectPointName = null;
+        monitorpage.pointNameData = [];
     }
 }
 

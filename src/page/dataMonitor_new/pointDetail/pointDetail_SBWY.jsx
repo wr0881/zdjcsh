@@ -3,7 +3,7 @@ import axios from 'axios';
 import { autorun, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import echarts from 'echarts';
-import { DatePicker, message ,Radio} from 'antd';
+import { DatePicker, message, Radio } from 'antd';
 import pagedata from 'store/page.js';
 import monitorpage from 'store/monitorpage.js';
 import { getTime } from 'common/js/util.js';
@@ -29,14 +29,14 @@ class PointDetail extends Component {
             <div className="point-detail-wrapper">
                 <div className="point-detail-operate">
                     <span>时间</span>
-                    {/* <RangePicker showTime format={dateFormat}
+                    <RangePicker showTime format={dateFormat}
                         onOk={v => {
                             this.setState({ selsectTime: v });
                         }}
-                    /> */}
-                    <DatePicker onChange={v => {
+                    />
+                    {/* <DatePicker onChange={v => {
                         this.setState({ selsectTime: v })
-                    }} />
+                    }} /> */}
                     <div className="point-detail-operate-timeselect"
                     >查看</div>
                     <div className="point-detail-operate-timeselect"
@@ -85,16 +85,6 @@ class PointDetail extends Component {
                             <div className="point-detail-table1-item">
                                 <span>三级告警</span>
                                 <span>{pointDetailData.threeMinValue || '暂无数据'}</span>
-                            </div>
-                        </div>
-                        <div className="point-detail-table2">
-                            <div className="point-detail-table2-item">
-                                <span>初始时间</span>
-                                <span>{pointDetailData.firstTime || '暂无数据'}</span>
-                            </div>
-                            <div className="point-detail-table2-item">
-                                <span>初始值</span>
-                                <span>{pointDetailData.firstData || '暂无数据'}</span>
                             </div>
                         </div>
                     </div>
@@ -262,6 +252,7 @@ class PointDetail extends Component {
             }
         }).then(res => {
             const { code, msg, data } = res.data;
+            console.log('chartdata', data)
             if (code === 0) {
                 this.setState({ isShowChart: true })
                 this.setEchartLine(data);
@@ -272,63 +263,16 @@ class PointDetail extends Component {
         })
     }
     setEchartLine(data) {
-        const { chart ,selsectWay} = this.state;
-        let depth = [], singleChange = [], totalChange = [], speedChange = [], singleChangeY = [], totalChangeY = [], speedChangeY = [];
-        const mock_data = [
-            {
-                depth: '1m',
-                singleChange: Math.random(),
-                totalChange: Math.random(),
-                speedChange: Math.random(),
-                singleChangeY: Math.random(),
-                totalChangeY: Math.random(),
-                speedChangeY: Math.random(),
-            },
-            {
-                depth: '2m',
-                singleChange: Math.random(),
-                totalChange: Math.random(),
-                speedChange: Math.random(),
-                singleChangeY: Math.random(),
-                totalChangeY: Math.random(),
-                speedChangeY: Math.random(),
-            },
-            {
-                depth: '3m',
-                singleChange: Math.random(),
-                totalChange: Math.random(),
-                speedChange: Math.random(),
-                singleChangeY: Math.random(),
-                totalChangeY: Math.random(),
-                speedChangeY: Math.random(),
-            },
-            {
-                depth: '4m',
-                singleChange: Math.random(),
-                totalChange: Math.random(),
-                speedChange: Math.random(),
-                singleChangeY: Math.random(),
-                totalChangeY: Math.random(),
-                speedChangeY: Math.random(),
-            },
-            {
-                depth: '5m',
-                singleChange: Math.random(),
-                totalChange: Math.random(),
-                speedChange: Math.random(),
-                singleChangeY: Math.random(),
-                totalChangeY: Math.random(),
-                speedChangeY: Math.random(),
-            },
-        ]
-        mock_data.forEach(v => {
-            depth.push(v.depth);
-            singleChange.push(v.singleChange);
-            totalChange.push(v.totalChange);
-            speedChange.push(v.speedChange);
-            singleChangeY.push(v.singleChange);
-            totalChangeY.push(v.totalChange);
-            speedChangeY.push(v.speedChange);
+        const { chart, selsectWay } = this.state;
+        let depth = [], singleChangeX = [], totalChangeX = [], speedChangeX = [], singleChangeY = [], totalChangeY = [], speedChangeY = [];
+        data.deepDatas && data.deepDatas.forEach(v => {
+            depth.push(v.sensorDeep);
+            singleChangeX.push(v.singleChangeX);
+            totalChangeX.push(v.totalChangeX);
+            speedChangeX.push(v.speedChangeX);
+            singleChangeY.push(v.singleChangeY);
+            totalChangeY.push(v.totalChangeY);
+            speedChangeY.push(v.speedChangeY);
         });
         chart && chart.setOption({
             xAxis: {
@@ -338,17 +282,17 @@ class PointDetail extends Component {
                 {
                     name: '累计变化量',
                     type: 'line',
-                    data: selsectWay === 'x' ? totalChange : totalChangeY
+                    data: selsectWay === 'x' ? totalChangeX : totalChangeY
                 },
                 {
                     name: '单次变化量',
                     type: 'line',
-                    data: selsectWay === 'x' ? singleChange : singleChangeY
+                    data: selsectWay === 'x' ? singleChangeX : singleChangeY
                 },
                 {
                     name: '变化速率',
                     type: 'line',
-                    data: selsectWay === 'x' ? speedChange : speedChangeY
+                    data: selsectWay === 'x' ? speedChangeX : speedChangeY
                 }
             ]
         })

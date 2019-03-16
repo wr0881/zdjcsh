@@ -5,30 +5,27 @@ import moment from 'moment';
 import pageData from 'store/page.js';
 import { getTime } from 'common/js/util.js';
 
-function sort(ary) {
-    ary.sort(function (a, b) {
-        return a[0] > b[0] ? 1 : -1;
-    });
-}
-
 class Monitor {
     /* DataMonitor */
     /* 用户选择数据 */
     @observable selectPoint = {};
     @observable selsectTime = [moment(getTime('day')[0]), moment(getTime('day')[1])];
+    @observable selectDeep = '';
     /* 接口数据 */
     @observable pointDetailData = {};
     @observable mapEchartData = {};
+    @observable mapEchartDataNBWY = {};
     /* ui数据 */
     @observable timeselectLoading = false;
     @observable isShowMapChart = false;
+    @observable isShowMapChartNBWY = false;
     @observable dataContrastVisible = false;
 
     /* DataConstrast */
     /* 用户选择数据 */
     @observable monitorTypeName = '';
     @observable selectPointName = [];
-    @observable timeType = 'week';
+    @observable timeType = 'month';
     @observable timeTypeSBWY = []; //深部位移选择的时间
     @observable pointdataType = '';
     /* 接口数据 */
@@ -74,14 +71,43 @@ class Monitor {
             }
         }).then(res => {
             const { code, msg, data } = res.data;
+            console.log(data);
             if (code === 0) {
-                // this.setState({ isShowChart: true })
-                // this.setEchartLine(data);
                 this.mapEchartData = data;
                 this.isShowMapChart = true;
                 this.timeselectLoading = false;
+                //内部位移深度
+                if (data.sensorNumbers) {
+                    this.selectDeep = data.sensorNumbers[0];
+                }
             } else {
                 this.isShowMapChart = false;
+                this.timeselectLoading = false;
+                message.info(msg);
+            }
+        })
+    }
+    //内部位移echarts图表数据
+    @action getMapEchartDataNBWY() {
+        const selectPoint = this.selectPoint;
+        const selsectTime = this.selsectTime;
+        axios.get('/data/queryDeepData', {
+            params: {
+                sectorId: pageData.sector.sectorId,
+                monitorType: selectPoint.monitorType,
+                monitorPointNumber: selectPoint.monitorPointNumber,
+                sensorNumber: this.selectDeep,
+                beginTime: selsectTime[0].format('YYYY-MM-DD HH:mm:ss'),
+                endTime: selsectTime[1].format('YYYY-MM-DD HH:mm:ss'),
+            }
+        }).then(res => {
+            const { code, msg, data } = res.data;
+            if (code === 0) {
+                this.mapEchartDataNBWY = data;
+                this.isShowMapChartNBWY = true;
+                this.timeselectLoading = false;
+            } else {
+                this.isShowMapChartNBWY = false;
                 this.timeselectLoading = false;
                 message.info(msg);
             }
@@ -124,13 +150,8 @@ class Monitor {
     //数据对比echart图表数据
     @action getEchartData() {
         let beginTime = '', endTime = '';
-        if (this.monitorTypeName === 26) {
-            beginTime = this.timeTypeSBWY[0] ? this.timeTypeSBWY[0].format('YYYY-MM-DD HH:mm:ss') : getTime('day')[0];
-            endTime = this.timeTypeSBWY[1] ? this.timeTypeSBWY[1].format('YYYY-MM-DD HH:mm:ss') : getTime('day')[1];
-        } else {
-            beginTime = getTime(this.timeType)[0];
-            endTime = getTime(this.timeType)[1];
-        }
+        beginTime = getTime(this.timeType)[0];
+        endTime = getTime(this.timeType)[1];
         axios.get('/sector/queryComparisonData', {
             params: {
                 sectorId: pageData.sector.sectorId,
@@ -144,19 +165,7 @@ class Monitor {
             const { code, msg, data } = res.data;
             if (code === 0 || code === 2) {
                 console.log(data);
-                if (this.monitorTypeName === 26) {
-                    this.contrastChartData = data.map;
-                } else {
-                    //排序
-                    const sortData = data.comparisonVO;
-                    sortData.forEach(element => {
-                        sort(element.measuredData);
-                        sort(element.totalChange);
-                        sort(element.singleChange);
-                        sort(element.speedChange);
-                    });
-                    this.contrastChartData = sortData;
-                }
+                this.contrastChartData = data.comparisonVO;
                 this.getEchartDataLoading = false;
             } else {
                 this.contrastChartData = [];
@@ -165,6 +174,7 @@ class Monitor {
             }
         })
     }
+
 }
 
 const monitor = new Monitor();
@@ -174,6 +184,13 @@ autorun(() => {
     if (JSON.stringify(selectPoint) !== '{}') {
         monitor.getPointDetailData();
         monitor.getMapEchartData();
+    }
+})
+
+autorun(() => {
+    const selectDeep = toJS(monitor.selectDeep);
+    if (selectDeep) {
+        monitor.getMapEchartDataNBWY();
     }
 })
 

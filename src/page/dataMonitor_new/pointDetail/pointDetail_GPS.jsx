@@ -3,11 +3,13 @@ import axios from 'axios';
 import { autorun, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import echarts from 'echarts';
-import { DatePicker, message } from 'antd';
+import { DatePicker, message, Radio } from 'antd';
 import pagedata from 'store/page.js';
 import monitorpage from 'store/monitorpage.js';
 import { getTime } from 'common/js/util.js';
 
+const RadioButton = Radio.Button;
+const RadioGroup = Radio.Group;
 const { RangePicker } = DatePicker;
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
 
@@ -17,8 +19,7 @@ class PointDetail extends Component {
         super(props);
         this.state = {
             selsectTime: [],
-            chart: null,
-            size: 'default'
+            chart: null
         }
     }
     render() {
@@ -128,6 +129,7 @@ class PointDetail extends Component {
     }
     initChart() {
         const chart = echarts.init(this.refs.chart);
+
         const option = {
             color: ['#32D184', '#E4B669', '#1890FF'],
             tooltip: {
@@ -220,9 +222,8 @@ class PointDetail extends Component {
             }
         }).then(res => {
             const { code, msg, data } = res.data;
-            //console.log(code);
+            console.log(code);
             //console.log(data);
-            
             if (code === 0 || code === 2) {
                 if (data) {
                     monitorpage.pointDetailData = data;

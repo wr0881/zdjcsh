@@ -142,7 +142,7 @@ class Manage extends Component {
     }
     componentDidMount() {
         const query = this.props.location.query;
-        //console.log(query);
+        console.log(query);
         if (query) {
             const projectTag = query.projectId ? query.projectId : '';
             this.setState({ projectTag }, this.getManage.bind(this));

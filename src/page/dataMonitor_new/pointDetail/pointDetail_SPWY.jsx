@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import { autorun, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import echarts from 'echarts';
-import { DatePicker, message, Radio } from 'antd';
-import pagedata from 'store/page.js';
+import { DatePicker, Button, Radio } from 'antd';
 import monitorpage from 'store/monitorpage.js';
 import { getTime } from 'common/js/util.js';
 
@@ -18,9 +16,7 @@ class PointDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selsectTime: [],
             selsectWay: 'x',
-            chart: null
         }
     }
     render() {
@@ -29,18 +25,26 @@ class PointDetail extends Component {
             <div className="point-detail-wrapper">
                 <div className="point-detail-operate">
                     <span>时间区间</span>
-                    <RangePicker showTime format={dateFormat}
+                    <RangePicker showTime format={dateFormat} defaultValue={monitorpage.selsectTime}
                         onOk={v => {
-                            this.setState({ selsectTime: v });
+                            monitorpage.selsectTime = v;
                         }}
                     />
-                    <div className="point-detail-operate-timeselect"
-                    >查看</div>
-                    <div className="point-detail-operate-timeselect"
+                    <Button
+                        type='primary'
+                        loading={monitorpage.timeselectLoading}
+                        onClick={() => {
+                            monitorpage.timeselectLoading = true;
+                            monitorpage.getMapEchartData();
+                        }}
+                    >查看</Button>
+                    <Button
+                        type='primary'
+                        style={{ marginLeft: '20px' }}
                         onClick={_ => {
                             monitorpage.dataContrastVisible = true;
                         }}
-                    >数据对比</div>
+                    >数据对比</Button>
                 </div>
                 <div style={{ display: JSON.stringify(toJS(monitorpage.selectPoint)) === '{}' ? 'block' : 'none', height: '400px' }}>
                     <div style={{ height: '50px' }}></div>
@@ -96,7 +100,7 @@ class PointDetail extends Component {
                         </div>
                     </div>
                     <div className="point-detail-chart-wrapper" style={{
-                        display: this.state.isShowChart ? 'block' : 'none',
+                        display: monitorpage.isShowMapChart ? 'block' : 'none',
                         position: 'relative'
                     }}>
                         <div style={{
@@ -128,16 +132,15 @@ class PointDetail extends Component {
         this.initChart();
 
         let destroyAutorun = autorun(() => {
-            const selectPoint = toJS(monitorpage.selectPoint);
-            if (JSON.stringify(selectPoint) !== '{}') {
-                this.getPointDetailData();
-                this.getEchartData();
+            const mapEchartData = toJS(monitorpage.mapEchartData);
+            if (JSON.stringify(mapEchartData) !== '{}') {
+                this.setEchartLine(mapEchartData);
             }
         });
-        this.setState({ destroyAutorun });
+        this.destroyAutorun = destroyAutorun;
     }
     componentWillUnmount() {
-        this.state.destroyAutorun();
+        this.destroyAutorun && this.destroyAutorun();
     }
     initChart() {
         const chart = echarts.init(this.refs.chart);
@@ -221,67 +224,24 @@ class PointDetail extends Component {
 
         chart.setOption(option);
 
-        this.setState({ chart });
+        this.chart = chart;
 
         window.addEventListener('resize', _ => {
             chart.resize();
         });
     }
-    getPointDetailData() {
-        const selectPoint = toJS(monitorpage.selectPoint);
-        axios.get('/sector/queryTerminalAndSensor', {
-            params: {
-                sectorId: pagedata.sector.sectorId,
-                monitorType: selectPoint.monitorType,
-                monitorPointNumber: selectPoint.monitorPointNumber
-            }
-        }).then(res => {
-            const { code, msg, data } = res.data;
-            if (code === 0 || code === 2) {
-                if (data) {
-                    monitorpage.pointDetailData = data;
-                }
-            } else {
-                monitorpage.pointDetailData = {};
-                console.log('/sector/queryTerminalAndSensor code: ', code, msg);
-            }
-        })
-    }
-    getEchartData() {
-        const selectPoint = toJS(monitorpage.selectPoint);
-        const { selsectTime } = this.state;
-        axios.get('/sector/querySensorData', {
-            params: {
-                sectorId: pagedata.sector.sectorId,
-                monitorType: selectPoint.monitorType,
-                monitorPointNumber: selectPoint.monitorPointNumber,
-                beginTime: selsectTime[0] ? selsectTime[0].format(dateFormat) : getTime('day')[0],
-                endTime: selsectTime[1] ? selsectTime[1].format(dateFormat) : getTime('day')[1],
-            }
-        }).then(res => {
-            const { code, msg, data } = res.data;
-            if (code === 0) {
-                this.setState({ isShowChart: true })
-                this.setEchartLine(data);
-            } else {
-                this.setState({ isShowChart: false })
-                message.info(msg);
-            }
-        })
-    }
     setEchartLine(data) {
-        const { chart, selsectWay } = this.state;
-        console.log(data.commonDataVOs)
-        let time = [], singleChange = [], totalChange = [], speedChange = [], singleChangeY = [], totalChangeY = [], speedChangeY = [];
+        const { selsectWay } = this.state;
+        const chart = this.chart;
+        let time = [], singleChangeX = [], totalChangeX = [], speedChangeX = [], singleChangeY = [], totalChangeY = [], speedChangeY = [];
         data.commonDataVOs && data.commonDataVOs.forEach(v => {
             time.push(v.createDate);
-            singleChange.push(v.singleChange);
-            totalChange.push(v.totalChange);
-            speedChange.push(v.speedChange);
-            singleChangeY.push(Math.random());
-            totalChangeY.push(Math.random());
-            speedChangeY.push(Math.random());
-            
+            singleChangeX.push(v.singleChangeX);
+            totalChangeX.push(v.totalChangeX);
+            speedChangeX.push(v.speedChangeX);
+            singleChangeY.push(v.singleChangeY);
+            totalChangeY.push(v.totalChangeY);
+            speedChangeY.push(v.speedChangeY);
         });
         chart && chart.setOption({
             xAxis: {
@@ -291,21 +251,21 @@ class PointDetail extends Component {
                 {
                     name: '累计变化量',
                     type: 'line',
-                    data: selsectWay === 'x' ? totalChange : totalChangeY
+                    data: selsectWay === 'x' ? totalChangeX : totalChangeY
                 },
                 {
                     name: '单次变化量',
                     type: 'line',
-                    data: selsectWay === 'x' ? singleChange : singleChangeY
+                    data: selsectWay === 'x' ? singleChangeX : singleChangeY
                 },
                 {
                     name: '变化速率',
                     type: 'line',
-                    data: selsectWay === 'x' ? speedChange : speedChangeY
+                    data: selsectWay === 'x' ? speedChangeX : speedChangeY
                 }
             ]
         })
-        chart.resize();
+        setTimeout(() => { chart.resize && chart.resize() }, 16);
     }
 }
 

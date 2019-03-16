@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Modal } from 'antd';
-//import { toJS } from 'mobx';
+import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import PointMap from './pointMap';
 import PointDetail_NM from './pointDetail/pointDetail_NM';
@@ -38,13 +38,13 @@ class DataMonitorContainer extends Component {
                                 <PointDetail_YL /> :
                                 monitorTypeName === '水平位移' ?
                                     <PointDetail_SPWY /> :
-                                    monitorTypeName === '砼支撑轴力' ?
-                                        <PointDetail_SBWY /> :
-                                        monitorTypeName === 'GPS位移' ?
-                                            <PointDetail_GPS /> :
-                                            monitorTypeName === '内部位移' ?
-                                                <PointDetail_NBWY /> :
-                                                <PointDetail_NM />
+                                    // monitorTypeName === '深部位移' ?
+                                    //     <PointDetail_SBWY /> :
+                                    monitorTypeName === 'GPS位移' ?
+                                        <PointDetail_GPS /> :
+                                        monitorTypeName === '内部位移' || monitorTypeName === '深部位移' ?
+                                            <PointDetail_NBWY /> :
+                                            <PointDetail_NM />
                 }
                 {/* <PointDetail /> */}
                 <Modal

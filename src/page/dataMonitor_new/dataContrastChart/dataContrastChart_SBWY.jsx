@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import { autorun, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import echarts from 'echarts';
-import { Checkbox, Radio } from 'antd';
+import { Checkbox, Radio, DatePicker } from 'antd';
 import pageData from 'store/page.js';
 import monitorpage from 'store/monitorpage.js';
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
+const { RangePicker } = DatePicker;
 
 @observer
 class DataContrastChart extends Component {
@@ -49,15 +50,15 @@ class DataContrastChart extends Component {
                     </div>
                 </div>
 
-                <div style={{ display: toJS(monitorpage.contrastChartData).length ? 'block' : 'none' }}>
+                <div style={{ display: JSON.stringify(toJS(monitorpage.contrastChartData)) !== '{}' && JSON.stringify(toJS(monitorpage.contrastChartData)) !== '[]' ? 'block' : 'none' }}>
                     <div className='dataAnalyse-chart' ref='chart'></div>
                 </div>
-                <div style={{ display: toJS(monitorpage.contrastChartData).length ? 'none' : 'block', height: '400px' }}>
+                <div style={{ display: JSON.stringify(toJS(monitorpage.contrastChartData)) === '{}' || JSON.stringify(toJS(monitorpage.contrastChartData)) === '[]' ? 'block' : 'none', height: '400px' }}>
                     <span style={{ margin: '50px' }}>暂无数据信息，请选择测点!</span>
                 </div>
 
                 <div className="dataAnalyse-type-wrapper">
-                    <div className="dataAnalyse-type-btnGrounp">
+                    {/* <div className="dataAnalyse-type-btnGrounp">
                         <RadioGroup key={Math.random()} defaultValue={monitorpage.timeType}
                             onChange={e => {
                                 monitorpage.timeType = e.target.value;
@@ -69,7 +70,13 @@ class DataContrastChart extends Component {
                             <RadioButton value="month">一月</RadioButton>
                             <RadioButton value="year" disabled>一年</RadioButton>
                         </RadioGroup>
-                    </div>
+                    </div> */}
+                    <RangePicker showTime format={'YYYY-MM-DD HH:mm:ss'}
+                        onOk={v => {
+                            monitorpage.timeTypeSBWY = v;
+                            monitorpage.getEchartData();
+                        }}
+                    />
                 </div>
             </div>
         );
@@ -111,16 +118,16 @@ class DataContrastChart extends Component {
                 }
             },
             dataZoom: [
-                {
-                    type: 'slider',
-                    realtime: true,
-                    height: 15,
-                    start: 70,
-                    end: 100
-                },
-                {
-                    type: 'inside',
-                }
+                // {
+                //     type: 'slider',
+                //     realtime: true,
+                //     height: 15,
+                //     start: 70,
+                //     end: 100
+                // },
+                // {
+                //     type: 'inside',
+                // }
             ],
             grid: {
                 top: '50',
@@ -133,7 +140,7 @@ class DataContrastChart extends Component {
                 data: []
             },
             xAxis: {
-                type: 'time',
+                type: 'category',
                 boundaryGap: false,
                 axisLine: {
                     lineStyle: {
@@ -170,27 +177,68 @@ class DataContrastChart extends Component {
     }
     setEchartData() {
         let legend = [], dataAry = [];
-        const { chart ,selsectWay} = this.state;
+        const { chart } = this.state;
         const contrastChartData = toJS(monitorpage.contrastChartData);
-
-        const pointdataType = monitorpage.pointdataType + selsectWay;
-
         console.log(contrastChartData);
-        contrastChartData.forEach(v => {
-            legend.push(v.monitorPointNumber);
+        // contrastChartData.forEach(v => {
+        //     legend.push(v.monitorPointNumber);
+        //     dataAry.push({
+        //         name: v.monitorPointNumber,
+        //         type: 'line',
+        //         smooth: true,
+        //         symbol: "none",
+        //         data: v[monitorpage.pointdataType]
+        //     });
+        // });
+        for (let item in contrastChartData) {
+            legend.push(item);
             dataAry.push({
-                name: v.monitorPointNumber,
+                name: item,
                 type: 'line',
                 smooth: true,
                 symbol: "none",
-                data: v[pointdataType]
+                data: contrastChartData[item].map(v => [v.sensorDeep, v[monitorpage.pointdataType + this.state.selsectWay]])
+                // data: item
             });
-        });
+            console.log(dataAry)
+        }
+        // const test = [
+        //     {
+        //         data: [
+        //             ['1m', Math.random()],
+        //             ['2m', Math.random()],
+        //             ['3m', Math.random()],
+        //             ['4m', Math.random()],
+        //             ['5m', Math.random()],
+        //             ['6m', Math.random()],
+        //         ],
+        //         name: "ZCL07",
+        //         smooth: true,
+        //         symbol: "none",
+        //         type: "line",
+        //     },
+        //     {
+        //         data: [
+        //             ['1m', Math.random()],
+        //             ['2m', Math.random()],
+        //             ['3m', Math.random()],
+        //             ['4m', Math.random()],
+        //             ['5m', Math.random()],
+        //             ['6m', Math.random()],
+        //         ],
+        //         name: "ZCL08",
+        //         smooth: true,
+        //         symbol: "none",
+        //         type: "line",
+        //     }
+        // ]
         chart.setOption({
             legend: {
                 data: legend
+                // data: ['ZCL07', 'ZCL08']
             },
             series: dataAry
+            // series: test
         });
         setTimeout(() => {
             chart.resize();

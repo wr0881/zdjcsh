@@ -92,7 +92,7 @@ class DataContrastChart extends Component {
         const singleChange = getUnit(monitorTypeName).unitB;
         const speedChange = getUnit(monitorTypeName).unitC;
 
-        console.log(totalChange, singleChange, speedChange)
+        // console.log(totalChange, singleChange, speedChange)
 
         const option = {
             color: ['#32D184', '#E4B669', '#1890FF', '#EA4C48', '#5D3AB3', '#7AAFD5',],
