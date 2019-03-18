@@ -33,10 +33,11 @@ class ProjectType extends Component {
         //     { "itemName": "中大实验室系统", "url": "http://zdlms.zdjcyun.com", "itemValue": "monitor/images/three/icon/slope.png", "projectTotalCount": 0, "projectErrorCount": 0 },
         // ];
         const ERP = [
-            { "itemName": "业务流程系统", "url": "http://zhdbpm.zdjcyun-iot.com:8080/jsaas_zd/login.jsp", "itemValue": "monitor/images/three/icon/slope.png", "projectTotalCount": 0, "projectErrorCount": 0 },
+            { "itemName": "业务流程系统", "url": "http://zhdtepp.zdjcyun-iot.com:9090/jsaas/login.jsp", "itemValue": "monitor/images/three/icon/slope.png", "projectTotalCount": 0, "projectErrorCount": 0 },
             { "itemName": "费用报销系统", "url": "http://zhdtepp.zdjcyun-iot.com:9090/zd_exp/", "itemValue": "monitor/images/three/icon/slope.png", "projectTotalCount": 0, "projectErrorCount": 0 },
             { "itemName": "基础人事系统", "url": "http://zhdtepp.zdjcyun-iot.com:9090/hrms/", "itemValue": "monitor/images/three/icon/slope.png", "projectTotalCount": 0, "projectErrorCount": 0 },
-            { "itemName": "工时管理系统", "url": "http://zhdtepp.zdjcyun-iot.com:9090/CattsoftPPP/", "itemValue": "monitor/images/three/icon/slope.png", "projectTotalCount": 0, "projectErrorCount": 0 },
+            { "itemName": "工时管理系统", "url": "http://zhdtepp.zdjcyun-iot.com:9090/pms/a/login", "itemValue": "monitor/images/three/icon/slope.png", "projectTotalCount": 0, "projectErrorCount": 0 },
+            { "itemName": "合同管理系统", "url": "http://zhdtepp.zdjcyun-iot.com:9090/bms/a/login", "itemValue": "monitor/images/three/icon/slope.png", "projectTotalCount": 0, "projectErrorCount": 0 }
         ];
         return (
             <div className="projecttype">
