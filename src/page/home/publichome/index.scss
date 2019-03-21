@@ -1,0 +1,22 @@
+#publichome .loging-content{
+    display: flex;
+    justify-content: center;
+}
+
+#publichome .loging-content-item1{
+    width: 939px;
+}
+
+.projecttype-content4 {
+    overflow: hidden;
+}
+
+.projecttype-content4>div {
+    float: left;
+    margin-right: 23px;
+    margin-bottom: 24px;
+}
+
+.projecttype-content4>div:nth-child(4n) {
+    margin-right: 0px;
+}

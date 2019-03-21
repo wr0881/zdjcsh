@@ -3,10 +3,10 @@ import axios from 'axios';
 import { autorun, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import echarts from 'echarts';
-import { DatePicker, message, Radio } from 'antd';
+import { DatePicker, message, Radio ,Button } from 'antd';
 import pagedata from 'store/page.js';
 import monitorpage from 'store/monitorpage.js';
-import { getTime } from 'common/js/util.js';
+import { getUnit } from 'common/js/util.js';
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
@@ -28,18 +28,26 @@ class PointDetail extends Component {
             <div className="point-detail-wrapper">
                 <div className="point-detail-operate">
                     <span>时间区间</span>
-                    <RangePicker showTime format={dateFormat}
+                    <RangePicker showTime format={dateFormat} defaultValue={monitorpage.selsectTime}
                         onOk={v => {
-                            this.setState({ selsectTime: v });
+                            monitorpage.selsectTime = v;
                         }}
                     />
-                    <div className="point-detail-operate-timeselect"
-                    >查看</div>
-                    <div className="point-detail-operate-timeselect"
+                    <Button
+                        type='primary'
+                        loading={monitorpage.timeselectLoading}
+                        onClick={() => {
+                            monitorpage.timeselectLoading = true;
+                            monitorpage.getMapEchartData();                          
+                        }}
+                    >查看</Button>
+                    <Button
+                        type='primary'
+                        style={{ marginLeft: '20px' }}
                         onClick={_ => {
                             monitorpage.dataContrastVisible = true;
                         }}
-                    >数据对比</div>
+                    >数据对比</Button>
                 </div>
                 <div style={{ display: JSON.stringify(toJS(monitorpage.selectPoint)) === '{}' ? 'block' : 'none', height: '400px' }}>
                     <div style={{ height: '50px' }}></div>
@@ -116,16 +124,15 @@ class PointDetail extends Component {
     componentDidMount() {
         this.initChart();
         let destroyAutorun = autorun(() => {
-            const selectPoint = toJS(monitorpage.selectPoint);
-            if (JSON.stringify(selectPoint) !== '{}') {
-                this.getPointDetailData();
-                this.getEchartData();
+            const mapEchartData = toJS(monitorpage.mapEchartData);
+            if (JSON.stringify(mapEchartData) !== '{}') {
+                this.setEchartLine(mapEchartData);
             }
         });
-        this.setState({ destroyAutorun });
+        this.destroyAutorun = destroyAutorun;
     }
     componentWillUnmount() {
-        this.state.destroyAutorun();
+        this.destroyAutorun && this.destroyAutorun();
     }
     initChart() {
         const chart = echarts.init(this.refs.chart);
@@ -206,60 +213,20 @@ class PointDetail extends Component {
                 }
             ]
         };
+        chart.clear();
         chart.setOption(option);
-        this.setState({ chart });
+        this.chart = chart;
         window.addEventListener('resize', _ => {
             chart.resize();
         });
     }
-    getPointDetailData() {
-        const selectPoint = toJS(monitorpage.selectPoint);
-        axios.get('/sector/queryTerminalAndSensor', {
-            params: {
-                sectorId: pagedata.sector.sectorId,
-                monitorType: selectPoint.monitorType,
-                monitorPointNumber: selectPoint.monitorPointNumber
-            }
-        }).then(res => {
-            const { code, msg, data } = res.data;
-            console.log(code);
-            //console.log(data);
-            if (code === 0 || code === 2) {
-                if (data) {
-                    monitorpage.pointDetailData = data;
-                }
-            } else {
-                monitorpage.pointDetailData = {};
-                console.log('/sector/queryTerminalAndSensor code: ', code, msg);
-            }
-        })
-    }
-    getEchartData() {
-        const selectPoint = toJS(monitorpage.selectPoint);
-        const { selsectTime } = this.state;
-        axios.get('/sector/querySensorData', {
-            params: {
-                sectorId: pagedata.sector.sectorId,
-                monitorType: selectPoint.monitorType,
-                monitorPointNumber: selectPoint.monitorPointNumber,
-                beginTime: selsectTime[0] ? selsectTime[0].format(dateFormat) : getTime('day')[0],
-                endTime: selsectTime[1] ? selsectTime[1].format(dateFormat) : getTime('day')[1],
-            }
-        }).then(res => {
-            const { code, msg, data } = res.data;
-            if (code === 0) {
-                this.setState({ isShowChart: true })
-                this.setEchartLine(data);
-            } else {
-                this.setState({ isShowChart: false })
-                message.info(msg);
-            }
-        })
-    }
     setEchartLine(data) {
-        const { chart } = this.state;
+        const chart = this.chart;
+        const monitorTypeName = monitorpage.selectPoint.monitorTypeName;
+        const totalChangeUnit = getUnit(monitorTypeName).unitA;
         let time = [], totalChangeX = [], totalChangeY = [], totalChangeZ = [];
-        data.commonDataVOs.forEach(v => {
+        console.log(data);
+        data.commonDataVOs && data.commonDataVOs.forEach(v => {
             time.push(v.createDate);
             totalChangeX.push(v.totalChangeX);
             totalChangeY.push(v.totalChangeY);
@@ -271,23 +238,23 @@ class PointDetail extends Component {
             },
             series: [
                 {
-                    name: '累计变化量X',
+                    name: '累计变化量X'+ totalChangeUnit,
                     type: 'line',
                     data: totalChangeX
                 },
                 {
-                    name: '累计变化量Y',
+                    name: '累计变化量Y'+ totalChangeUnit,
                     type: 'line',
                     data: totalChangeY
                 },
                 {
-                    name: '累计变化量Z',
+                    name: '累计变化量Z'+ totalChangeUnit,
                     type: 'line',
                     data: totalChangeZ
                 }
             ]
         })
-        chart.resize();
+        setTimeout(() => { chart.resize && chart.resize() }, 16);
     }
 }
 

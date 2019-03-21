@@ -51,8 +51,14 @@ class Monitor {
                 if (data) {
                     this.pointDetailData = data;
                 }
+                if(data && this.selectDeep !== ''){
+                    this.getMapEchartDataNBWY();
+                }
             } else {
                 this.pointDetailData = {};
+                this.selectDeep = '';
+                this.isShowMapChartNBWY = false;
+                this.isShowMapChart = false;
                 console.log('/sector/queryTerminalAndSensor code: ', code, msg);
             }
         })
@@ -71,7 +77,6 @@ class Monitor {
             }
         }).then(res => {
             const { code, msg, data } = res.data;
-            console.log(data);
             if (code === 0) {
                 this.mapEchartData = data;
                 this.isShowMapChart = true;
@@ -100,6 +105,7 @@ class Monitor {
                 beginTime: selsectTime[0].format('YYYY-MM-DD HH:mm:ss'),
                 endTime: selsectTime[1].format('YYYY-MM-DD HH:mm:ss'),
             }
+            
         }).then(res => {
             const { code, msg, data } = res.data;
             if (code === 0) {
@@ -164,7 +170,6 @@ class Monitor {
         }).then(res => {
             const { code, msg, data } = res.data;
             if (code === 0 || code === 2) {
-                console.log(data);
                 this.contrastChartData = data.comparisonVO;
                 this.getEchartDataLoading = false;
             } else {
@@ -189,7 +194,7 @@ autorun(() => {
 
 autorun(() => {
     const selectDeep = toJS(monitor.selectDeep);
-    if (selectDeep) {
+    if (selectDeep !== '') {
         monitor.getMapEchartDataNBWY();
     }
 })

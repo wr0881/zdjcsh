@@ -4,6 +4,7 @@ import { observer } from 'mobx-react';
 import echarts from 'echarts';
 import { DatePicker, Select, Button } from 'antd';
 import monitorpage from 'store/monitorpage.js';
+import { getUnit } from 'common/js/util.js';
 
 const { RangePicker } = DatePicker;
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
@@ -26,7 +27,6 @@ class PointDetail extends Component {
         return (
             <div className="point-detail-wrapper">
                 <div className="point-detail-operate">
-                    <div style={{ display: 'inline-block', width: '20px' }}></div>
                     <span>时间区间</span>
                     <RangePicker showTime format={dateFormat} defaultValue={monitorpage.selsectTime}
                         onOk={v => {
@@ -39,7 +39,7 @@ class PointDetail extends Component {
                         onClick={() => {
                             monitorpage.timeselectLoading = true;
                             monitorpage.getMapEchartData();
-                            monitorpage.getMapEchartDataNBWY();
+                            monitorpage.getMapEchartDataNBWY();                          
                         }}
                     >查看</Button>
                     <Button
@@ -107,7 +107,7 @@ class PointDetail extends Component {
                     </div>
                     <div className="point-detail-chart-wrapper" style={{
                         width: 680,
-                        display: monitorpage.isShowMapChartNBWY ? 'block' : 'none'
+                        display: monitorpage.isShowMapChart ? 'block' : 'none'
                     }}>
                         <span>深度</span>
                         <Select
@@ -139,6 +139,8 @@ class PointDetail extends Component {
             }
             if (JSON.stringify(mapEchartDataNBWY) !== '{}') {
                 this.setEchartLineNBWY(mapEchartDataNBWY);
+            }else {
+                this.isShowMapChartNBWY = false;
             }
         });
         this.destroyAutorun = destroyAutorun;
@@ -289,48 +291,24 @@ class PointDetail extends Component {
                 }
             ]
         };
+        chart1.clear();
         chart1.setOption(option1);
-        this.setState({ chart1 });
+        this.chart1 = chart1;
+        chart2.clear();
         chart2.setOption(option2);
-        this.setState({ chart2 });
+        this.chart2 = chart2;
         window.addEventListener('resize', _ => {
             chart1.resize();
             chart2.resize();
         });
     }
-    // getDepth(){
-    //     const selectPoint = toJS(monitorpage.selectPoint);
-    //     const { selsectTime } = this.state;
-    //     axios.get('/sector/querySensorData', {
-    //         params: {
-    //             sectorId: pagedata.sector.sectorId,
-    //             monitorType: selectPoint.monitorType,
-    //             monitorPointNumber: selectPoint.monitorPointNumber,
-    //             beginTime: selsectTime[0] ? selsectTime[0].format(dateFormat) : getTime('day')[0],
-    //             endTime: selsectTime[1] ? selsectTime[1].format(dateFormat) : getTime('day')[1],
-    //         }
-    //     }).then(res => {
-    //         const { code, msg, data } = res.data;
-    //         console.log(data);
-    //         if (code === 0) {
-    //             const deepArr = data.sensorNumbers;
-    //             let deepOption = [];
-    //             deepArr.map((item,i)=>(
-    //                 deepOption.push(
-    //                     <Option className="deepSelect" key={i} value={item}>{item}</Option>
-    //                 )           
-    //             ));
-    //             this.setState({deepOption});
-    //         }else {
-    //             message.info(msg);
-    //         }
-    //     })
-    // }
     setEchartLine(data) {
-        const { chart1 } = this.state;
+        const chart1 = this.chart1;
+        const monitorTypeName = monitorpage.selectPoint.monitorTypeName;
+
+        const totalChangeUnit = getUnit(monitorTypeName).unitA;
         let totalChangeX = [], totalChangeY = [], Depth = [];
-        console.log(data);
-        data.deepDatas.forEach(v => {
+        data.deepDatas && data.deepDatas.forEach(v => {
             Depth.push(v.sensorDeep + 'm');
             totalChangeX.push(v.totalChangeX);
             totalChangeY.push(v.totalChangeY);
@@ -341,50 +319,53 @@ class PointDetail extends Component {
             },
             series: [
                 {
-                    name: 'X',
+                    name: 'X通道' + totalChangeUnit,
                     type: 'line',
                     smooth: true,
-                    data: totalChangeX
+                    data: totalChangeX,
                 },
                 {
-                    name: 'Y',
+                    name: 'Y通道' + totalChangeUnit,
                     type: 'line',
                     smooth: true,
                     data: totalChangeY
                 }
             ]
         });
-        chart1.resize();
+        setTimeout(() => { chart1.resize && chart1.resize() }, 16);
     }
     setEchartLineNBWY(data) {
-        const { chart2 } = this.state;
+        const chart2 = this.chart2;
+        const monitorTypeName = monitorpage.selectPoint.monitorTypeName;
+
+        const measuredDataUnit = getUnit(monitorTypeName).unitA;
         let time = [], measuredDataX = [], measuredDataY = [];
-        console.log(data);
-        data.measuredDataX.forEach(v => {
+        data.measuredDataX && data.measuredDataX.forEach(v => {
             time.push(v.createDate);
             measuredDataX.push(v.date);
         });
-        data.measuredDataY.forEach(v => {
+        data.measuredDataY && data.measuredDataY.forEach(v => {
             measuredDataY.push(v.date);
         });
+        
         chart2 && chart2.setOption({
             xAxis: {
                 data: time
             },
             series: [
                 {
-                    name: '深度X通道',
+                    name: '深度X通道' + measuredDataUnit,
                     type: 'line',
                     data: measuredDataX
                 },
                 {
-                    name: '深度Y通道',
+                    name: '深度Y通道' + measuredDataUnit,
                     type: 'line',
                     data: measuredDataY
                 }
             ]
         })
-        chart2.resize();
+        setTimeout(() => { chart2.resize && chart2.resize() }, 16);
     }
 }
 
