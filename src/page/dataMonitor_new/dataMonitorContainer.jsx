@@ -9,7 +9,6 @@ import PointDetail_GTGC from './pointDetail/pointDetail_GTGC';
 import PointDetail_KSW from './pointDetail/pointDetail_KSW';
 import PointDetail_YL from './pointDetail/pointDetail_YL';
 import PointDetail_SPWY from './pointDetail/pointDetail_SPWY';
-import PointDetail_SBWY from './pointDetail/pointDetail_SBWY';
 import PointDetail_GPS from './pointDetail/pointDetail_GPS';
 import PointDetail_NBWY from './pointDetail/pointDetail_NBWY';
 import DataContrast from './dataContrast';
@@ -65,7 +64,12 @@ class DataMonitorContainer extends Component {
     }
     componentWillMount() {
         monitorpage.selectPoint = {};
+
+        // this.socket = setInterval(_=>{monitorpage.getMapEchartData()},1000);
     }
+    // componentWillUnmount(){
+    //     clearInterval(this.socket);
+    // }
 }
 
 export default DataMonitorContainer;

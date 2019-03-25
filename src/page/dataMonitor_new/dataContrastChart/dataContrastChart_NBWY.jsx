@@ -95,7 +95,7 @@ class DataContrastChart extends Component {
         const chart = echarts.init(this.refs.chart);
         const pointdataType = monitorpage.pointdataType;
         const monitorTypeName = monitorpage.monitorTypeName;
-
+        //
         const totalChange = getUnit(monitorTypeName).unitA;
         const singleChange = getUnit(monitorTypeName).unitB;
         const speedChange = getUnit(monitorTypeName).unitC;
@@ -186,7 +186,7 @@ class DataContrastChart extends Component {
         const { chart, selsectWay } = this.state;
         const contrastChartData = toJS(monitorpage.contrastChartData);
         const pointdataType = monitorpage.pointdataType + selsectWay;
-        contrastChartData.forEach(v => {
+        contrastChartData && contrastChartData.forEach(v => {
             legend.push(v.monitorPointNumber);
             dataAry.push({
                 name: v.monitorPointNumber,

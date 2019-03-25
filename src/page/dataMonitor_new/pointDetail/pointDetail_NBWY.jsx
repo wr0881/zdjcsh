@@ -28,7 +28,7 @@ class PointDetail extends Component {
             <div className="point-detail-wrapper">
                 <div className="point-detail-operate">
                     <span>时间区间</span>
-                    <RangePicker showTime format={dateFormat} defaultValue={monitorpage.selsectTime}
+                    <RangePicker showTime format={dateFormat} defaultValue={monitorpage.selsectTimeNBWY}
                         onOk={v => {
                             monitorpage.selsectTime = v;
                         }}

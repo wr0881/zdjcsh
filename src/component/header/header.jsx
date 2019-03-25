@@ -259,6 +259,7 @@ class Header extends Component {
             user.islogin = false;
             window.localStorage.setItem('token', null);
             this.props.history.push('/publichome');
+            window.location.href = window.location.href;
         })
     }
 }

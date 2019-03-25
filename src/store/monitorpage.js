@@ -10,6 +10,7 @@ class Monitor {
     /* 用户选择数据 */
     @observable selectPoint = {};
     @observable selsectTime = [moment(getTime('day')[0]), moment(getTime('day')[1])];
+    @observable selsectTimeNBWY = [moment(getTime('month')[0]), moment(getTime('month')[1])];
     @observable selectDeep = '';
     /* 接口数据 */
     @observable pointDetailData = {};
@@ -95,7 +96,7 @@ class Monitor {
     //内部位移echarts图表数据
     @action getMapEchartDataNBWY() {
         const selectPoint = this.selectPoint;
-        const selsectTime = this.selsectTime;
+        const selsectTime = this.selsectTimeNBWY;
         axios.get('/data/queryDeepData', {
             params: {
                 sectorId: pageData.sector.sectorId,

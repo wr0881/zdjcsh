@@ -36,8 +36,9 @@ class ProjectType extends Component {
             { "itemName": "合同管理系统", "url": "http://zhdtepp.zdjcyun-iot.com:9090/bms/a/login", "itemValue": "monitor/images/three/icon/slope.png", "projectTotalCount": 0, "projectErrorCount": 0 },
             { "itemName": "业务流程系统", "url": "http://zhdtepp.zdjcyun-iot.com:9090/jsaas/login.jsp", "itemValue": "monitor/images/three/icon/slope.png", "projectTotalCount": 0, "projectErrorCount": 0 },
             { "itemName": "费用报销系统", "url": "http://zhdtepp.zdjcyun-iot.com:9090/zd_exp/", "itemValue": "monitor/images/three/icon/slope.png", "projectTotalCount": 0, "projectErrorCount": 0 },
-            { "itemName": "基础人事系统", "url": "http://zhdtepp.zdjcyun-iot.com:9090/hrms/", "itemValue": "monitor/images/three/icon/slope.png", "projectTotalCount": 0, "projectErrorCount": 0 },
             { "itemName": "工时管理系统", "url": "http://zhdtepp.zdjcyun-iot.com:9090/pms/a/login", "itemValue": "monitor/images/three/icon/slope.png", "projectTotalCount": 0, "projectErrorCount": 0 },
+            { "itemName": "基础人事系统", "url": "http://zhdtepp.zdjcyun-iot.com:9090/hrms/", "itemValue": "monitor/images/three/icon/slope.png", "projectTotalCount": 0, "projectErrorCount": 0 },
+            
         ];
         return (
             <div className="projecttype">
@@ -59,54 +60,58 @@ class ProjectType extends Component {
                         </div>
                     </div>
                 </div>
-                <div className="projecttype-content-wrapper">
-                    <div className="projecttype-content-title">
-                        <div>监测</div>
-                        {/* <div className='line'></div> */}
-                    </div>
-                    <Card
-                        loading={loading}
-                        bordered={false}
-                        bodyStyle={{ width: '100%', padding: '0px' }}
-                    >
-                        <div className="projecttype-content4">
-                            {JIANCE.map(v => {
-                                return <TypeItem key={Math.random()} data={v} />
-                            })}
+                <div className="projecttype-content-wrapper" style={{display:'flex'}}>
+                    <div style={{width:'50%'}}>
+                        <div className="projecttype-content-title">
+                            <div>监测</div>
+                            {/* <div className='line'></div> */}
                         </div>
-                    </Card>
-
-                    <div className="projecttype-content-title">
-                        <div>检测</div>
-                        {/* <div className='line'></div> */}
+                        <Card
+                            loading={loading}
+                            bordered={false}
+                            bodyStyle={{ width: '100%', padding: '0px' }}
+                        >
+                            <div className="projecttype-content4">
+                                {JIANCE.map(v => {
+                                    return <TypeItem key={Math.random()} data={v} />
+                                })}
+                            </div>
+                        </Card>
                     </div>
-                    <Card
-                        loading={loading}
-                        bordered={false}
-                        bodyStyle={{ width: '100%', padding: '0px' }}
-                    >
-                        <div className="projecttype-content4">
-                            {JIANCE2.map(v => {
-                                return <TypeItem key={Math.random()} data={v} url={v.url} />
-                            })}
+                    <div style={{width:'25%'}}>
+                        <div className="projecttype-content-title">
+                            <div>检测</div>
+                            {/* <div className='line'></div> */}
                         </div>
-                    </Card>
-
-                    <div className="projecttype-content-title">
-                        <div>ERP系统</div>
-                        {/* <div className='line'></div> */}
+                        <Card
+                            loading={loading}
+                            bordered={false}
+                            bodyStyle={{ width: '100%', padding: '0px' }}
+                        >
+                            <div className="projecttype-content4">
+                                {JIANCE2.map(v => {
+                                    return <TypeItem key={Math.random()} data={v} url={v.url} />
+                                })}
+                            </div>
+                        </Card>
                     </div>
-                    <Card
-                        loading={loading}
-                        bordered={false}
-                        bodyStyle={{ width: '100%', padding: '0px' }}
-                    >
-                        <div className="projecttype-content4">
-                            {ERP.map(v => {
-                                return <TypeItem key={Math.random()} data={v} url={v.url} alarm={false} />
-                            })}
+                    <div style={{width:'25%'}}>
+                        <div className="projecttype-content-title">
+                            <div>ERP系统</div>
+                            {/* <div className='line'></div> */}
                         </div>
-                    </Card>
+                        <Card
+                            loading={loading}
+                            bordered={false}
+                            bodyStyle={{ width: '100%', padding: '0px' }}
+                        >
+                            <div className="projecttype-content4">
+                                {ERP.map(v => {
+                                    return <TypeItem key={Math.random()} data={v} url={v.url} alarm={false} />
+                                })}
+                            </div>
+                        </Card>
+                    </div>
                 </div>
             </div>
         );

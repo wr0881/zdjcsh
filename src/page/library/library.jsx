@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
-import { Table, Form, Input, Select, Button } from 'antd';
+import { Table, Form, Input, Select, Button, DatePicker } from 'antd';
 import axios from 'axios';
+import moment from 'moment';
 import { Post } from 'common/js/util';
 import pageData from 'store/page';
 import './library.scss';
+
+const { RangePicker } = DatePicker;
 
 class Library extends Component {
     constructor(props) {
@@ -28,7 +31,6 @@ class Library extends Component {
             {
                 title: '操作',
                 render: function (record) {
-                    console.log(record)
                     return <a href={`${window.Psq_ImgUrl}${record.path}`}>下载</a>
                 }
             },
@@ -42,8 +44,8 @@ class Library extends Component {
                             e.preventDefault();
                             this.props.form.validateFieldsAndScroll((err, values) => {
                                 if (!err) {
-                                    const { libraryName, libraryType } = values;
-                                    this.getLibrary(libraryName, libraryType);
+                                    const { libraryName, libraryType, time } = values;
+                                    this.getLibrary(libraryName, libraryType, time);
                                 }
                             });
                         }}>
@@ -69,6 +71,11 @@ class Library extends Component {
                                 </Select>
                             )}
                         </Form.Item>
+                        <Form.Item
+                            label="文档时间"
+                        >
+                            {getFieldDecorator('time', { initialValue: [moment().subtract(1, 'days'), moment()] })(<RangePicker />)}
+                        </Form.Item>
                         <Form.Item>
                             <Button type="primary" htmlType="submit">搜索</Button>
                         </Form.Item>
@@ -83,11 +90,13 @@ class Library extends Component {
     componentDidMount() {
         this.getLibrary();
     }
-    getLibrary(name = '', type = '') {
+    getLibrary(name = '', type = '', time = [moment().subtract(1, 'days'), moment()]) {
         axios.post('/document/getDocuments', Post({
             sectorId: pageData.sector.sectorId,
+            beginTime: time[0].format('l'),
+            endTime: time[1].format('l'),
             name,
-            type
+            type,
         })).then(res => {
             const { code, msg, data } = res.data;
             if (code === 0) {

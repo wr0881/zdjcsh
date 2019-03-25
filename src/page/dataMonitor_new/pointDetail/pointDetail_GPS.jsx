@@ -111,7 +111,7 @@ class PointDetail extends Component {
                         </div>
                     </div>
                     <div className="point-detail-chart-wrapper" style={{
-                        display: this.state.isShowChart ? 'block' : 'none'
+                        display: monitorpage.isShowMapChart ? 'block' : 'none'
                     }}>
                         <div>
                             <div className="point-detail-chart" ref='chart'></div>
@@ -162,7 +162,7 @@ class PointDetail extends Component {
             },
             legend: {
                 data: ['累计变化量X', '累计变化量Y', '累计变化量Z'],
-                //selectedMode: 'single'
+                selectedMode: 'single'
             },
             xAxis: {
                 type: 'category',
