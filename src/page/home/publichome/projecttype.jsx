@@ -60,7 +60,7 @@ class ProjectType extends Component {
                         </div>
                     </div>
                 </div>
-                <div className="projecttype-content-wrapper" style={{display:'flex'}}>
+                <div className="projecttype-content-wrapper" style={{display:'flex',padding:'0px 0px 0px 24px'}}>
                     <div style={{width:'50%'}}>
                         <div className="projecttype-content-title">
                             <div>监测</div>
