@@ -38,13 +38,13 @@ class PointDetail extends Component {
                             monitorpage.getMapEchartData();
                         }}
                     >查看</Button>
-                    <Button
+                    {/* <Button
                         type='primary'
                         style={{ marginLeft: '20px' }}
                         onClick={_ => {
                             monitorpage.dataContrastVisible = true;
                         }}
-                    >数据对比</Button>
+                    >数据对比</Button> */}
                 </div>
                 <div style={{ display: JSON.stringify(toJS(monitorpage.selectPoint)) === '{}' ? 'block' : 'none', height: '400px' }}>
                     <div style={{ height: '50px' }}></div>

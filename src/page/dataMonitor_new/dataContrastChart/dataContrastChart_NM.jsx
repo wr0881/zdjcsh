@@ -44,7 +44,7 @@ class DataContrastChart extends Component {
                     <div className='dataAnalyse-chart' ref='chart'></div>
                 </div>
                 <div style={{ display: toJS(monitorpage.contrastChartData).length ? 'none' : 'block', height: '400px' }}>
-                    <span style={{ margin: '50px' }}>暂无数据信息，请选择测点!</span>
+                    <span style={{ margin: '50px' }}>暂无数据信息，请选择指标！!</span>
                 </div>
 
                 <div className="dataAnalyse-type-wrapper">
@@ -179,6 +179,8 @@ class DataContrastChart extends Component {
         let legend = [], dataAry = [];
         const { chart } = this.state;
         const contrastChartData = toJS(monitorpage.contrastChartData)
+        console.log(contrastChartData);
+        console.log(monitorpage.pointdataType);
         contrastChartData.forEach(v => {
             legend.push(v.monitorPointNumber);
             dataAry.push({
@@ -189,6 +191,7 @@ class DataContrastChart extends Component {
                 data: v[monitorpage.pointdataType]
             });
         });
+        console.log('对比数据:',dataAry);
         chart.setOption({
             legend: {
                 data: legend

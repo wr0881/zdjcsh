@@ -42,13 +42,13 @@ class PointDetail extends Component {
                             monitorpage.getMapEchartDataNBWY();                          
                         }}
                     >查看</Button>
-                    <Button
+                    {/* <Button
                         type='primary'
                         style={{ marginLeft: '20px' }}
                         onClick={_ => {
                             monitorpage.dataContrastVisible = true;
                         }}
-                    >数据对比</Button>
+                    >数据对比</Button> */}
                 </div>
                 <div style={{ display: JSON.stringify(toJS(monitorpage.selectPoint)) === '{}' ? 'block' : 'none', height: '400px' }}>
                     <div style={{ height: '50px' }}></div>
@@ -57,7 +57,7 @@ class PointDetail extends Component {
                 <div className="point-detail-content" style={{
                     display: JSON.stringify(toJS(monitorpage.selectPoint)) === '{}' ? 'none' : 'block'
                 }}>
-                    <div className="point-detail-table-wrapper" style={{ width: 280 }}>
+                    <div className="point-detail-table-wrapper" style={{ width: '20%' }}>
                         <div className="point-detail-table3">
                             <div className="point-detail-table3-item">
                                 <span>测点名称</span>
@@ -98,7 +98,7 @@ class PointDetail extends Component {
                         </div>
                     </div>
                     <div className="point-detail-chart-wrapper" style={{
-                        width: 520,
+                        width: '30%',
                         display: monitorpage.isShowMapChart ? 'block' : 'none'
                     }}>
                         <div>
@@ -106,7 +106,7 @@ class PointDetail extends Component {
                         </div>
                     </div>
                     <div className="point-detail-chart-wrapper" style={{
-                        width: 680,
+                        width: '50%',
                         display: monitorpage.isShowMapChart ? 'block' : 'none'
                     }}>
                         <span>深度</span>
@@ -117,8 +117,8 @@ class PointDetail extends Component {
                             onChange={v => { monitorpage.selectDeep = v }}
                             value={monitorpage.selectDeep}
                         >
-                            {monitorpage.mapEchartData.sensorNumbers && monitorpage.mapEchartData.sensorNumbers.map(item => {
-                                return <Option className="deepSelect" key={item} value={item}>{item}</Option>
+                            {monitorpage.mapEchartData.sensorNumbers && monitorpage.mapEchartData.sensorNumbers.map((item,index) => {
+                                return <Option className="deepSelect" key={index} value={item}>{monitorpage.mapEchartData.sensorDeep[index]}m</Option>
                             })}
                         </Select>
                         <div>

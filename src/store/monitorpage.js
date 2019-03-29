@@ -170,9 +170,12 @@ class Monitor {
             }
         }).then(res => {
             const { code, msg, data } = res.data;
+            console.log('数据对比数据:',data);
             if (code === 0 || code === 2) {
                 this.contrastChartData = data.comparisonVO;
+                console.log(data.comparisonVO);
                 this.getEchartDataLoading = false;
+                console.log('/sector/queryComparisonData code: ', code, msg);
             } else {
                 this.contrastChartData = [];
                 this.getEchartDataLoading = false;

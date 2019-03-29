@@ -78,7 +78,7 @@ class DataContrast extends Component {
                     </div>
                     <div className="dataAnalyse-operate-btn">
                         <Button
-                            style={{ width: '100px', height: '35px' }}
+                            style={{ width: '40%', height: '35px' }}
                             onClick={() => {
                                 monitorpage.monitorTypeName = null;
                                 monitorpage.selectPointName = null;
@@ -87,7 +87,7 @@ class DataContrast extends Component {
                             }}
                         >重置</Button>
                         <Button
-                            style={{ marginLeft: '30px', width: '100px', height: '35px' }}
+                            style={{ marginLeft: '30px', width: '40%', height: '35px' }}
                             type='primary'
                             loading={monitorpage.getEchartDataLoading}
                             onClick={() => {
@@ -102,7 +102,6 @@ class DataContrast extends Component {
     }
     componentDidMount() {
         monitorpage.getMonitorTypeData();
-
         autorun(() => {
             if (monitorpage.monitorTypeName) {
                 monitorpage.getPointName();

@@ -5,6 +5,7 @@ import user from 'store/user';
 // axios.defaults.baseURL = 'http://10.88.89.41:8180';
 // axios.defaults.baseURL = 'http://10.88.89.170:8181';
 axios.defaults.baseURL = 'http://123.207.88.210:8180';
+// axios.defaults.baseURL = 'http://10.88.89.73:8180';
 axios.defaults.timeout = 6000;
 
 window.Psq_ImgUrl = 'http://123.207.88.210';

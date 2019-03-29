@@ -94,11 +94,11 @@ class DataContrastChart extends Component {
     initChart() {
         const chart = echarts.init(this.refs.chart);
         const pointdataType = monitorpage.pointdataType;
-        const monitorTypeName = monitorpage.monitorTypeName;
+        //const monitorTypeName = monitorpage.monitorTypeName;
         //
-        const totalChange = getUnit(monitorTypeName).unitA;
-        const singleChange = getUnit(monitorTypeName).unitB;
-        const speedChange = getUnit(monitorTypeName).unitC;
+        //const totalChange = getUnit(monitorTypeName).unitA;
+        //const singleChange = getUnit(monitorTypeName).unitB;
+        //const speedChange = getUnit(monitorTypeName).unitC;
         const option = {
             color: ['#32D184', '#E4B669', '#1890FF', '#EA4C48', '#5D3AB3', '#7AAFD5',],
             tooltip: {
@@ -177,6 +177,7 @@ class DataContrastChart extends Component {
             series: []
         };
         chart.clear();
+        chart.resize();
         chart.setOption(option);
         this.setState({ chart });
     }
