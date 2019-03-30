@@ -23,6 +23,7 @@ class Monitor {
     @observable dataContrastVisible = false;
 
     /* DataConstrast */
+    //@observable dataContrastNBWY = {};
     /* 用户选择数据 */
     @observable monitorTypeName = '';
     @observable selectPointName = [];
@@ -146,6 +147,7 @@ class Monitor {
             }
         }).then(res => {
             const { code, msg, data } = res.data;
+            console.log('数据对比数据:',data);
             if (code === 0) {
                 this.pointNameData = data;
             } else {
