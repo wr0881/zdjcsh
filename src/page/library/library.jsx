@@ -98,7 +98,7 @@ class Library extends Component {
             name,
             type,
         })).then(res => {
-            const { code, msg, data } = res.data;
+            const { code, data } = res.data;
             if (code === 0) {
                 const dataSource = data.map(v => {
                     return { ...v, key: Math.random() }

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+//import axios from 'axios';
 import { autorun, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import echarts from 'echarts';
-import { DatePicker, message, Button } from 'antd';
+import { DatePicker, Button } from 'antd';
 import monitorpage from 'store/monitorpage.js';
 import { getUnit } from 'common/js/util.js';
 

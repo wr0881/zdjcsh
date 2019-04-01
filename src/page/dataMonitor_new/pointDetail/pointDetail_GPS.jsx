@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+//import axios from 'axios';
 import { autorun, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import echarts from 'echarts';
-import { DatePicker, message, Radio ,Button } from 'antd';
-import pagedata from 'store/page.js';
+import { DatePicker, Button } from 'antd';
+//import pagedata from 'store/page.js';
 import monitorpage from 'store/monitorpage.js';
 import { getUnit } from 'common/js/util.js';
 
-const RadioButton = Radio.Button;
-const RadioGroup = Radio.Group;
+//const RadioButton = Radio.Button;
+//const RadioGroup = Radio.Group;
 const { RangePicker } = DatePicker;
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
 

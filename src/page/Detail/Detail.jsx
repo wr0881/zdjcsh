@@ -61,6 +61,13 @@ const title = [
         component: DataMonitor,
     },
     {
+        title: '数据查询',
+        enTitle: 'DataSelect',
+        icon_url: require('common/image/数据监控.png'),
+        icon_url_active: require('common/image/数据监控2.png'),
+        component: ProductComponent,
+    },
+    {
         title: '数据对比',
         enTitle: 'DataContrast',
         icon_url: require('common/image/数据对比.png'),

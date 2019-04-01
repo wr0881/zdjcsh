@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { autorun, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import echarts from 'echarts';
-import { Checkbox, Radio } from 'antd';
+import { Radio } from 'antd';
 import pageData from 'store/page.js';
 import monitorpage from 'store/monitorpage.js';
 import { getUnit } from 'common/js/util.js';

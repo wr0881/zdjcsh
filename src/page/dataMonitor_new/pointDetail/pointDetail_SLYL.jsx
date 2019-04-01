@@ -3,9 +3,9 @@ import { autorun, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import echarts from 'echarts';
 import { DatePicker, Button } from 'antd';
-import pagedata from 'store/page.js';
+//import pagedata from 'store/page.js';
 import monitorpage from 'store/monitorpage.js';
-import { getTime } from 'common/js/util.js';
+//import { getTime } from 'common/js/util.js';
 
 const { RangePicker } = DatePicker;
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';

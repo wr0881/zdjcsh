@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import echarts from 'echarts';
 import { DatePicker, Button, Radio } from 'antd';
 import monitorpage from 'store/monitorpage.js';
-import { getTime } from 'common/js/util.js';
+//import { getTime } from 'common/js/util.js';
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;

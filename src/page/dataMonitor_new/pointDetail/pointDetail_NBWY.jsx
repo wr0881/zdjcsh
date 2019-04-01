@@ -49,6 +49,20 @@ class PointDetail extends Component {
                             monitorpage.dataContrastVisible = true;
                         }}
                     >数据对比</Button> */}
+                    <div style={{ margin:'0px 40px' }}>
+                        <span style={{ padding:'0px 20px' }}>测点</span>
+                        <Select
+                            showSearch
+                            className="point"
+                            style={{ width: 200 }}
+                            onChange={v => { monitorpage.selectPointName = v }}
+                            value={monitorpage.selectPointName}
+                        >
+                            {/* {monitorpage.pointDetailData && monitorpage.pointDetailData.map((item,index) => {
+                                return <Option className="pointSelect" key={index} value={item}>{item}</Option>
+                            })} */}
+                        </Select>
+                    </div>                   
                 </div>
                 <div style={{ display: JSON.stringify(toJS(monitorpage.selectPoint)) === '{}' ? 'block' : 'none', height: '400px' }}>
                     <div style={{ height: '50px' }}></div>
@@ -304,11 +318,11 @@ class PointDetail extends Component {
             chart1.resize();
             chart2.resize();
         });
+        
     }
     setEchartLine(data) {
         const chart1 = this.chart1;
         const monitorTypeName = monitorpage.selectPoint.monitorTypeName;
-
         const totalChangeUnit = getUnit(monitorTypeName).unitA;
         let totalChangeX = [], totalChangeY = [], Depth = [];
         data.deepDatas && data.deepDatas.forEach(v => {

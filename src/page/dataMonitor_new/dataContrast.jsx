@@ -8,13 +8,13 @@ import DataContrastChart_GTGC from './dataContrastChart/dataContrastChart_GTGC';
 import DataContrastChart_KSW from './dataContrastChart/dataContrastChart_KSW';
 import DataContrastChart_YL from './dataContrastChart/dataContrastChart_YL';
 import DataContrastChart_SPWY from './dataContrastChart/dataContrastChart_SPWY';
-import DataContrastChart_SBWY from './dataContrastChart/dataContrastChart_SBWY';
+//import DataContrastChart_SBWY from './dataContrastChart/dataContrastChart_SBWY';
 import DataContrastChart_GPS from './dataContrastChart/dataContrastChart_GPS';
 import DataContrastChart_NBWY from './dataContrastChart/dataContrastChart_NBWY';
 import monitorpage from 'store/monitorpage.js';
 
 const CheckboxGroup = Checkbox.Group;
-const RadioButton = Radio.Button;
+//const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
 @observer
@@ -43,7 +43,7 @@ class DataContrast extends Component {
                                     <DataContrastChart_YL /> :
                                     monitorTypeName === 21 ?
                                         <DataContrastChart_SPWY /> :
-                                        monitorTypeName == 52 ?
+                                        monitorTypeName === 52 ?
                                             <DataContrastChart_GPS /> :
                                             // monitorTypeName === 26 ?
                                             //     <DataContrastChart_SBWY /> :

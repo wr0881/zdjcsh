@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Modal } from 'antd';
-import { toJS } from 'mobx';
+//import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import PointMap from './pointMap';
 import PointDetail_NM from './pointDetail/pointDetail_NM';
@@ -41,7 +41,7 @@ class DataMonitorContainer extends Component {
                                     //     <PointDetail_SBWY /> :
                                     monitorTypeName === 'GPS位移' ?
                                         <PointDetail_GPS /> :
-                                        monitorTypeName === '内部位移' || monitorTypeName === '深部位移' ?
+                                        monitorTypeName === '内部位移' || monitorTypeName === '土体深部位移' ?
                                             <PointDetail_NBWY /> :
                                             <PointDetail_NM />
                 }
@@ -64,7 +64,7 @@ class DataMonitorContainer extends Component {
     }
     componentWillMount() {
         monitorpage.selectPoint = {};
-
+        //console.log(monitorpage.selectPoint);
         // this.socket = setInterval(_=>{monitorpage.getMapEchartData()},1000);
     }
     // componentWillUnmount(){

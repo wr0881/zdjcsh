@@ -53,6 +53,7 @@ class Monitor {
                 if (data) {
                     this.pointDetailData = data;
                 }
+                console.log(data);
                 if(data && this.selectDeep !== ''){
                     this.getMapEchartDataNBWY();
                 }
@@ -79,6 +80,7 @@ class Monitor {
             }
         }).then(res => {
             const { code, msg, data } = res.data;
+            console.log(data);
             if (code === 0) {
                 this.mapEchartData = data;
                 this.isShowMapChart = true;
@@ -130,11 +132,12 @@ class Monitor {
             }
         }).then(res => {
             const { code, msg, data } = res.data;
+            console.log('数据对比监测指标数据:',data);
             if (code === 0) {
                 this.monitorTypeData = data;
             } else {
                 this.monitorTypeData = [];
-                console.log('/common/queryMonitorTypeName code: ', code, msg);
+                console.log('/point/queryMonitorTypeName code: ', code, msg);
             }
         })
     }

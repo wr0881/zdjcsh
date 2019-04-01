@@ -91,6 +91,7 @@ class DataContrastChart extends Component {
     }
     componentWillUnmount(){
         monitorpage.contrastChartData = [];
+        
     }
     initChart() {
         const chart = echarts.init(this.refs.chart);
@@ -197,6 +198,7 @@ class DataContrastChart extends Component {
                 data: v[pointdataType]
             });
         });
+        console.log(dataAry);
         chart.setOption({
             legend: {
                 data: legend

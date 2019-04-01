@@ -75,6 +75,7 @@ class PointMap extends Component {
             }
         }).then(res => {
             const { code, msg, data } = res.data;
+            console.log(data);
             if (code === 0 || code === 2) {
                 this.setState({ blueprintData: data });
             } else {
