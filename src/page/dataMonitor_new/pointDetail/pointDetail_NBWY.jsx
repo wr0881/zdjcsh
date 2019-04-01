@@ -117,8 +117,11 @@ class PointDetail extends Component {
                             onChange={v => { monitorpage.selectDeep = v }}
                             value={monitorpage.selectDeep}
                         >
-                            {monitorpage.mapEchartData.sensorNumbers && monitorpage.mapEchartData.sensorNumbers.map((item,index) => {
+                            {/* {monitorpage.mapEchartData.sensorNumbers && monitorpage.mapEchartData.sensorNumbers.map((item,index) => {
                                 return <Option className="deepSelect" key={index} value={item}>{monitorpage.mapEchartData.sensorDeep[index]}m</Option>
+                            })} */}
+                            {monitorpage.mapEchartData.sensorNumbers && monitorpage.mapEchartData.sensorNumbers.map((item,index) => {
+                                return <Option className="deepSelect" key={index} value={item}>{item}</Option>
                             })}
                         </Select>
                         <div>
