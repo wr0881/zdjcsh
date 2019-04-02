@@ -51,10 +51,10 @@ class DataContrastChart extends Component {
                     </div>
                 </div>
 
-                <div style={{ display: toJS(monitorpage.contrastChartData) ? 'block' : 'none' }}>
+                <div style={{ display: toJS(monitorpage.contrastChartDataNBWY) ? 'block' : 'none' }}>
                     <div className='dataAnalyse-chart' ref='chart'></div>
                 </div>
-                <div style={{ display: toJS(monitorpage.contrastChartData) ? 'none' : 'block', height: '400px' }}>
+                <div style={{ display: toJS(monitorpage.contrastChartDataNBWY) ? 'none' : 'block', height: '400px' }}>
                     <span style={{ margin: '50px' }}>暂无数据信息，请选择测点!</span>
                 </div>
 
@@ -186,9 +186,9 @@ class DataContrastChart extends Component {
     setEchartData() {
         let legend = [], dataAry = [];
         const { chart, selsectWay } = this.state;
-        const contrastChartData = toJS(monitorpage.contrastChartData);
+        const contrastChartDataNBWY = toJS(monitorpage.contrastChartDataNBWY);
         const pointdataType = monitorpage.pointdataType + selsectWay;
-        contrastChartData && contrastChartData.forEach(v => {
+        contrastChartDataNBWY && contrastChartDataNBWY.forEach(v => {
             legend.push(v.monitorPointNumber);
             dataAry.push({
                 name: v.monitorPointNumber,

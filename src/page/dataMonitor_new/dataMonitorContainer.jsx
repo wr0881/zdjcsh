@@ -39,9 +39,9 @@ class DataMonitorContainer extends Component {
                                     <PointDetail_SPWY /> :
                                     // monitorTypeName === '深部位移' ?
                                     //     <PointDetail_SBWY /> :
-                                    monitorTypeName === 'GPS位移' ?
+                                    monitorTypeName === '地表位移' ?
                                         <PointDetail_GPS /> :
-                                        monitorTypeName === '内部位移' || monitorTypeName === '土体深部位移' ?
+                                        monitorTypeName === '土体深部位移' ?
                                             <PointDetail_NBWY /> :
                                             <PointDetail_NM />
                 }

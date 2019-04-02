@@ -13,7 +13,7 @@ import Library from 'page/library/library';
 import pagedata from 'store/page.js';
 import manage from 'common/image/manage.png';
 import './Detail.scss';
-import DataContrast from '../dataMonitor_new/dataContrast';
+import DataControl from '../dataControl/dataControl';
 
 const ProductComponent = _ => {
     const Status = require('component/Status/status').default;
@@ -54,25 +54,18 @@ const title = [
         component: ProductComponent,
     },
     {
-        title: '数据监控',
+        title: '数据查询',
         enTitle: 'DataMonitor',
-        icon_url: require('common/image/数据监控.png'),
-        icon_url_active: require('common/image/数据监控2.png'),
+        icon_url: require('common/image/数据对比.png'),
+        icon_url_active: require('common/image/数据对比2.png'),
         component: DataMonitor,
     },
     {
-        title: '数据查询',
-        enTitle: 'DataSelect',
+        title: '数据监控',
+        enTitle: 'DataControl',
         icon_url: require('common/image/数据监控.png'),
         icon_url_active: require('common/image/数据监控2.png'),
-        component: ProductComponent,
-    },
-    {
-        title: '数据对比',
-        enTitle: 'DataContrast',
-        icon_url: require('common/image/数据对比.png'),
-        icon_url_active: require('common/image/数据对比2.png'),
-        component: DataContrast,
+        component: DataControl,
     },
     {
         title: '视频监控',

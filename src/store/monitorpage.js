@@ -35,6 +35,7 @@ class Monitor {
     @observable pointNameData = [];
     @observable contrastChartData = [];
     @observable contrastChartDataSBWY = []; //深部位移接口数据
+    @observable contrastChartDataNBWY = [];//土地深部位移接口数据对比
     /* ui数据 */
     @observable getEchartDataLoading = false;
 
@@ -80,11 +81,11 @@ class Monitor {
             }
         }).then(res => {
             const { code, msg, data } = res.data;
-            console.log(data);
             if (code === 0) {
                 this.mapEchartData = data;
                 this.isShowMapChart = true;
                 this.timeselectLoading = false;
+                console.log(data);
                 //内部位移深度
                 if (data.sensorNumbers) {
                     this.selectDeep = data.sensorNumbers[0];
@@ -150,7 +151,7 @@ class Monitor {
             }
         }).then(res => {
             const { code, msg, data } = res.data;
-            console.log('数据对比数据:',data);
+            console.log('数据对比监测测点数据:',data);
             if (code === 0) {
                 this.pointNameData = data;
             } else {
@@ -175,20 +176,22 @@ class Monitor {
             }
         }).then(res => {
             const { code, msg, data } = res.data;
-            console.log('数据对比数据:',data);
+            console.log('数据对比echarts图表数据:',data);
             if (code === 0 || code === 2) {
                 this.contrastChartData = data.comparisonVO;
+                this.contrastChartDataNBWY = data.comparisonVO;
                 console.log(data.comparisonVO);
                 this.getEchartDataLoading = false;
                 console.log('/sector/queryComparisonData code: ', code, msg);
             } else {
                 this.contrastChartData = [];
+                this.contrastChartDataNBWY = [];
                 this.getEchartDataLoading = false;
                 console.log('/sector/queryComparisonData code: ', code, msg);
             }
         })
     }
-
+    //数据监控图表数据
 }
 
 const monitor = new Monitor();

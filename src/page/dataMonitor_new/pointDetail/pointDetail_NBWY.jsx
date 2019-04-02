@@ -42,27 +42,27 @@ class PointDetail extends Component {
                             monitorpage.getMapEchartDataNBWY();                          
                         }}
                     >查看</Button>
-                    {/* <Button
+                    <Button
                         type='primary'
                         style={{ marginLeft: '20px' }}
                         onClick={_ => {
                             monitorpage.dataContrastVisible = true;
                         }}
-                    >数据对比</Button> */}
-                    <div style={{ margin:'0px 40px' }}>
+                    >数据对比</Button>
+                    {/* <div style={{ margin:'0px 40px' }}>
                         <span style={{ padding:'0px 20px' }}>测点</span>
                         <Select
                             showSearch
                             className="point"
                             style={{ width: 200 }}
-                            onChange={v => { monitorpage.selectPointName = v }}
-                            value={monitorpage.selectPointName}
+                            onChange={v => { monitorpage.selectPoint = v }}
+                            value={monitorpage.selectPoint}
                         >
-                            {/* {monitorpage.pointDetailData && monitorpage.pointDetailData.map((item,index) => {
+                            {monitorpage.blueprintData && monitorpage.blueprintData.map((item,index) => {
                                 return <Option className="pointSelect" key={index} value={item}>{item}</Option>
-                            })} */}
+                            })}
                         </Select>
-                    </div>                   
+                    </div>                    */}
                 </div>
                 <div style={{ display: JSON.stringify(toJS(monitorpage.selectPoint)) === '{}' ? 'block' : 'none', height: '400px' }}>
                     <div style={{ height: '50px' }}></div>
@@ -131,8 +131,8 @@ class PointDetail extends Component {
                             onChange={v => { monitorpage.selectDeep = v }}
                             value={monitorpage.selectDeep}
                         >
-                            {/* {monitorpage.mapEchartData.sensorNumbers && monitorpage.mapEchartData.sensorNumbers.map((item,index) => {
-                                return <Option className="deepSelect" key={index} value={item}>{monitorpage.mapEchartData.sensorDeep[index]}m</Option>
+                            {/* {monitorpage.mapEchartData.deepDatas && monitorpage.mapEchartData.deepDatas.map((item,index) => {
+                                return <Option className="deepSelect" key={index} value={item}>{monitorpage.mapEchartData.deepDatas.sensorDeep[index]}m</Option>
                             })} */}
                             {monitorpage.mapEchartData.sensorNumbers && monitorpage.mapEchartData.sensorNumbers.map((item,index) => {
                                 return <Option className="deepSelect" key={index} value={item}>{item}</Option>
