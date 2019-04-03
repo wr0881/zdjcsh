@@ -23,7 +23,6 @@ class Monitor {
     @observable dataContrastVisible = false;
 
     /* DataConstrast */
-    //@observable dataContrastNBWY = {};
     /* 用户选择数据 */
     @observable monitorTypeName = '';
     @observable selectPointName = [];
@@ -35,7 +34,6 @@ class Monitor {
     @observable pointNameData = [];
     @observable contrastChartData = [];
     @observable contrastChartDataSBWY = []; //深部位移接口数据
-    @observable contrastChartDataNBWY = [];//土地深部位移接口数据对比
     /* ui数据 */
     @observable getEchartDataLoading = false;
 
@@ -54,8 +52,13 @@ class Monitor {
                 if (data) {
                     this.pointDetailData = data;
                 }
-                console.log(data);
-                if(data && this.selectDeep !== ''){
+                if(data && selectPoint.monitorType === 80 && this.selectDeep !== ''){
+                    this.getMapEchartDataNBWY();
+                }
+                if(data && selectPoint.monitorType === 26 && this.selectDeep !== ''){
+                    this.getMapEchartDataNBWY();
+                }
+                if(data && selectPoint.monitorType === 66 && this.selectDeep !== ''){
                     this.getMapEchartDataNBWY();
                 }
             } else {
@@ -85,7 +88,7 @@ class Monitor {
                 this.mapEchartData = data;
                 this.isShowMapChart = true;
                 this.timeselectLoading = false;
-                console.log(data);
+                console.log(data.sensorNumbers);
                 //内部位移深度
                 if (data.sensorNumbers) {
                     this.selectDeep = data.sensorNumbers[0];
@@ -101,6 +104,7 @@ class Monitor {
     @action getMapEchartDataNBWY() {
         const selectPoint = this.selectPoint;
         const selsectTime = this.selsectTimeNBWY;
+        if(selectPoint.monitorType === 66 || 26){
         axios.get('/data/queryDeepData', {
             params: {
                 sectorId: pageData.sector.sectorId,
@@ -123,6 +127,7 @@ class Monitor {
                 message.info(msg);
             }
         })
+        }
     }
 
     //数据对比监测指标
@@ -133,12 +138,11 @@ class Monitor {
             }
         }).then(res => {
             const { code, msg, data } = res.data;
-            console.log('数据对比监测指标数据:',data);
             if (code === 0) {
                 this.monitorTypeData = data;
             } else {
                 this.monitorTypeData = [];
-                console.log('/point/queryMonitorTypeName code: ', code, msg);
+                console.log('/common/queryMonitorTypeName code: ', code, msg);
             }
         })
     }
@@ -151,7 +155,6 @@ class Monitor {
             }
         }).then(res => {
             const { code, msg, data } = res.data;
-            console.log('数据对比监测测点数据:',data);
             if (code === 0) {
                 this.pointNameData = data;
             } else {
@@ -176,22 +179,17 @@ class Monitor {
             }
         }).then(res => {
             const { code, msg, data } = res.data;
-            console.log('数据对比echarts图表数据:',data);
             if (code === 0 || code === 2) {
                 this.contrastChartData = data.comparisonVO;
-                this.contrastChartDataNBWY = data.comparisonVO;
-                console.log(data.comparisonVO);
                 this.getEchartDataLoading = false;
-                console.log('/sector/queryComparisonData code: ', code, msg);
             } else {
                 this.contrastChartData = [];
-                this.contrastChartDataNBWY = [];
                 this.getEchartDataLoading = false;
                 console.log('/sector/queryComparisonData code: ', code, msg);
             }
         })
     }
-    //数据监控图表数据
+
 }
 
 const monitor = new Monitor();

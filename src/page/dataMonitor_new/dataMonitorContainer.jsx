@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Modal } from 'antd';
-//import { toJS } from 'mobx';
+import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import PointMap from './pointMap';
 import PointDetail_NM from './pointDetail/pointDetail_NM';
@@ -24,24 +24,26 @@ class DataMonitorContainer extends Component {
     }
     render() {
         const monitorTypeName = monitorpage.selectPoint.monitorTypeName;
+        const monitorType = monitorpage.selectPoint.monitorType;
+        console.log(monitorType);
         return (
             <div className='dataMonitor-wrapper'>
                 <PointMap />
-                {monitorTypeName === '渗流压力' ?
+                {monitorTypeName === '' ?
                     <PointDetail_SLYL /> :
-                    monitorTypeName === '干滩高程' ?
+                    monitorTypeName === '' ?
                         <PointDetail_GTGC /> :
-                        monitorTypeName === '库水位' ?
+                        monitorTypeName === '' ?
                             <PointDetail_KSW /> :
-                            monitorTypeName === '雨量' ?
+                            monitorTypeName === '' ?
                                 <PointDetail_YL /> :
-                                monitorTypeName === '水平位移' ?
-                                    <PointDetail_SPWY /> :
+                                // monitorTypeName === '水平位移' ?
+                                //     <PointDetail_SPWY /> :
                                     // monitorTypeName === '深部位移' ?
                                     //     <PointDetail_SBWY /> :
-                                    monitorTypeName === '地表位移' ?
+                                    monitorType === 52 ?
                                         <PointDetail_GPS /> :
-                                        monitorTypeName === '土体深部位移' ?
+                                        monitorType === 66 || monitorType === 26 || monitorType === 80 ?
                                             <PointDetail_NBWY /> :
                                             <PointDetail_NM />
                 }
@@ -64,7 +66,7 @@ class DataMonitorContainer extends Component {
     }
     componentWillMount() {
         monitorpage.selectPoint = {};
-        //console.log(monitorpage.selectPoint);
+
         // this.socket = setInterval(_=>{monitorpage.getMapEchartData()},1000);
     }
     // componentWillUnmount(){

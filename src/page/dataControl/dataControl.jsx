@@ -18,28 +18,38 @@ class DataControl extends Component {
     constructor(props) {
         super(props);
         this.state = {
+
         }
     }
-    render() {        
+    render() { 
+        const monitorTypeName = monitorpage.monitorTypeName;
+        console.log('获取的指标类型:',monitorTypeName);   
+        const { pointDetailData } = monitorpage;
+        console.log('测点详细数据:',pointDetailData); 
+        const { monitorTypeData } = monitorpage.monitorTypeData;
+        console.log('监控数据:',monitorTypeData);
         return (
             <div className='dataMonitor-wrapper'>
-                <div className="dataAnalyse-operate-select" style={{ marginTop:'40px' }}>
+                <div className="point-detail-operate" style={{ marginTop:'40px' }}>
                     <span style={{ padding:'0 20px' }}>选择指标</span>
                     <CheckboxGroup
                         key={Math.random()}
-                        defaultValue={monitorpage.monitorTypeName}
-                        //onChange={e => { monitorpage.monitorTypeName = e.target.value }}
+                        //defaultValue={monitorpage.selectPointName}
+                        //onChange={e => { monitorpage.monitorTypeData.monitorTypeName = e.target.checked }}
                     >
                         {monitorpage.monitorTypeData.map(v => {
-                            return <Checkbox key={v.monitorTypeName} value={v.monitorTypeName}>{v.monitorTypeName}</Checkbox>;
+                            return <Checkbox key={v.monitorTypeName} value={v.monitorTypeName} defaultChecked={false}>{v.monitorTypeName}</Checkbox>;
                         })}
                     </CheckboxGroup>
                 </div>
                 <div className="point-detail-content">
-                    <div className="dataAnalyse-chart-wrapper" style={{ display: toJS() ? 'none' : 'block', width:'40%' }}>
+                    <div className="dataAnalyse-chart-wrapper" style={{ display: toJS(monitorpage.monitorTypeData).length ? 'none' : 'block', width:'80%' }}>
                         <div className="dataAnalyse-type-wrapper" style={{ margin:'10px 40px 10px' }}>
                             <div className="dataAnalyse-type-btnGrounp">
-                                <RadioGroup key={Math.random()} defaultValue={monitorpage.pointdataType}
+                                <RadioGroup 
+                                    key={Math.random()} 
+                                    size='small'
+                                    defaultValue={monitorpage.pointdataType}
                                     onChange={e => {
                                         monitorpage.pointdataType = e.target.value;
                                         this.setState(
@@ -54,18 +64,60 @@ class DataControl extends Component {
                                 </RadioGroup>
                             </div>
                         </div>
-
-                        <div style={{ display: toJS(monitorpage.contrastChartData).length ? 'block' : 'none' }}>
-                            <div className='dataControl-chart' ref='chart'></div>
+                        <div style={{ display: toJS(monitorpage.monitorTypeData).length ? 'block' : 'none' }}>
+                            <div className='dataAnalyse-chart' ref='chart'></div>
                         </div>
-                        <div style={{ display: toJS(monitorpage.contrastChartData).length ? 'none' : 'block', height: '200px' }}>
+                        <div style={{ display: toJS(monitorpage.monitorTypeData).length ? 'none' : 'block', height: '300px' }}>
                             <span style={{ margin: '50px' }}>暂无数据信息，请选择指标！!</span>
                         </div>
                     </div>
-                    <div className="dataAnalyse-chart-wrapper" style={{ display: toJS() ? 'none' : 'block', width:'40%' }}>
+                    <div className="point-detail-table-wrapper" style={{ display: toJS(monitorpage.monitorTypeData).length ? 'none' : 'block', width:'20%', height: '300px' }}>
+                        <div className="point-detail-table3">
+                            <div className="point-detail-table3-item">
+                                <span>实时值</span>
+                                <span>{pointDetailData.monitorPointNumber || '暂无数据'}</span>
+                            </div>
+                            <div className="point-detail-table3-item">
+                                <span>累计值</span>
+                                <span>{pointDetailData.monitorPointNumber || '暂无数据'}</span>
+                            </div>
+                            <div className="point-detail-table3-item">
+                                <span>单次值</span>
+                                <span>{pointDetailData.monitorPointNumber || '暂无数据'}</span>
+                            </div>
+                            <div className="point-detail-table3-item">
+                                <span>速率值</span>
+                                <span>{pointDetailData.monitorPointNumber || '暂无数据'}</span>
+                            </div>
+                            <div className="point-detail-table3-item">
+                                <span>最大值</span>
+                                <span>{pointDetailData.monitorPointNumber || '暂无数据'}</span>
+                            </div>
+                            <div className="point-detail-table3-item">
+                                <span>最小值</span>
+                                <span>{pointDetailData.monitorPointNumber || '暂无数据'}</span>
+                            </div>
+                            <div className="point-detail-table3-item">
+                                <span>一级告警</span>
+                                <span>{pointDetailData.monitorPointNumber || '暂无数据'}</span>
+                            </div>
+                            <div className="point-detail-table3-item">
+                                <span>二级告警</span>
+                                <span>{pointDetailData.monitorPointNumber || '暂无数据'}</span>
+                            </div>
+                            <div className="point-detail-table3-item">
+                                <span>三级告警</span>
+                                <span>{pointDetailData.monitorPointNumber || '暂无数据'}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="dataAnalyse-chart-wrapper" style={{ display: toJS() ? 'none' : 'block', width:'80%' }}>
                         <div className="dataAnalyse-type-wrapper" style={{ margin:'10px 40px 10px' }}>
                             <div className="dataAnalyse-type-btnGrounp">
-                                <RadioGroup key={Math.random()} defaultValue={monitorpage.pointdataType}
+                                <RadioGroup 
+                                    key={Math.random()} 
+                                    size='small'
+                                    defaultValue={monitorpage.pointdataType}
                                     onChange={e => {
                                         monitorpage.pointdataType = e.target.value;
                                         this.setState(
@@ -84,66 +136,56 @@ class DataControl extends Component {
                         <div style={{ display: toJS(monitorpage.contrastChartData).length ? 'block' : 'none' }}>
                             <div className='dataAnalyse-chart' ref='chart'></div>
                         </div>
-                        <div style={{ display: toJS(monitorpage.contrastChartData).length ? 'none' : 'block', height: '200px' }}>
+                        <div style={{ display: toJS(monitorpage.contrastChartData).length ? 'none' : 'block', height: '300px' }}>
                             <span style={{ margin: '50px' }}>暂无数据信息，请选择指标！!</span>
                         </div>
-                    </div>
-                    <div className="dataAnalyse-chart-wrapper" style={{ width:'40%' }}>
-                        <div style={{ display: toJS(monitorpage.contrastChartData).length ? 'block' : 'none' }}>
-                            <div className='dataAnalyse-chart' ref='chart'></div>
-                        </div>
-                        <div style={{ display: toJS(monitorpage.contrastChartData).length ? 'none' : 'block', height: '200px' }}>
-                            <span style={{ margin: '50px' }}>暂无数据信息，请选择指标！!</span>
-                        </div>
-                    </div>
-                    <div className="dataAnalyse-chart-wrapper" style={{ width:'40%' }}>
-                        <div className="dataAnalyse-type-wrapper" style={{ margin:'10px 40px 10px' }}>
-                            <div className="dataAnalyse-type-btnGrounp">
-                                <RadioGroup key={Math.random()} defaultValue={monitorpage.pointdataType}
-                                    onChange={e => {
-                                        monitorpage.pointdataType = e.target.value;
-                                        this.setState(
-                                            // { pointdataType: e.target.value },
-                                            // this.setEchartData.bind(this, e.target.value)
-                                        )
-                                    }}
-                                >
-                                    <RadioButton value="totalChange4">累计变化量</RadioButton>
-                                    <RadioButton value="singleChange4">单次变化量</RadioButton>
-                                    <RadioButton value="speedChange4">变化速率</RadioButton>
-                                </RadioGroup>
+                    </div>   
+                    <div className="point-detail-table-wrapper" style={{width:'20%'}}>
+                        <div className="point-detail-table3">
+                            <div className="point-detail-table3-item">
+                                <span>实时值</span>
+                                <span>{pointDetailData.monitorPointNumber || '暂无数据'}</span>
+                            </div>
+                            <div className="point-detail-table3-item">
+                                <span>累计值</span>
+                                <span>{pointDetailData.monitorPointNumber || '暂无数据'}</span>
+                            </div>
+                            <div className="point-detail-table3-item">
+                                <span>单次值</span>
+                                <span>{pointDetailData.monitorPointNumber || '暂无数据'}</span>
+                            </div>
+                            <div className="point-detail-table3-item">
+                                <span>速率值</span>
+                                <span>{pointDetailData.monitorPointNumber || '暂无数据'}</span>
+                            </div>
+                            <div className="point-detail-table3-item">
+                                <span>最大值</span>
+                                <span>{pointDetailData.monitorPointNumber || '暂无数据'}</span>
+                            </div>
+                            <div className="point-detail-table3-item">
+                                <span>最小值</span>
+                                <span>{pointDetailData.monitorPointNumber || '暂无数据'}</span>
+                            </div>
+                            <div className="point-detail-table3-item">
+                                <span>一级告警</span>
+                                <span>{pointDetailData.monitorPointNumber || '暂无数据'}</span>
+                            </div>
+                            <div className="point-detail-table3-item">
+                                <span>二级告警</span>
+                                <span>{pointDetailData.monitorPointNumber || '暂无数据'}</span>
+                            </div>
+                            <div className="point-detail-table3-item">
+                                <span>三级告警</span>
+                                <span>{pointDetailData.monitorPointNumber || '暂无数据'}</span>
                             </div>
                         </div>
-
-                        <div style={{ display: toJS(monitorpage.contrastChartData).length ? 'block' : 'none' }}>
-                            <div className='dataAnalyse-chart' ref='chart'></div>
-                        </div>
-                        <div style={{ display: toJS(monitorpage.contrastChartData).length ? 'none' : 'block', height: '200px' }}>
-                            <span style={{ margin: '50px' }}>暂无数据信息，请选择指标！!</span>
-                        </div>
-                    </div>
-                    {/* <div style={{ display: JSON.stringify(toJS(monitorpage.selectPoint)) === '{}' ? 'block' : 'none',width:'40%', height: '200px',float:'left' }}>
-                        <div style={{ height: '50px' }}></div>
-                        <span style={{ padding: '50px' }}>暂无数据信息，请选择指标!</span>
-                    </div>
-                    <div style={{ display: JSON.stringify(toJS(monitorpage.selectPoint)) === '{}' ? 'block' : 'none',width:'40%', height: '200px',float:'left' }}>
-                        <div style={{ height: '50px' }}></div>
-                        <span style={{ padding: '50px' }}>暂无数据信息，请选择指标!</span>
-                    </div>
-                    <div style={{ display: JSON.stringify(toJS(monitorpage.selectPoint)) === '{}' ? 'block' : 'none',width:'40%', height: '200px',float:'left' }}>
-                        <div style={{ height: '50px' }}></div>
-                        <span style={{ padding: '50px' }}>暂无数据信息，请选择指标!</span>
-                    </div>
-                    <div style={{ display: JSON.stringify(toJS(monitorpage.selectPoint)) === '{}' ? 'block' : 'none',width:'40%', height: '200px',float:'left' }}>
-                        <div style={{ height: '50px' }}></div>
-                        <span style={{ padding: '50px' }}>暂无数据信息，请选择指标!</span>
-                    </div> */}
-                </div>            
+                    </div>                    
+                </div>
+                         
             </div>
         );
     }
     componentDidMount() {
-        this.initChart();
         monitorpage.getMonitorTypeData();
         autorun(() => {
             if (monitorpage.monitorTypeName) {

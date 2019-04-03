@@ -49,20 +49,6 @@ class PointDetail extends Component {
                             monitorpage.dataContrastVisible = true;
                         }}
                     >数据对比</Button>
-                    {/* <div style={{ margin:'0px 40px' }}>
-                        <span style={{ padding:'0px 20px' }}>测点</span>
-                        <Select
-                            showSearch
-                            className="point"
-                            style={{ width: 200 }}
-                            onChange={v => { monitorpage.selectPoint = v }}
-                            value={monitorpage.selectPoint}
-                        >
-                            {monitorpage.blueprintData && monitorpage.blueprintData.map((item,index) => {
-                                return <Option className="pointSelect" key={index} value={item}>{item}</Option>
-                            })}
-                        </Select>
-                    </div>                    */}
                 </div>
                 <div style={{ display: JSON.stringify(toJS(monitorpage.selectPoint)) === '{}' ? 'block' : 'none', height: '400px' }}>
                     <div style={{ height: '50px' }}></div>
@@ -131,12 +117,15 @@ class PointDetail extends Component {
                             onChange={v => { monitorpage.selectDeep = v }}
                             value={monitorpage.selectDeep}
                         >
-                            {/* {monitorpage.mapEchartData.deepDatas && monitorpage.mapEchartData.deepDatas.map((item,index) => {
-                                return <Option className="deepSelect" key={index} value={item}>{monitorpage.mapEchartData.deepDatas.sensorDeep[index]}m</Option>
-                            })} */}
                             {monitorpage.mapEchartData.sensorNumbers && monitorpage.mapEchartData.sensorNumbers.map((item,index) => {
-                                return <Option className="deepSelect" key={index} value={item}>{item}</Option>
+                                return <Option className="deepSelect" key={index} value={item}>{monitorpage.mapEchartData.sensorDeep[index]}m</Option>
                             })}
+                            {/* {monitorpage.mapEchartData.sensorNumbers && monitorpage.mapEchartData.sensorNumbers.map((item) => {
+                                return <Option className="deepSelect" key={item} value={item}>{item}</Option>
+                            })} */}
+                            {/* {monitorpage.mapEchartData.sensorNumbers && monitorpage.mapEchartData.sensorNumbers.map((item,index) => {
+                                return <Option className="deepSelect" key={index} value={item}>{item}</Option>
+                            })} */}
                         </Select>
                         <div>
                             <div className="point-detail-chart" ref='chart2'></div>
@@ -318,11 +307,11 @@ class PointDetail extends Component {
             chart1.resize();
             chart2.resize();
         });
-        
     }
     setEchartLine(data) {
         const chart1 = this.chart1;
         const monitorTypeName = monitorpage.selectPoint.monitorTypeName;
+
         const totalChangeUnit = getUnit(monitorTypeName).unitA;
         let totalChangeX = [], totalChangeY = [], Depth = [];
         data.deepDatas && data.deepDatas.forEach(v => {

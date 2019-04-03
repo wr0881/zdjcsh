@@ -8,13 +8,13 @@ import DataContrastChart_GTGC from './dataContrastChart/dataContrastChart_GTGC';
 import DataContrastChart_KSW from './dataContrastChart/dataContrastChart_KSW';
 import DataContrastChart_YL from './dataContrastChart/dataContrastChart_YL';
 import DataContrastChart_SPWY from './dataContrastChart/dataContrastChart_SPWY';
-//import DataContrastChart_SBWY from './dataContrastChart/dataContrastChart_SBWY';
+import DataContrastChart_SBWY from './dataContrastChart/dataContrastChart_SBWY';
 import DataContrastChart_GPS from './dataContrastChart/dataContrastChart_GPS';
 import DataContrastChart_NBWY from './dataContrastChart/dataContrastChart_NBWY';
 import monitorpage from 'store/monitorpage.js';
 
 const CheckboxGroup = Checkbox.Group;
-//const RadioButton = Radio.Button;
+const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
 @observer
@@ -43,11 +43,11 @@ class DataContrast extends Component {
                                     <DataContrastChart_YL /> :
                                     monitorTypeName === 21 ?
                                         <DataContrastChart_SPWY /> :
-                                        monitorTypeName === 52 ?
+                                        monitorTypeName == 52 ?
                                             <DataContrastChart_GPS /> :
                                             // monitorTypeName === 26 ?
                                             //     <DataContrastChart_SBWY /> :
-                                            monitorTypeName === 66 ?
+                                            monitorTypeName === 66 || monitorTypeName === 26 || monitorTypeName === 80 ?
                                                 <DataContrastChart_NBWY /> :
                                                 <DataContrastChart_NM />
                 }
@@ -78,7 +78,7 @@ class DataContrast extends Component {
                     </div>
                     <div className="dataAnalyse-operate-btn">
                         <Button
-                            style={{ width: '40%', height: '35px' }}
+                            style={{ width: '100px', height: '35px' }}
                             onClick={() => {
                                 monitorpage.monitorTypeName = null;
                                 monitorpage.selectPointName = null;
@@ -87,7 +87,7 @@ class DataContrast extends Component {
                             }}
                         >重置</Button>
                         <Button
-                            style={{ marginLeft: '30px', width: '40%', height: '35px' }}
+                            style={{ marginLeft: '30px', width: '100px', height: '35px' }}
                             type='primary'
                             loading={monitorpage.getEchartDataLoading}
                             onClick={() => {
@@ -102,6 +102,7 @@ class DataContrast extends Component {
     }
     componentDidMount() {
         monitorpage.getMonitorTypeData();
+
         autorun(() => {
             if (monitorpage.monitorTypeName) {
                 monitorpage.getPointName();
