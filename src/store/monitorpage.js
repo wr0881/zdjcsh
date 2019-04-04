@@ -163,6 +163,26 @@ class Monitor {
             }
         })
     }
+    //获取数据监控指标下的测点数据
+    @action getDataMonitor(){
+        axios.get('',{
+            params:{
+
+            }
+        }).then({
+
+        })
+    }
+    //获取监控指标所有测点图表数据
+    @action getEchartTypeData() {
+        axios.get('',{
+            params:{
+
+            }
+        }).then({
+            
+        })
+    }
     //数据对比echart图表数据
     @action getEchartData() {
         let beginTime = '', endTime = '';
@@ -189,7 +209,7 @@ class Monitor {
             }
         })
     }
-
+    
 }
 
 const monitor = new Monitor();
