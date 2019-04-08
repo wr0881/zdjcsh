@@ -14,17 +14,15 @@ class PointMap extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            /* 布点图图片数据 */
-            blueprintData: []
+            
         }
     }
     render() {
-        const { blueprintData } = this.state;
         return (
             <div className="point-map-wrapper">
                 <div className="swiper-container">
                     <div className="swiper-wrapper" style={{ width: '800px', height: '300px' }}>
-                        {blueprintData.map(v => {
+                        {monitorpage.blueprintData.map(v => {
                             return (
                                 <div key={Math.random()} className="swiper-slide">
                                     <Hot
@@ -75,19 +73,10 @@ class PointMap extends Component {
             }
         }).then(res => {
             const { code, msg, data } = res.data;
-            console.log(data);
-            // const pointNumber = [];
-            // const arrPoint = data[0].monitorPoints;
-            // console.log(arrPoint);
-            // for(var i=0;i<data[0].monitorPoints.length;i++){
-            //     var getPointNumber = data[0].monitorPoints.monitorPointNumber;
-            //     pointNumber.push(getPointNumber);
-            // };
-            // console.log(pointNumber);
             if (code === 0 || code === 2) {
-                this.setState({ blueprintData: data });
+                monitorpage.blueprintData=data;
             } else {
-                this.setState({ blueprintData: [] });
+                monitorpage.blueprintData=[];
                 message.info(msg);
                 console.log('/sector/queryImagesMonitorPoint code: ', code, msg);
             }

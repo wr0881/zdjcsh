@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Modal } from 'antd';
-import { toJS } from 'mobx';
+import { Modal, Badge, Icon } from 'antd';
 import { observer } from 'mobx-react';
 import PointMap from './pointMap';
 import PointDetail_NM from './pointDetail/pointDetail_NM';
@@ -28,6 +27,15 @@ class DataMonitorContainer extends Component {
         console.log(monitorType);
         return (
             <div className='dataMonitor-wrapper'>
+                {/* <div className='pointmap-explain'>
+                    <Badge status="success" text="监测中" />
+                    <Badge status="error" text="监测异常" />
+                    <Badge status="default" text="监测完毕" />
+                    <span style={{ color: '#faad14' }}>
+                        <Icon type="exclamation-circle" />
+                        <span style={{ marginLeft: '8px', color: 'rgba(0, 0, 0, 0.65)' }}>点击下图圆点查看测点数据信息!</span>
+                    </span>
+                </div> */}
                 <PointMap />
                 {monitorTypeName === '' ?
                     <PointDetail_SLYL /> :
@@ -47,7 +55,6 @@ class DataMonitorContainer extends Component {
                                             <PointDetail_NBWY /> :
                                             <PointDetail_NM />
                 }
-                {/* <PointDetail /> */}
                 <Modal
                     key='dataAnalyse'
                     title={<div className='user-change-pwd'>数据对比</div>}

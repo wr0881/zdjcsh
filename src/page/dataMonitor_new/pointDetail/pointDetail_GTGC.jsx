@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import echarts from 'echarts';
 import { DatePicker, Button } from 'antd';
 import monitorpage from 'store/monitorpage.js';
-//import { getTime } from 'common/js/util.js';
+import { getUnit } from 'common/js/util.js';
 
 const { RangePicker } = DatePicker;
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
@@ -45,11 +45,11 @@ class PointDetail extends Component {
                     >数据对比</Button>
                 </div>
                 <div style={{ display: JSON.stringify(toJS(monitorpage.selectPoint)) === '{}' ? 'block' : 'none', height: '400px' }}>
-                    <div style={{height:'50px'}}></div>
+                    <div style={{ height: '50px' }}></div>
                     <span style={{ padding: '50px' }}>暂无数据信息，请选择测点!</span>
                 </div>
                 <div className="point-detail-content" style={{
-                    display: JSON.stringify(toJS(monitorpage.selectPoint)) === '{}' ? 'none' : 'block'
+                    display: JSON.stringify(toJS(monitorpage.selectPoint)) === '{}' ? 'none' : 'flex'
                 }}>
                     <div className="point-detail-table-wrapper">
                         <div className="point-detail-table1">
@@ -149,7 +149,7 @@ class PointDetail extends Component {
                 containLabel: true
             },
             legend: {
-                data: ['高度','宽度'],
+                data: [],
                 selectedMode: 'single'
             },
             xAxis: {
@@ -183,9 +183,7 @@ class PointDetail extends Component {
                     }
                 }
             },
-            series: [
-                
-            ]
+            series: []
         };
 
         chart.setOption(option);
@@ -198,24 +196,30 @@ class PointDetail extends Component {
     }
     setEchartLine(data) {
         const chart = this.chart;
-        let time = [], singleChange = [], totalChange = [];
+        const monitorTypeName = monitorpage.selectPoint.monitorTypeName;
+        const totalChangeUnit = getUnit(monitorTypeName).unitA;
+        let time = [], singleChange = [], totalChange = [], speedChange = [];
         data.commonDataVOs.forEach(v => {
             time.push(v.createDate);
             singleChange.push(v.singleChange);
             totalChange.push(v.totalChange);
         });
         chart && chart.setOption({
+            legend: {
+                data: ['高度' + totalChangeUnit, '宽度' + totalChangeUnit],
+                selectedMode: 'single'
+            },
             xAxis: {
                 data: time
             },
             series: [
                 {
-                    name: '高度',
+                    name: '高度' + totalChangeUnit,
                     type: 'line',
                     data: totalChange
                 },
                 {
-                    name: '宽度',
+                    name: '宽度' + totalChangeUnit,
                     type: 'line',
                     data: singleChange
                 }

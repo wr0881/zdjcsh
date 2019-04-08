@@ -28,9 +28,12 @@ class PointDetail extends Component {
             <div className="point-detail-wrapper">
                 <div className="point-detail-operate">
                     <span>时间区间</span>
-                    <RangePicker showTime format={dateFormat} defaultValue={monitorpage.selsectTimeNBWY}
+                    <RangePicker showTime format={dateFormat} defaultValue={monitorpage.selsectTime}
                         onOk={v => {
                             monitorpage.selsectTime = v;
+                            monitorpage.timeselectLoading = true;
+                            monitorpage.getMapEchartData();
+                            monitorpage.getMapEchartDataNBWY();
                         }}
                     />
                     <Button
@@ -55,7 +58,7 @@ class PointDetail extends Component {
                     <span style={{ padding: '50px' }}>暂无数据信息，请选择测点!</span>
                 </div>
                 <div className="point-detail-content" style={{
-                    display: JSON.stringify(toJS(monitorpage.selectPoint)) === '{}' ? 'none' : 'block'
+                    display: JSON.stringify(toJS(monitorpage.selectPoint)) === '{}' ? 'none' : 'flex'
                 }}>
                     <div className="point-detail-table-wrapper" style={{ width: '20%' }}>
                         <div className="point-detail-table3">
@@ -109,7 +112,7 @@ class PointDetail extends Component {
                         width: '50%',
                         display: monitorpage.isShowMapChart ? 'block' : 'none'
                     }}>
-                        <span>深度</span>
+                        <span style={{ marginRight:'10px' }}>深度</span>
                         <Select
                             showSearch
                             className="deep"
@@ -320,6 +323,10 @@ class PointDetail extends Component {
             totalChangeY.push(v.totalChangeY);
         });
         chart1 && chart1.setOption({
+            legend: {
+                data: ['X通道' + totalChangeUnit, 'Y通道' + totalChangeUnit],
+                //selectedMode: 'single'
+            },
             xAxis: {
                 data: Depth
             },
@@ -355,6 +362,10 @@ class PointDetail extends Component {
         });
         
         chart2 && chart2.setOption({
+            legend: {
+                data: ['深度X通道' + measuredDataUnit, '深度Y通道' + measuredDataUnit],
+                //selectedMode: 'single'
+            },
             xAxis: {
                 data: time
             },

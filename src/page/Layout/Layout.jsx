@@ -38,7 +38,7 @@ class Layout extends Component {
     }
     componentDidMount(){
         axios.get('/sector/queryMonitorUnit').then(res => {
-            const { data } = res.data;
+            const { code, data, msg } = res.data;
             unit.unit = data;
             console.log(data);
         })

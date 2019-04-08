@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { autorun, toJS } from 'mobx';
-//import { react } from 'react.eval';
 import { observer } from 'mobx-react';
 import echarts from 'echarts';
 import { Radio } from 'antd';
@@ -51,10 +50,10 @@ class DataContrastChart extends Component {
                     </div>
                 </div>
 
-                <div style={{ display: toJS(monitorpage.contrastChartDataNBWY) ? 'block' : 'none' }}>
+                <div style={{ display: toJS(monitorpage.contrastChartData) ? 'block' : 'none' }}>
                     <div className='dataAnalyse-chart' ref='chart'></div>
                 </div>
-                <div style={{ display: toJS(monitorpage.contrastChartDataNBWY) ? 'none' : 'block', height: '400px' }}>
+                <div style={{ display: toJS(monitorpage.contrastChartData) ? 'none' : 'block', height: '400px' }}>
                     <span style={{ margin: '50px' }}>暂无数据信息，请选择测点!</span>
                 </div>
 
@@ -91,7 +90,6 @@ class DataContrastChart extends Component {
     }
     componentWillUnmount(){
         monitorpage.contrastChartData = [];
-        
     }
     initChart() {
         const chart = echarts.init(this.refs.chart);
@@ -186,9 +184,9 @@ class DataContrastChart extends Component {
     setEchartData() {
         let legend = [], dataAry = [];
         const { chart, selsectWay } = this.state;
-        const contrastChartDataNBWY = toJS(monitorpage.contrastChartDataNBWY);
+        const contrastChartData = toJS(monitorpage.contrastChartData);
         const pointdataType = monitorpage.pointdataType + selsectWay;
-        contrastChartDataNBWY && contrastChartDataNBWY.forEach(v => {
+        contrastChartData && contrastChartData.forEach(v => {
             legend.push(v.monitorPointNumber);
             dataAry.push({
                 name: v.monitorPointNumber,
@@ -198,7 +196,6 @@ class DataContrastChart extends Component {
                 data: v[pointdataType]
             });
         });
-        console.log(dataAry);
         chart.setOption({
             legend: {
                 data: legend

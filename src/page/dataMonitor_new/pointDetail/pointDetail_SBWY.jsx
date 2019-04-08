@@ -50,7 +50,7 @@ class PointDetail extends Component {
                     <span style={{ padding: '50px' }}>暂无数据信息，请选择测点!</span>
                 </div>
                 <div className="point-detail-content" style={{
-                    display: JSON.stringify(toJS(monitorpage.selectPoint)) === '{}' ? 'none' : 'block'
+                    display: JSON.stringify(toJS(monitorpage.selectPoint)) === '{}' ? 'none' : 'flex'
                 }}>
                     <div className="point-detail-table-wrapper">
                         <div className="point-detail-table1">

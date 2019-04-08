@@ -7,13 +7,15 @@ import PeopleInformation from 'page/peopleInformation/info';
 import DeviceInformation from 'page/deviceInformation/info';
 import BluePrint from 'page/blueprint/blueprint';
 import DataMonitor from 'page/dataMonitor_new/dataMonitorContainer';
+import ComplexAnalyse from 'page/complexanalyse/complexanalyse';
+import DataControl from 'page/dataControl/dataControl';
+import VideoMonitor from 'page/videomonitor/videomonitor';
 import SourceRisk from 'page/risk/risk';
 import AlarmDetail from 'page/alarmdetail/alarmdetail';
 import Library from 'page/library/library';
 import pagedata from 'store/page.js';
 import manage from 'common/image/manage.png';
 import './Detail.scss';
-import DataControl from '../dataControl/dataControl';
 
 const ProductComponent = _ => {
     const Status = require('component/Status/status').default;
@@ -56,8 +58,8 @@ const title = [
     {
         title: '数据查询',
         enTitle: 'DataMonitor',
-        icon_url: require('common/image/数据对比.png'),
-        icon_url_active: require('common/image/数据对比2.png'),
+        icon_url: require('common/image/数据监控.png'),
+        icon_url_active: require('common/image/数据监控2.png'),
         component: DataMonitor,
     },
     {
@@ -65,14 +67,21 @@ const title = [
         enTitle: 'DataControl',
         icon_url: require('common/image/数据监控.png'),
         icon_url_active: require('common/image/数据监控2.png'),
-        component: DataControl,
+        component: ProductComponent,
+    },
+    {
+        title: '综合分析',
+        enTitle: 'ComplexAnalyse',
+        icon_url: require('common/image/数据监控.png'),
+        icon_url_active: require('common/image/数据监控2.png'),
+        component: ComplexAnalyse,
     },
     {
         title: '视频监控',
         enTitle: 'VideoMonitor',
         icon_url: require('common/image/视频监控.png'),
         icon_url_active: require('common/image/视频监控2.png'),
-        component: ProductComponent,
+        component: VideoMonitor,
     },
     {
         title: '危险源',

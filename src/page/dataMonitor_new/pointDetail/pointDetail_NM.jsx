@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-//import axios from 'axios';
 import { autorun, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import echarts from 'echarts';
-import { DatePicker, Button } from 'antd';
+import { DatePicker, Select, Button } from 'antd';
 import monitorpage from 'store/monitorpage.js';
 import { getUnit } from 'common/js/util.js';
 
 const { RangePicker } = DatePicker;
+const { Option } = Select;
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
 
 @observer
@@ -28,6 +28,8 @@ class PointDetail extends Component {
                     <RangePicker showTime format={dateFormat} defaultValue={monitorpage.selsectTime}
                         onOk={v => {
                             monitorpage.selsectTime = v;
+                            monitorpage.timeselectLoading = true;
+                            monitorpage.getMapEchartData();
                         }}
                     />
                     <Button
@@ -45,13 +47,26 @@ class PointDetail extends Component {
                             monitorpage.dataContrastVisible = true;
                         }}
                     >数据对比</Button>
+                    <div style={{ flex: "1 1 auto" }}>
+                        <Select
+                            showSearch
+                            style={{ width: 200, float: 'right' }}
+                            placeholder="选择测点"
+                            value={monitorpage.selectPoint.monitorPointNumber}
+                            onChange={v => { monitorpage.selectPoint = JSON.parse(v) }}
+                        >
+                            {toJS(monitorpage.selectPointList).map(v => {
+                                return <Option key={v.monitorPointNumber} value={JSON.stringify(v)}>{v.monitorPointNumber}</Option>
+                            })}
+                        </Select>
+                    </div>
                 </div>
                 <div style={{ display: JSON.stringify(toJS(monitorpage.selectPoint)) === '{}' ? 'block' : 'none', height: '400px' }}>
                     <div style={{ height: '50px' }}></div>
                     <span style={{ padding: '50px' }}>暂无数据信息，请选择测点!</span>
                 </div>
                 <div className="point-detail-content" style={{
-                    display: JSON.stringify(toJS(monitorpage.selectPoint)) === '{}' ? 'none' : 'block'
+                    display: JSON.stringify(toJS(monitorpage.selectPoint)) === '{}' ? 'none' : 'flex'
                 }}>
                     <div className="point-detail-table-wrapper">
                         <div className="point-detail-table1">
@@ -60,20 +75,8 @@ class PointDetail extends Component {
                                 <span>{pointDetailData.monitorPointNumber || '暂无数据'}</span>
                             </div>
                             <div className="point-detail-table1-item">
-                                <span>终端通道</span>
-                                <span>{pointDetailData.terminalChannel || '暂无数据'}</span>
-                            </div>
-                            <div className="point-detail-table1-item">
-                                <span>传感器编号</span>
-                                <span>{pointDetailData.sensorNumber || '暂无数据'}</span>
-                            </div>
-                            <div className="point-detail-table1-item">
                                 <span>检测指标</span>
                                 <span>{pointDetailData.monitorTypeName || '暂无数据'}</span>
-                            </div>
-                            <div className="point-detail-table1-item">
-                                <span>采集器编号</span>
-                                <span>{pointDetailData.terminalNumber || '暂无数据'}</span>
                             </div>
                             <div className="point-detail-table1-item">
                                 <span>一级告警</span>
@@ -170,6 +173,8 @@ class PointDetail extends Component {
                 type: 'category',
                 boundaryGap: false,
                 axisLine: {
+                    symbol: ['none', 'arrow'],
+                    onZero: false,
                     lineStyle: {
                         color: '#BFBFBF'
                     }
@@ -189,9 +194,11 @@ class PointDetail extends Component {
                     }
                 },
                 axisLabel: {
+                    showMaxLabel: false,
                     color: '#545454'
                 },
                 axisLine: {
+                    symbol: ['none', 'arrow'],
                     lineStyle: {
                         color: '#BFBFBF'
                     }
@@ -232,6 +239,9 @@ class PointDetail extends Component {
             },
             xAxis: {
                 data: time
+            },
+            yAxis: {
+                name: `单位: ${singleChangeUnit}`
             },
             series: [
                 {

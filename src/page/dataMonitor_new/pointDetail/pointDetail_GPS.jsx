@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
-//import axios from 'axios';
 import { autorun, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import echarts from 'echarts';
-import { DatePicker, Button } from 'antd';
-//import pagedata from 'store/page.js';
+import { DatePicker ,Button } from 'antd';
 import monitorpage from 'store/monitorpage.js';
 import { getUnit } from 'common/js/util.js';
 
-//const RadioButton = Radio.Button;
-//const RadioGroup = Radio.Group;
 const { RangePicker } = DatePicker;
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
 
@@ -54,7 +50,7 @@ class PointDetail extends Component {
                     <span style={{ padding: '50px' }}>暂无数据信息，请选择测点!</span>
                 </div>
                 <div className="point-detail-content" style={{
-                    display: JSON.stringify(toJS(monitorpage.selectPoint)) === '{}' ? 'none' : 'block'
+                    display: JSON.stringify(toJS(monitorpage.selectPoint)) === '{}' ? 'none' : 'flex'
                 }}>
                     <div className="point-detail-table-wrapper">
                         <div className="point-detail-table1">
@@ -225,7 +221,6 @@ class PointDetail extends Component {
         const monitorTypeName = monitorpage.selectPoint.monitorTypeName;
         const totalChangeUnit = getUnit(monitorTypeName).unitA;
         let time = [], totalChangeX = [], totalChangeY = [], totalChangeZ = [];
-        console.log(data);
         data.commonDataVOs && data.commonDataVOs.forEach(v => {
             time.push(v.createDate);
             totalChangeX.push(v.totalChangeX);
@@ -233,6 +228,10 @@ class PointDetail extends Component {
             totalChangeZ.push(v.totalChangeZ);
         });
         chart && chart.setOption({
+            legend: {
+                data: ['累计变化量X'+ totalChangeUnit, '累计变化量Y'+ totalChangeUnit, '累计变化量Z'+ totalChangeUnit],
+                //selectedMode: 'single'
+            },
             xAxis: {
                 data: time
             },

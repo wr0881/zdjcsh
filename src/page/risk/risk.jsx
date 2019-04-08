@@ -165,7 +165,7 @@ class Library extends Component {
             jobActivity,
             type
         })).then(res => {
-            const { code, data } = res.data;
+            const { code, msg, data } = res.data;
             if (code === 0) {
                 const dataSource = data.map(v => {
                     return { ...v, key: Math.random() }

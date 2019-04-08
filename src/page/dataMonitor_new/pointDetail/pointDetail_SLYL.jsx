@@ -3,9 +3,8 @@ import { autorun, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import echarts from 'echarts';
 import { DatePicker, Button } from 'antd';
-//import pagedata from 'store/page.js';
 import monitorpage from 'store/monitorpage.js';
-//import { getTime } from 'common/js/util.js';
+import { getUnit } from 'common/js/util.js';
 
 const { RangePicker } = DatePicker;
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
@@ -50,7 +49,7 @@ class PointDetail extends Component {
                     <span style={{ padding: '50px' }}>暂无数据信息，请选择测点!</span>
                 </div>
                 <div className="point-detail-content" style={{
-                    display: JSON.stringify(toJS(monitorpage.selectPoint)) === '{}' ? 'none' : 'block'
+                    display: JSON.stringify(toJS(monitorpage.selectPoint)) === '{}' ? 'none' : 'flex'
                 }}>
                     <div className="point-detail-table-wrapper">
                         <div className="point-detail-table1">
@@ -150,7 +149,7 @@ class PointDetail extends Component {
                 containLabel: true
             },
             legend: {
-                data: ['单次变化量', '变化速率'],
+                data: [],
                 selectedMode: 'single'
             },
             xAxis: {
@@ -208,6 +207,9 @@ class PointDetail extends Component {
     }
     setEchartLine(data) {
         const chart = this.chart;
+        const monitorTypeName = monitorpage.selectPoint.monitorTypeName;
+        const totalChangeUnit = getUnit(monitorTypeName).unitA;
+        const speedChangeUnit = getUnit(monitorTypeName).unitC;
         let time = [], singleChange = [], speedChange = [];
         data.commonDataVOs.forEach(v => {
             time.push(v.createDate);
@@ -215,17 +217,21 @@ class PointDetail extends Component {
             speedChange.push(v.speedChange);
         });
         chart && chart.setOption({
+            legend: {
+                data: ['单次变化量' + totalChangeUnit, '变化速率' + speedChangeUnit],
+                selectedMode: 'single'
+            },
             xAxis: {
                 data: time
             },
             series: [
                 {
-                    name: '单次变化量',
+                    name: '单次变化量' + totalChangeUnit,
                     type: 'line',
                     data: singleChange
                 },
                 {
-                    name: '变化速率',
+                    name: '变化速率' + speedChangeUnit,
                     type: 'line',
                     data: speedChange
                 }

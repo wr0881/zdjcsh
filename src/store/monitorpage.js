@@ -1,4 +1,4 @@
-import { observable, autorun, toJS, action } from 'mobx';
+import { observable, computed, autorun, toJS, action } from 'mobx';
 import axios from 'axios';
 import { message } from 'antd';
 import moment from 'moment';
@@ -10,9 +10,10 @@ class Monitor {
     /* 用户选择数据 */
     @observable selectPoint = {};
     @observable selsectTime = [moment(getTime('day')[0]), moment(getTime('day')[1])];
-    @observable selsectTimeNBWY = [moment(getTime('month')[0]), moment(getTime('month')[1])];
+    //@observable selsectTimeNBWY = [moment(getTime('month')[0]), moment(getTime('month')[1])];
     @observable selectDeep = '';
     /* 接口数据 */
+    @observable blueprintData = [];
     @observable pointDetailData = {};
     @observable mapEchartData = {};
     @observable mapEchartDataNBWY = {};
@@ -21,6 +22,16 @@ class Monitor {
     @observable isShowMapChart = false;
     @observable isShowMapChartNBWY = false;
     @observable dataContrastVisible = false;
+    @computed get selectPointList() {
+        let ary = [];
+        let blueprintData = toJS(this.blueprintData);
+        blueprintData.length && blueprintData.forEach(v => {
+            if (v.monitorPoints) {
+                ary = [...ary, ...v.monitorPoints];
+            }
+        })
+        return ary;
+    }
 
     /* DataConstrast */
     /* 用户选择数据 */
@@ -88,7 +99,7 @@ class Monitor {
                 this.mapEchartData = data;
                 this.isShowMapChart = true;
                 this.timeselectLoading = false;
-                console.log(data.sensorNumbers);
+                //console.log(data);
                 //内部位移深度
                 if (data.sensorNumbers) {
                     this.selectDeep = data.sensorNumbers[0];
@@ -103,7 +114,7 @@ class Monitor {
     //内部位移echarts图表数据
     @action getMapEchartDataNBWY() {
         const selectPoint = this.selectPoint;
-        const selsectTime = this.selsectTimeNBWY;
+        const selsectTime = this.selsectTime;
         if(selectPoint.monitorType === 66 || 26){
         axios.get('/data/queryDeepData', {
             params: {
@@ -114,11 +125,12 @@ class Monitor {
                 beginTime: selsectTime[0].format('YYYY-MM-DD HH:mm:ss'),
                 endTime: selsectTime[1].format('YYYY-MM-DD HH:mm:ss'),
             }
-            
+
         }).then(res => {
             const { code, msg, data } = res.data;
             if (code === 0) {
                 this.mapEchartDataNBWY = data;
+                //console.log(data);
                 this.isShowMapChartNBWY = true;
                 this.timeselectLoading = false;
             } else {
@@ -163,26 +175,6 @@ class Monitor {
             }
         })
     }
-    //获取数据监控指标下的测点数据
-    @action getDataMonitor(){
-        axios.get('',{
-            params:{
-
-            }
-        }).then({
-
-        })
-    }
-    //获取监控指标所有测点图表数据
-    @action getEchartTypeData() {
-        axios.get('',{
-            params:{
-
-            }
-        }).then({
-            
-        })
-    }
     //数据对比echart图表数据
     @action getEchartData() {
         let beginTime = '', endTime = '';
@@ -209,7 +201,6 @@ class Monitor {
             }
         })
     }
-    
 }
 
 const monitor = new Monitor();

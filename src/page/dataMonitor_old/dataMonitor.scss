@@ -1,6 +1,20 @@
 .dataMonitor-wrapper {
+    position: relative;
     width: 100%;
     min-height: calc(100vh - 310px);
+}
+
+.pointmap-explain{
+    display: flex;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: 999;
+    padding: 10px 20px;
+}
+
+.pointmap-explain>span{
+    margin-right: 15px;
 }
 
 .point-map-wrapper {
@@ -38,14 +52,14 @@
 }
 
 .point-detail-content {
+    display: flex;
     position: relative;
     padding: 24px;
     overflow: hidden;
 }
 
 .point-detail-table-wrapper {
-    float: left;
-    width: 45%;
+    flex: 0 0 350px;
 }
 
 .point-detail-table1 {
@@ -54,7 +68,6 @@
 
 .point-detail-table1-item {
     float: left;
-    width: 50%;
     border: 1px solid #DFDDEC;
     overflow: hidden;
 }
@@ -62,7 +75,7 @@
 .point-detail-table1-item>span {
     float: left;
     display: block;
-    width: 50%;
+    width: 160px;
     height: 32px;
     line-height: 32px;
     text-align: center;
@@ -80,7 +93,7 @@
 
 .point-detail-table2-item {
     float: left;
-    width: 25%;
+    width: 160px;
     border: 1px solid #DFDDEC;
 }
 
@@ -122,15 +135,14 @@
 }
 
 .point-detail-chart-wrapper {
-    float: left;
-    width: 55%;
+    flex: 1 1 auto;
     padding-left: 16px;
     height: 310px;
 }
 
-.point-detail-chart-wrapper span{
-    margin-right: 16px;
-}
+// .point-detail-chart-wrapper span{
+//     margin-right: 16px;
+// }
 
 .point-detail-chart {
     width: 100%;

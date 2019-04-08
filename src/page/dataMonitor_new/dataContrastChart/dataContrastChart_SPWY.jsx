@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { autorun, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import echarts from 'echarts';
-import { Radio } from 'antd';
+import { Checkbox, Radio } from 'antd';
 import pageData from 'store/page.js';
 import monitorpage from 'store/monitorpage.js';
+import { getUnit } from 'common/js/util.js';
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
@@ -93,7 +94,12 @@ class DataContrastChart extends Component {
     }
     initChart() {
         const chart = echarts.init(this.refs.chart);
+        const pointdataType = monitorpage.pointdataType;
+        const monitorTypeName = monitorpage.monitorTypeName;
 
+        const totalChange = getUnit(monitorTypeName).unitA;
+        const singleChange = getUnit(monitorTypeName).unitB;
+        const speedChange = getUnit(monitorTypeName).unitC;
         const option = {
             color: ['#32D184', '#E4B669', '#1890FF', '#EA4C48', '#5D3AB3', '#7AAFD5',],
             tooltip: {
@@ -108,6 +114,13 @@ class DataContrastChart extends Component {
                         color: '#fff',
                         backgroundColor: '#5D3AB3'
                     }
+                },
+                formatter: function (params) {
+                    let value = params[0].data[0];
+                    for (let i = 0; i < params.length; i++) {
+                        value += `<div>${params[i].seriesName}：${params[i].value[1]}(${eval(pointdataType)})</div>`
+                    }
+                    return value;
                 }
             },
             dataZoom: [
