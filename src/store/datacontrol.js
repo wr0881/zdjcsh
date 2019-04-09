@@ -4,6 +4,7 @@ import { message } from 'antd';
 import moment from 'moment';
 import pageData from 'store/page.js';
 import { getTime } from 'common/js/util.js';
+import $ from  'jquery';
 
 class dataControl {
     /* 用户选择数据 */
@@ -12,17 +13,13 @@ class dataControl {
     @observable timeType = 'month';
     @observable pointdataType = 'totalChange';
     /* 接口数据 */
-    @observable monitorTypeData = [];
-    @observable pointData = [];
-    @observable chartData = [];
+    @observable controlTypeData = [];
     /* 接口状态 */
-    @observable getMonitorTypeDataLoading = false;
-    @observable getPointDataLoading = false;
-    @observable getEchartDataLoading = false;
+    @observable getControlTypeDataLoading = false;
 
-    //监测指标
-    @action getMonitorTypeData() {
-        this.getMonitorTypeDataLoading = true;
+    //数据监控指标
+    @action getControlTypeData() {
+        this.getControlTypeDataLoading = true;
         axios.get('/common/queryMonitorTypeName', {
             params: {
                 sectorId: pageData.sector.sectorId
@@ -30,47 +27,32 @@ class dataControl {
         }).then(res => {
             const { code, msg, data } = res.data;
             if (code === 0) {
-                this.monitorTypeData = data;
+                this.controlTypeData = data;
+                console.log(data);
+                console.log('111111');
+                $(".dataControl-content").hide();
+                console.log('222222');
+                $('.ant-checkbox-input').click(function () {
+                    if($(this).attr('checked','true')){
+                        console.log('选中:',$(this).val());
+                    }else{
+                        
+                    }
+                                        
+                });
             } else {
-                this.monitorTypeData = [];
+                this.controlTypeData = [];
                 console.log('/common/queryMonitorTypeName code: ', code, msg);
             }
-            this.getMonitorTypeDataLoading = false;
+            this.getControlTypeDataLoading = false;
         }).catch(err => {
             console.log('/common/queryMonitorTypeName code: ', err);
-            this.getMonitorTypeDataLoading = false;
+            this.getControlTypeDataLoading = false;
         })
     }
     
-    //echart数据
-    @action getEchartData() {
-        this.getEchartDataLoading = true;
-        let beginTime = '', endTime = '';
-        beginTime = getTime(this.timeType)[0];
-        endTime = getTime(this.timeType)[1];
-        axios.get('/sector/queryComparisonData', {
-            params: {
-                sectorId: pageData.sector.sectorId,
-                monitorType: this.monitorTypeName,
-                pointNames: JSON.stringify(this.pointName),
-                beginTime: beginTime,
-                endTime: endTime,
-                dateType: 1
-            }
-        }).then(res => {
-            const { code, msg, data } = res.data;
-            if (code === 0 || code === 2) {
-                this.chartData = data.comparisonVO;
-                console.log(data)
-            } else {
-                this.chartData = [];
-                console.log('/sector/queryComparisonData code: ', code, msg);
-            }
-            this.getEchartDataLoading = false;
-        }).catch(err => {
-            console.log('/sector/queryComparisonData code: ', err);
-            this.getEchartDataLoading = false;
-        })
+    @action getTargetData(){
+        
     }
 }
 
@@ -78,7 +60,7 @@ const datacontrol = new dataControl();
 
 autorun(_ => {
     if (datacontrol.monitorTypeName) {
-        datacontrol.getPointData();
+        datacontrol.getTargetData();
     }
 })
 

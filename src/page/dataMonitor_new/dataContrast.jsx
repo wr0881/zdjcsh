@@ -113,6 +113,7 @@ class DataContrast extends Component {
         monitorpage.monitorTypeName = null;
         monitorpage.selectPointName = null;
         monitorpage.pointNameData = [];
+        monitorpage.contrastChartData = [];
     }
 }
 

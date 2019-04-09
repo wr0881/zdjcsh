@@ -6,6 +6,7 @@ import BasicInformation from 'page/basicInformation/info';
 import PeopleInformation from 'page/peopleInformation/info';
 import DeviceInformation from 'page/deviceInformation/info';
 import BluePrint from 'page/blueprint/blueprint';
+import Bim from 'page/bim/bim';
 import DataMonitor from 'page/dataMonitor_new/dataMonitorContainer';
 import ComplexAnalyse from 'page/complexanalyse/complexanalyse';
 import DataControl from 'page/dataControl/dataControl';
@@ -67,7 +68,7 @@ const title = [
         enTitle: 'DataControl',
         icon_url: require('common/image/数据监控.png'),
         icon_url_active: require('common/image/数据监控2.png'),
-        component: ProductComponent,
+        component: DataControl,
     },
     {
         title: '综合分析',
