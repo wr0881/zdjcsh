@@ -24,7 +24,7 @@ class DataMonitorContainer extends Component {
     render() {
         const monitorTypeName = monitorpage.selectPoint.monitorTypeName;
         const monitorType = monitorpage.selectPoint.monitorType;
-        console.log(monitorType);
+        //console.log(monitorType);
         return (
             <div className='dataMonitor-wrapper'>
                 {/* <div className='pointmap-explain'>

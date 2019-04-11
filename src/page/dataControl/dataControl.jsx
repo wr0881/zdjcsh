@@ -45,34 +45,18 @@ class DataControl extends Component {
                         }}
                         value={datacontrol.monitorTypeName}
                     >
-                        {datacontrol.controlTypeData && datacontrol.controlTypeData.map(v => {
-                            return <Radio key={v.monitorType} value={v.monitorType}>{v.monitorTypeName}</Radio>;
+                        {datacontrol.controlTypeData.slice(0,5) && datacontrol.controlTypeData.slice(0,5).map(v => {
+                            return <Radio key={v.monitorType} value={v.monitorTypeName}>{v.monitorTypeName}</Radio>
+                            
                         })}
                     </RadioGroup>                   
                 </div>
-                {/* <div className="control-operate">
-                    <span style={{ padding:'0 20px',width:'130px' }}>选择指标二</span>
-                    <CheckboxGroup
-                        key={Math.random()}
-                        //defaultValue={datacontrol.monitorTypeName[0]}
-                        onChange={v => { 
-                            datacontrol.monitorTypeName=v;
-                            console.log(v);
-                            if (v!==[]) {
-                                console.log('44444');
-                                $(".dataControl-content").show();
-                            }
-                        }}
-                    >
-                        {datacontrol.controlTypeData && datacontrol.controlTypeData.map(v => {
-                            return <Checkbox className='monitorType' name='monitorType' key={v.monitorType} value={v.monitorType}>{v.monitorTypeName}</Checkbox>;
-                        })}
-                    </CheckboxGroup>
-                </div> */}
-                <div className="point-detail-content">
-                    <div className="dataControl-content" style={{ width:'100%' }}>
+                <div className="point-detail-content">                    
+                    <div className="dataControl-content" style={{float:'left', width:'100%' }}>                        
                         <div className="dataAnalyse-chart-wrapper" style={{ width:'80%' }}>
                             <div className="dataAnalyse-type-wrapper" style={{ margin:'10px 40px 10px' }}>
+                                
+                                <span style={{float:'left',width:'100px',height:'30px'}}>{datacontrol.monitorTypeName}</span>
                                 <div className="dataAnalyse-type-btnGrounp">
                                     <RadioGroup 
                                         key={Math.random()} 
@@ -93,6 +77,7 @@ class DataControl extends Component {
                                 </div>
                             </div>
                             <div>
+                                {datacontrol.control}
                                 <div className='dataControl-chart' ref='chart'></div>
                             </div>
                         </div>
@@ -100,11 +85,11 @@ class DataControl extends Component {
                             <div className="point-detail-table3">
                                 <div className="point-detail-table3-item">
                                     <span>实时值</span>
-                                    <span>{datacontrol.monitorTypeName || '暂无数据'}</span>
+                                    <span>{datacontrol.mapType || '暂无数据'}</span>
                                 </div>
                                 <div className="point-detail-table3-item">
                                     <span>累计值</span>
-                                    <span>{datacontrol.targetData || '暂无数据'}</span>
+                                    <span>{datacontrol.monitorTypeName || '暂无数据'}</span>
                                 </div>
                                 <div className="point-detail-table3-item">
                                     <span>单次值</span>
@@ -132,7 +117,7 @@ class DataControl extends Component {
                                 </div>
                                 <div className="point-detail-table3-item">
                                     <span>三级告警</span>
-                                    <span>{datacontrol.threeMinValue || '暂无数据1'}</span>
+                                    <span>{datacontrol.threeMinValue || '暂无数据'}</span>
                                 </div>
                             </div>
                         </div>

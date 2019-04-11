@@ -91,7 +91,7 @@ class Analyse {
             const { code, msg, data } = res.data;
             if (code === 0 || code === 2) {
                 this.chartData = data.comparisonVO;
-                console.log(data)
+                console.log(data);
             } else {
                 this.chartData = [];
                 console.log('/sector/queryComparisonData code: ', code, msg);

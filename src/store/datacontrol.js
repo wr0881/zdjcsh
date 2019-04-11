@@ -16,9 +16,11 @@ class dataControl {
     /* 接口数据 */
     @observable controlTypeData = [];
     @observable targetData = [];
+    @observable controlEchartData = [];
     /* 接口状态 */
     @observable getControlTypeDataLoading = false;
     @observable getTargetDataLoading = false;
+    @observable getControlEchartDataLoading = false;
 
     //数据监控指标
     @action getControlTypeData() {
@@ -66,6 +68,25 @@ class dataControl {
         }).catch(err => {
             console.log('/point/queryMonitorPointName code: ', err);
             this.getTargetDataLoading = false;
+        })
+    }
+    //获取指标Echart图表
+    @action getControlEchartData(){
+        axios.get('',{
+            params:{
+
+            }
+        }).then(res =>{
+            const { code, msg , data } = res.data;
+            if(code === 0 ){
+                this.controlEchartData = data;
+            }else{
+                this.controlEchartData = [];
+                
+            }
+            this.getControlEchartDataLoading = false;
+        }).catch(err => {
+            this.getControlEchartDataLoading = false;
         })
     }
 }
