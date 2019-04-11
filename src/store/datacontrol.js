@@ -9,13 +9,16 @@ import $ from  'jquery';
 class dataControl {
     /* 用户选择数据 */
     @observable monitorTypeName = '';
+    @observable monitorTypeNameCH = '';
     @observable pointName = [];
     @observable timeType = 'month';
     @observable pointdataType = 'totalChange';
     /* 接口数据 */
     @observable controlTypeData = [];
+    @observable targetData = [];
     /* 接口状态 */
     @observable getControlTypeDataLoading = false;
+    @observable getTargetDataLoading = false;
 
     //数据监控指标
     @action getControlTypeData() {
@@ -32,14 +35,6 @@ class dataControl {
                 console.log('111111');
                 $(".dataControl-content").hide();
                 console.log('222222');
-                $('.ant-checkbox-input').click(function () {
-                    if($(this).attr('checked','true')){
-                        console.log('选中:',$(this).val());
-                    }else{
-                        
-                    }
-                                        
-                });
             } else {
                 this.controlTypeData = [];
                 console.log('/common/queryMonitorTypeName code: ', code, msg);
@@ -52,7 +47,26 @@ class dataControl {
     }
     
     @action getTargetData(){
-        
+        this.getTargetDataLoading = true;
+        axios.get('/point/queryMonitorPointName', {
+            params: {
+                sectorId: pageData.sector.sectorId,
+                monitorType: this.monitorTypeName
+            }
+        }).then(res => {
+            const { code, msg, data } = res.data;
+            if (code === 0) {
+                this.targetData = data;
+                console.log('指标下测点:',data);
+            } else {
+                this.targetData = [];
+                console.log('/point/queryMonitorPointName code: ', code, msg);
+            }
+            this.getTargetDataLoading = false;
+        }).catch(err => {
+            console.log('/point/queryMonitorPointName code: ', err);
+            this.getTargetDataLoading = false;
+        })
     }
 }
 

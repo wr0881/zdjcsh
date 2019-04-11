@@ -43,7 +43,7 @@ class DataContrast extends Component {
                                     <DataContrastChart_YL /> :
                                     monitorTypeName === 21 ?
                                         <DataContrastChart_SPWY /> :
-                                        monitorTypeName == 52 ?
+                                        monitorTypeName === 52 ?
                                             <DataContrastChart_GPS /> :
                                             // monitorTypeName === 26 ?
                                             //     <DataContrastChart_SBWY /> :
