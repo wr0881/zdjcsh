@@ -32,6 +32,7 @@ class Manage extends Component {
                         return <div
                             key={Math.random()}
                             className='k-select'
+                            style={{textDecoration:'none'}}
                             onClick={_ => {
                                 pagedata.sector = { sectorId: row.sectorId[i], sectorName: row.sectorName[i] };
                                 this.props.history.push('/project/manage/detail');
@@ -102,7 +103,10 @@ class Manage extends Component {
         return (
             <div className="manage">
                 <Card
-                    icon={<div style={{ width: '24px', height: '24px' }}><img src={manage} alt="" /></div>}
+                    icon={<div style={{ width: '24px', height: '24px' }}
+                    onClick={_ => {
+                        this.props.history.push('/project/overview');
+                    }}><img src={manage} alt="" /></div>}
                     text={`${pagedata.projectType.projectTypeName}自动监测项目`}
                 >
                     <div className='manage-content'>

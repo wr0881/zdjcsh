@@ -5,6 +5,7 @@ import echarts from 'echarts';
 import { DatePicker, Select, Button } from 'antd';
 import monitorpage from 'store/monitorpage.js';
 import { getUnit } from 'common/js/util.js';
+import $ from  'jquery';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -105,9 +106,7 @@ class PointDetail extends Component {
                     <div className="point-detail-chart-wrapper" style={{
                         display: monitorpage.isShowMapChart ? 'block' : 'none'
                     }}>
-                        <div>
-                            <div className="point-detail-chart" ref='chart' style={{padding:'5px'}}></div>
-                        </div>
+                        <div className="point-detail-chart" ref='chart' style={{padding:'5px'}}></div>
                     </div>
                 </div>
             </div>

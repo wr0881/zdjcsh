@@ -132,7 +132,10 @@ class Detail extends Component {
         return (
             <div className="detail">
                 <Card
-                    icon={<div style={{ width: '24px', height: '24px' }}><img src={manage} alt="" /></div>}
+                    icon={<div style={{ width: '24px', height: '24px' }} 
+                    onClick={_ => {
+                        this.props.history.push('/project/manage');
+                    }}><img src={manage} alt="" /></div>}
                     text={`${pagedata.sector.sectorName}`}
                 >
                     <div className="detail-content-wrapper">

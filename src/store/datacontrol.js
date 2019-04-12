@@ -34,9 +34,6 @@ class dataControl {
             if (code === 0) {
                 this.controlTypeData = data;
                 console.log(data);
-                console.log('111111');
-                $(".dataControl-content").hide();
-                console.log('222222');
             } else {
                 this.controlTypeData = [];
                 console.log('/common/queryMonitorTypeName code: ', code, msg);
