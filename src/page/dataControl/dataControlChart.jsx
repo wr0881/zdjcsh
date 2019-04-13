@@ -10,6 +10,8 @@ import './control.scss';
 import { Checkbox, Radio } from 'antd';
 import datacontrol from 'store/datacontrol.js';
 import $ from  'jquery';
+import Card from 'component/Card/Card';
+import enlarge from 'common/image/enlarge.png';
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
@@ -31,7 +33,8 @@ class DataControlChart extends Component {
                 <div className="dataControl-content" style={{float:'left', width:'100%' }}>                        
                     <div className="dataAnalyse-chart-wrapper" style={{ width:'80%',height:'320px',border:'1px dashed #f00' }}>
                         <div className="dataAnalyse-type-wrapper" style={{ margin:'10px 40px 10px' }}>                           
-                            <span style={{float:'left',width:'100px',height:'30px'}}>{datacontrol.monitorTypeName}</span>
+                            <span style={{float:'left',width:'100px',height:'30px'}}>{datacontrol.monitorTypeName}                            
+                            </span>
                             <div className="dataAnalyse-type-btnGrounp">
                                 <RadioGroup 
                                     key={Math.random()} 
@@ -100,9 +103,9 @@ class DataControlChart extends Component {
             </div>
         );
     }
-    // componentWillUnmount() {
-    //     datacontrol.monitorTypeName = [];
-    // }
+    componentWillUnmount() {
+        datacontrol.monitorTypeName = [];
+    }
     // componentDidMount() {
     //     datacontrol.getControlTypeData();
     // }

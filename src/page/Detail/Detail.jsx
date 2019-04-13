@@ -15,7 +15,7 @@ import SourceRisk from 'page/risk/risk';
 import AlarmDetail from 'page/alarmdetail/alarmdetail';
 import Library from 'page/library/library';
 import pagedata from 'store/page.js';
-import manage from 'common/image/manage.png';
+import returnkey from 'common/image/returnkey.png';
 import './Detail.scss';
 
 const ProductComponent = _ => {
@@ -135,7 +135,7 @@ class Detail extends Component {
                     icon={<div style={{ width: '24px', height: '24px' }} 
                     onClick={_ => {
                         this.props.history.push('/project/manage');
-                    }}><img src={manage} alt="" /></div>}
+                    }}><img src={returnkey} alt="" /></div>}
                     text={`${pagedata.sector.sectorName}`}
                 >
                     <div className="detail-content-wrapper">

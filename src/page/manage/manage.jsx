@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Table, Button, Input } from 'antd';
 import Card from 'component/Card/Card';
 import pagedata from 'store/page.js';
-import manage from 'common/image/manage.png';
+import returnkey from 'common/image/returnkey.png';
 import './manage.scss';
 
 class Manage extends Component {
@@ -106,7 +106,8 @@ class Manage extends Component {
                     icon={<div style={{ width: '24px', height: '24px' }}
                     onClick={_ => {
                         this.props.history.push('/project/overview');
-                    }}><img src={manage} alt="" /></div>}
+                    }}>
+                    <img src={returnkey} alt="" /></div>}
                     text={`${pagedata.projectType.projectTypeName}自动监测项目`}
                 >
                     <div className='manage-content'>
