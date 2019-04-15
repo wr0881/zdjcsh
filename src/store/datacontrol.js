@@ -17,10 +17,12 @@ class dataControl {
     @observable controlTypeData = [];
     @observable targetData = [];
     @observable controlEchartData = [];
+    
     /* 接口状态 */
     @observable getControlTypeDataLoading = false;
     @observable getTargetDataLoading = false;
     @observable getControlEchartDataLoading = false;
+    @observable dataEnlargeVisible = false;
 
     //数据监控指标
     @action getControlTypeData() {
@@ -34,6 +36,7 @@ class dataControl {
             if (code === 0) {
                 this.controlTypeData = data;
                 console.log(data);
+                
             } else {
                 this.controlTypeData = [];
                 console.log('/common/queryMonitorTypeName code: ', code, msg);

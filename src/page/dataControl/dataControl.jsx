@@ -7,11 +7,12 @@ import echarts from 'echarts';
 import monitorpage from 'store/monitorpage.js';
 import { getUnit } from 'common/js/util.js';
 import './control.scss';
-import { Checkbox, Radio } from 'antd';
+import { Checkbox, Radio, Modal } from 'antd';
 import datacontrol from 'store/datacontrol.js';
 import $ from  'jquery';
 import Card from 'component/Card/Card';
 import enlarge from 'common/image/enlarge.png';
+import enlarge2 from 'common/image/enlarge2.png';
 import DataControlChart from './dataControlChart';
 
 const RadioButton = Radio.Button;
@@ -27,85 +28,85 @@ class DataControl extends Component {
             pointTypeData: [],
             pointNameData: [],
             checked: false
-        }
+        };
     }
+    
+    handleMouseOver(){
+        $('.enlarge').src={enlarge2};
+        //$('.enlarge').hide();
+        //$('.enlarge2').show();
+    }  
+    handleMouseOut(){
+        $('.enlarge2').hide();
+        $('.enlarge').show();
+    }   
     render() { 
         // const monitorTypeName = datacontrol.controlTypeData.monitorTypeName; 
-        // console.log(monitorTypeName);       
+        // console.log(monitorTypeName); 
+             
         return (
             <div className='datacontrol-wrapper'>
-                <ul style={{margin:'0',padding:'0'}}>
+                <div className='datacontrol-top'></div>
+                <ul className="datacontrol-ul">
                 {datacontrol.controlTypeData && datacontrol.controlTypeData.map(v=>{
                     return (
-                    <li key={v.monitorType} value={v.monitorTypeName} style={{listStyle:'none'}}>
-                        <div style={{ width:'100%', height:'380px', marginTop:'20px', backgroundColor:'#fff', borderRadius:'8px'}}>
-                            <span style={{height:'30px',lineHeight:'30px',paddingLeft:'30px',fontSize:'16px',fontWeight:'400',color:'#121521'}}>{v.monitorTypeName}</span>
-                            <div className="point-detail-content" style={{padding:'10px 24px'}}>                    
-                                <div className="dataControl-content" style={{float:'left', width:'100%' }}>                        
-                                    <div className="dataAnalyse-chart-wrapper" style={{ width:'80%',height:'320px',border:'1px dashed #f00' }}>
-                                        <div className="dataAnalyse-type-wrapper" style={{ margin:'10px 40px 10px' }}>                           
-                                            <span style={{float:'left',width:'100px',height:'30px'}}>{datacontrol.monitorTypeName}                            
+                    <li key={v.monitorType} value={v.monitorTypeName} style={{listStyle:'none', marginTop:'20px'}}>
+                        <div className="datacontrol-box">
+                            <div className="datacontrol-content-wrapper">                    
+                                <div className="datacontrol-content">                        
+                                    <div className="datacontrol-chart-wrapper">
+                                        <div className="datacontrol-type-wrapper">                           
+                                            <span style={{float:'left',width:'100px',height:'30px',marginLeft:'20px', marginTop:'10px',fontSize:'16px',color:'#121521'}}>{v.monitorTypeName}                            
                                             </span>
-                                            <div className="dataAnalyse-type-btnGrounp">
-                                                <RadioGroup 
-                                                    key={Math.random()} 
-                                                    size='small'
-                                                    defaultValue={datacontrol.pointdataType}
-                                                    onChange={e => {
-                                                        datacontrol.pointdataType = e.target.value;
-                                                        this.setState(
-                                                            // { pointdataType: e.target.value },
-                                                            // this.setEchartData.bind(this, e.target.value)
-                                                        )
-                                                    }}
-                                                >
-                                                    <RadioButton value="totalChange1">累计变化量</RadioButton>
-                                                    <RadioButton value="singleChange1">单次变化量</RadioButton>
-                                                    <RadioButton value="speedChange1">变化速率</RadioButton>
-                                                </RadioGroup>
+                                            <div onClick={_ => {
+                                                    datacontrol.dataEnlargeVisible = true;
+                                            }}>
+                                                <img id="enlarge" className="enlarge" src={enlarge} onMouseOver={this.handleMouseOver} alt="" />
+                                                <img id="enlarge2" className="enlarge2" src={enlarge2} onMouseOut={this.handleMouseOut} alt="" />
                                             </div>
                                         </div>
-                                        <div className="point-detail-chart-wrapper" style={{
-                                            display: monitorpage.isShowMapChart ? 'block' : 'none'
+                                        <div className="datacontrol-chart-wrapper" style={{
+                                            //display: monitorpage.isShowMapChart ? 'block' : 'none',
+                                            height:'300px'
                                         }}>
-                                            <div className="point-detail-chart" ref='chart' style={{padding:'5px'}}></div>
+                                            <div className="datacontrol-chart" ref='chart' style={{padding:'5px'}}></div>
                                         </div>
                                     </div>
-                                    <div className="point-detail-table-wrapper" style={{ width:'20%', height: '320px', float:'right',border:'1px dashed #f00' }}>
-                                        <div className="point-detail-table3">
-                                            <div className="point-detail-table3-item">
+                                    <div className="datacontrol-table-wrapper">
+                                        <div className="datacontrol-table">
+                                            <div className="datacontrol-table-item">
                                                 <span>实时值</span>
                                                 <span>{datacontrol.mapType || '暂无数据'}</span>
                                             </div>
-                                            <div className="point-detail-table3-item">
+                                            <div className="datacontrol-table-item">
                                                 <span>累计值</span>
                                                 <span>{v.monitorTypeName || '暂无数据'}</span>
                                             </div>
-                                            <div className="point-detail-table3-item">
+                                            <div className="datacontrol-table-item">
                                                 <span>单次值</span>
                                                 <span>{datacontrol.singleValue || '暂无数据'}</span>
                                             </div>
-                                            <div className="point-detail-table3-item">
+                                            <div className="datacontrol-table-item">
                                                 <span>速率值</span>
                                                 <span>{datacontrol.speedValue || '暂无数据'}</span>
                                             </div>
-                                            <div className="point-detail-table3-item">
+                                            <div className="datacontrol-table-item">
                                                 <span>最大值</span>
                                                 <span>{datacontrol.maxValue || '暂无数据'}</span>
                                             </div>
-                                            <div className="point-detail-table3-item">
+                                            <div className="datacontrol-table-item">
                                                 <span>最小值</span>
                                                 <span>{datacontrol.minValue || '暂无数据'}</span>
                                             </div>
-                                            <div className="point-detail-table3-item">
+                                            <div className="datacontrol-table-item">
                                                 <span>一级告警</span>
                                                 <span>{datacontrol.oneMinValue || '暂无数据'}</span>
                                             </div>
-                                            <div className="point-detail-table3-item">
+                                            <div className="datacontrol-table-item">
                                                 <span>二级告警</span>
                                                 <span>{datacontrol.twoMinValue || '暂无数据'}</span>
                                             </div>
-                                            <div className="point-detail-table3-item">
+                                            <div className="datacontrol-table-item">
                                                 <span>三级告警</span>
                                                 <span>{datacontrol.threeMinValue || '暂无数据'}</span>
                                             </div>
@@ -116,7 +117,20 @@ class DataControl extends Component {
                         </div>
                     </li>)
                 })}
-                </ul>                                       
+                </ul>
+                <Modal
+                    key='Enlarge'
+                    title={<div className='user-change-pwd'>放大</div>}
+                    visible={datacontrol.dataEnlargeVisible}
+                    destroyOnClose={true}
+                    footer={null}
+                    width='1200px'
+                    height='400px'
+                    bodyStyle={{ padding: '0px' }}
+                    onCancel={_ => { datacontrol.dataEnlargeVisible = false }}
+                >
+                    
+                </Modal>                                       
             </div>            
         );
     }
@@ -133,9 +147,11 @@ class DataControl extends Component {
         this.destroyAutorun = destroyAutorun;
     }
     componentDidMount() {
+        $('ul.datacontrol-ul').children("li:eq(0)").css('margin-top', '0px');
         datacontrol.getControlTypeData();
         this.destroyAutorun && this.destroyAutorun();
     }
+   
     initChart() {
         const chart = echarts.init(this.refs.chart);
 

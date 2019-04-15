@@ -13,6 +13,95 @@
     border: 1px solid #ECEAF3;
 }
 
-.card{
-    background-color: transparent;
+// .card{
+//     background-color: transparent;
+// }
+
+.datacontrol-wrapper{
+    background-color: #F4F7FC;
+}
+
+.datacontrol-top{
+    width: 100%;
+    height: 10px;
+    background-color:#F4F7FC;
+}
+
+.datacontrol-box{
+    width:100%;
+    height:364px;
+    background-color:#fff;
+    border-radius:8px;
+}
+
+.datacontrol-content{
+    float:left;
+    width:100%;
+    height:364px;
+}
+
+.datacontrol-ul{
+    margin: 0;
+    padding: 0;
+}
+
+.datacontrol-chart-wrapper{
+    width:70%;
+    height:364px;
+    float:left;
+}
+
+.datacontrol-type-wrapper{
+    height:45px;
+    border-left:4px solid #29CF7F;
+    border-bottom:1px solid #ECEAF3;
+}
+
+.enlarge{
+    width: 24px;
+    height: 24px;
+    float:right;
+    margin-right: 20px;
+    margin-top: 10px;
+}
+
+.enlarge2{
+    width: 24px;
+    height: 24px;
+    float:right;
+    margin-right: 20px;
+    margin-top: 10px;
+    display: none;
+}
+
+.datacontrol-table-wrapper{
+    width:30%;
+    height:364px;
+    float:right;
+    padding:20px;
+}
+
+.datacontrol-table {
+    overflow: hidden;
+}
+
+.datacontrol-table-item {
+    float: left;
+    width: 100%;
+    border: 1px solid #DFDDEC;
+    overflow: hidden;
+}
+
+.datacontrol-table-item>span {
+    float: left;
+    display: block;
+    width: 50%;
+    height: 34px;
+    line-height: 34px;
+    text-align: center;
+}
+
+.datacontrol-table-item>span:nth-child(1) {
+    background-color: #F4F7FC;
+    border-right: 1px solid #DFDDEC;
 }
