@@ -32,14 +32,10 @@ class DataControl extends Component {
     }
     
     handleMouseOver(){
-        $('.enlarge').src={enlarge2};
-        //$('.enlarge').hide();
+        //$('.enlarge').src={enlarge2};
+        $('.enlarge').hide();
         //$('.enlarge2').show();
-    }  
-    handleMouseOut(){
-        $('.enlarge2').hide();
-        $('.enlarge').show();
-    }   
+    }    
     render() { 
         // const monitorTypeName = datacontrol.controlTypeData.monitorTypeName; 
         // console.log(monitorTypeName); 
@@ -58,11 +54,14 @@ class DataControl extends Component {
                                         <div className="datacontrol-type-wrapper">                           
                                             <span style={{float:'left',width:'100px',height:'30px',marginLeft:'20px', marginTop:'10px',fontSize:'16px',color:'#121521'}}>{v.monitorTypeName}                            
                                             </span>
-                                            <div onClick={_ => {
+                                            <div className="datacontrol-type-ul" onClick={_ => {
                                                     datacontrol.dataEnlargeVisible = true;
                                             }}>
-                                                <img id="enlarge" className="enlarge" src={enlarge} onMouseOver={this.handleMouseOver} alt="" />
-                                                <img id="enlarge2" className="enlarge2" src={enlarge2} onMouseOut={this.handleMouseOut} alt="" />
+                                                <ul>
+                                                    <li><img className="enlarge" src={enlarge} alt="" /></li>
+                                                    <li><img className="enlarge2" src={enlarge2} alt="" /></li>
+                                                </ul>
+                                                
                                             </div>
                                         </div>
                                         <div className="datacontrol-chart-wrapper" style={{

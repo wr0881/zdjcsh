@@ -99,7 +99,7 @@ class Monitor {
                 this.mapEchartData = data;
                 this.isShowMapChart = true;
                 this.timeselectLoading = false;
-                //console.log(data);
+                console.log(data);
                 //内部位移深度
                 if (data.sensorNumbers) {
                     this.selectDeep = data.sensorNumbers[0];
