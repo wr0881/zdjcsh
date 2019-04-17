@@ -24,6 +24,7 @@
 .datacontrol-top{
     width: 100%;
     height: 10px;
+    margin-top: -20px;
     background-color:#F4F7FC;
 }
 
@@ -46,7 +47,7 @@
 }
 
 .datacontrol-chart-wrapper{
-    width:70%;
+    width:80%;
     height:364px;
     float:left;
 }
@@ -95,7 +96,7 @@
 }
 
 .datacontrol-table-wrapper{
-    width:30%;
+    width:20%;
     height:364px;
     float:right;
     padding:20px;

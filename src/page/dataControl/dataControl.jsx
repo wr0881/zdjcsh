@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { autorun, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import echarts from 'echarts';
+import ReactEcharts from 'echarts-for-react';
 //import PointMap from './pointMap';
 import monitorpage from 'store/monitorpage.js';
 import { getUnit } from 'common/js/util.js';
@@ -30,16 +31,9 @@ class DataControl extends Component {
             checked: false
         };
     }
-    
-    handleMouseOver(){
-        //$('.enlarge').src={enlarge2};
-        $('.enlarge').hide();
-        //$('.enlarge2').show();
-    }    
+
     render() { 
-        // const monitorTypeName = datacontrol.controlTypeData.monitorTypeName; 
-        // console.log(monitorTypeName); 
-             
+
         return (
             <div className='datacontrol-wrapper'>
                 <div className='datacontrol-top'></div>
@@ -64,11 +58,13 @@ class DataControl extends Component {
                                                 
                                             </div>
                                         </div>
-                                        <div className="datacontrol-chart-wrapper" style={{
+                                        <div className="datacontrol-chart-wrapper1" style={{
                                             //display: monitorpage.isShowMapChart ? 'block' : 'none',
-                                            height:'300px'
+                                            height:'300px',
+                                            marginLeft:'22px'
                                         }}>
-                                            <div className="datacontrol-chart" ref='chart' style={{padding:'5px'}}></div>
+                                            <div className="datacontrol-chart" ref='chart' style={{padding:'5px'}}>
+                                            </div>
                                         </div>
                                     </div>
                                     <div className="datacontrol-table-wrapper">
@@ -133,21 +129,19 @@ class DataControl extends Component {
             </div>            
         );
     }
-    componentWillUnmount() {
-        datacontrol.monitorTypeName = [];
-        this.initChart();
-
-        let destroyAutorun = autorun(() => {
-            const mapEchartData = toJS(monitorpage.mapEchartData);
-            if (JSON.stringify(mapEchartData) !== '{}') {
-                this.setEchartLine(mapEchartData);
-            }
-        });
-        this.destroyAutorun = destroyAutorun;
-    }
     componentDidMount() {
-        $('ul.datacontrol-ul').children("li:eq(0)").css('margin-top', '0px');
+        //this.initChart();
         datacontrol.getControlTypeData();
+        
+        // let destroyAutorun = autorun(() => {
+        //     const mapEchartData = toJS(monitorpage.mapEchartData);
+        //     if (JSON.stringify(mapEchartData) !== '{}') {
+        //         this.setEchartLine(mapEchartData);
+        //     }
+        // });
+        // this.destroyAutorun = destroyAutorun;
+    }
+    componentWillUnmount() {
         this.destroyAutorun && this.destroyAutorun();
     }
    
@@ -264,16 +258,13 @@ class DataControl extends Component {
 
             ]
         };
-
         chart.setOption(option);
-
         this.chart = chart;
-
         window.addEventListener('resize', _ => {
             chart.resize();
         });
     }
-    setEchartLine(data){
+    setEchartLine(data) {
         const chart = this.chart;
         const monitorTypeName = monitorpage.selectPoint.monitorTypeName;
 
