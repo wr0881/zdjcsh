@@ -1,24 +1,24 @@
 import React, { Component } from 'react';
 //import { toJS } from 'mobx';
-import { autorun, toJS } from 'mobx';
+//import { autorun, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import echarts from 'echarts';
-import ReactEcharts from 'echarts-for-react';
 //import PointMap from './pointMap';
 import monitorpage from 'store/monitorpage.js';
 import { getUnit } from 'common/js/util.js';
 import './control.scss';
-import { Checkbox, Radio, Modal } from 'antd';
+import { Modal } from 'antd';
 import datacontrol from 'store/datacontrol.js';
-import $ from  'jquery';
-import Card from 'component/Card/Card';
+//import Card from 'component/Card/Card';
 import enlarge from 'common/image/enlarge.png';
 import enlarge2 from 'common/image/enlarge2.png';
 import DataControlChart from './dataControlChart';
+//import DataControlChart from './dataControlChart';
 
-const RadioButton = Radio.Button;
-const RadioGroup = Radio.Group;
-const CheckboxGroup = Checkbox.Group;
+//const RadioButton = Radio.Button;
+//const RadioGroup = Radio.Group;
+//const CheckboxGroup = Checkbox.Group;
+
 
 @observer
 class DataControl extends Component {
@@ -63,7 +63,7 @@ class DataControl extends Component {
                                             height:'300px',
                                             marginLeft:'22px'
                                         }}>
-                                            <div className="datacontrol-chart" ref='chart' style={{padding:'5px'}}>
+                                            <div className="datacontrol-chart" ref='chart' style={{padding:'5px',width:'100%',height:'290px'}}>
                                             </div>
                                         </div>
                                     </div>
@@ -115,22 +115,23 @@ class DataControl extends Component {
                 </ul>
                 <Modal
                     key='Enlarge'
-                    title={<div className='user-change-pwd'>放大</div>}
+                    title={<div className='user-change-pwd' style={{height:"0px"}}></div>}
                     visible={datacontrol.dataEnlargeVisible}
                     destroyOnClose={true}
                     footer={null}
-                    width='1200px'
-                    height='400px'
+                    width='1400px'
+                    height='600px'
                     bodyStyle={{ padding: '0px' }}
                     onCancel={_ => { datacontrol.dataEnlargeVisible = false }}
                 >
-                    
+                    <DataControlChart />
                 </Modal>                                       
             </div>            
         );
     }
     componentDidMount() {
         //this.initChart();
+        datacontrol.ConnectWithWS();
         datacontrol.getControlTypeData();
         
         // let destroyAutorun = autorun(() => {

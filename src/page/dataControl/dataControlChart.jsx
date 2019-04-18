@@ -1,84 +1,70 @@
 import React, { Component } from 'react';
-let echarts = require('echarts');
+import { observer } from 'mobx-react';
+import { Checkbox,Radio } from 'antd';
+import { autorun } from 'mobx';
+import monitorpage from 'store/monitorpage.js';
+import './control.scss';
 
-let colors = ['#f27573', '#69757a', '#ffd553', '#51b8ae', '#ff8d69', '#a48b82', '#dde779', '#7d89cd', '#cacaca', '#51d1e1', '#f06695', '#fff179', '#8ca8f9', '#c9b185', '#9e5c81'];
+const RadioGroup = Radio.Group;
+const CheckboxGroup = Checkbox.Group;
 
+@observer
 class DataControlChart extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+    constructor(props) {
+        super(props);
+        this.state = {
+        };
+    }
 
-  componentDidMount() {
-    let { id, xAxis, yAxis } = this.props;
-    let myChart = echarts.init(document.getElementById(id));
-    myChart.setOption({
-      color: this.props.color ? this.props.color : colors,
-      title: {
-        left: "center",
-      },
-      legend: {
-        orient: 'vertical',
-        left: 'right',
-        show: this.props.legendShow ? true : false,
-        textStyle: {
-          color: this.props.legendTextStyle ? this.props.legendTextStyle : '#000',
-          fontSize: 12
+    render() {
+        const datacontrol = monitorpage.controlTypeData;
+        return(
+          <div className="control-modal-content">
+            <div className="left-control-modal">
+              <div className="dataAnalyse-operate-title">选择指标:</div>
+              <div className="dataAnalyse-operate-content">
+                  <RadioGroup
+                      key={Math.random()}
+                      onChange={e => { monitorpage.monitorTypeName = e.target.value }}
+                      value={monitorpage.monitorTypeName}
+                  >
+                      {monitorpage.monitorTypeData.map(v => {
+                          return <Radio key={v.monitorType} value={v.monitorType}>{v.monitorTypeName}</Radio>;
+                      })}
+                  </RadioGroup>
+              </div>
+              <div className="dataAnalyse-operate-title">选择测点:</div>
+              <div className="dataAnalyse-operate-select">
+                  <CheckboxGroup
+                      key={Math.random()}
+                      defaultValue={monitorpage.selectPointName}
+                      onChange={v => { monitorpage.selectPointName = v }}
+                  >
+                      {monitorpage.pointNameData.map(v => {
+                          return <Checkbox key={v} value={v}>{v}</Checkbox>;
+                      })}
+                  </CheckboxGroup>
+              </div>
+            </div>
+            <div className="right-control-modal"></div>
+          </div>
+        );
+    }
+    componentDidMount() {
+      monitorpage.getMonitorTypeData();
+
+      autorun(() => {
+        if (monitorpage.monitorTypeName) {
+            monitorpage.getPointName();
         }
-      },
-      tooltip: {
-        trigger: 'axis',
-        formatter: this.props.noPercent ? '' : '{b0}<br />{a0}: {c0}%<br />{a1}: {c1}%'
-      },
-      grid: {
-        left: '20%',
-        right: '20%',
-        bottom: '3%',
-        top:'30%',
-        containLabel: true
-      },
-      xAxis: {
-        type: 'category',
-        boundaryGap: false,
-        data: xAxis,
-        "axisLabel": {
-          interval: this.props.intervalNum ? this.props.intervalNum : 0,
-          rotate: 7
-        },
-        axisLine: {
-          lineStyle: {
-            color: this.props.lineColor ? this.props.lineColor : '#000',
-          }
-        },
-      },
-      yAxis: {
-        type: 'value',
-        minInterval: 1,
-        boundaryGap: [0, 0.1],
-        axisLabel: {
-          formatter: this.props.noPercent ? '{value}' : '{value} %',
-        },
-        axisLine: {
-          lineStyle: {
-            color: this.props.lineColor ? this.props.lineColor : '#000',
-          }
-        },
-        precision: 0,
-        // min: 1,
-        max: this.props.maxSize && this.props.maxSize <= 10 ? 10 : null,
-      },
-      series: yAxis
     })
   }
-
-  render() {
-    return (
-      <div id={this.props.id} className="charts">
-
-      </div>
-    );
+  componentWillUnmount() {
+      monitorpage.monitorTypeName = null;
+      monitorpage.selectPointName = null;
+      monitorpage.pointNameData = [];
+      monitorpage.contrastChartData = [];
   }
-
 }
 
 export default DataControlChart;
