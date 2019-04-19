@@ -35,6 +35,10 @@
     border-radius:8px;
 }
 
+.datacontrol-content-wrapper{
+    height: 364px;
+}
+
 .datacontrol-content{
     float:left;
     width:100%;
@@ -137,17 +141,14 @@
     width:300px;
     height:600px;
     float:left;
-    border:1px dashed #f00
+    border-radius:4px;
 }
 
 .right-control-modal{
     width:1080px;
     height: 600px;
     float: right;
-    border:1px dashed #29CF7F
-}
-.ant-modal-header{
-    padding: 0px!important;
+    border-radius:4px;
 }
 
 .left-modal-title{
@@ -159,4 +160,13 @@
     font-family:PingFang-SC-Medium;
     font-weight:500;
     color:rgba(18,21,33,1);
+}
+
+.ant-radio-wrapper{
+    width:45%;
+}
+
+.ant-checkbox-wrapper{
+    margin-left:0px!important;
+    width:106px;
 }

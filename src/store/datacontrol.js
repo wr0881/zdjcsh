@@ -13,6 +13,7 @@ class dataControl {
     @observable pointName = [];
     @observable timeType = 'month';
     @observable pointdataType = 'totalChange';
+    @observable selectPointName = [];
     /* 接口数据 */
     @observable controlTypeData = [];
     @observable targetData = [];
@@ -31,8 +32,10 @@ class dataControl {
         ws.onopen = function (e){
             console.log("连接上ws服务器了");
         }
-        ws.onmessage = (msg) => {
-            console.log("接收服务器发送过来的消息:%o",msg);
+        ws.onmessage = function(event){
+            console.log("接收服务器发送过来的消息:%o");
+            var data = event.data;
+            console.log(data);
         }
         ws.onclose = function (e){
             console.log("ws连接关闭！！！");
@@ -65,7 +68,7 @@ class dataControl {
         })
     }
     
-    //数据对比监测测点
+    //获取指标下测点数据
     @action getControlPointName() {
         axios.get('/point/queryMonitorPointName', {
             params: {
