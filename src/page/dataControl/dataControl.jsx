@@ -43,7 +43,8 @@ class DataControl extends Component {
     componentDidMount() {
         //datacontrol.ConnectWithWS();
         datacontrol.getControlTypeData();
-        //datacontrol.getControlEchartData();
+        console.log("断点1111111111");
+        datacontrol.getControlPointName();
     }
     componentWillUnmount() {
         this.destroyAutorun && this.destroyAutorun();

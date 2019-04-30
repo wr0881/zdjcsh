@@ -16,7 +16,6 @@ class DataControlChart extends Component {
         super(props);
         this.state = {
         };
-        console.log("获得指标名称！！！！！");
     }
 
     render() {
@@ -25,14 +24,16 @@ class DataControlChart extends Component {
             
             <div className="control-modal-content">
                 <div className="left-control-modal" style={{backgroundColor:'#FAFBFF'}}>
-                    <div className="dataAnalyse-operate-title">{this.props.typeValue}</div>
+                    <div className="dataAnalyse-operate-title">{datacontrol.monitorTypeName}</div>
                     <div className="dataAnalyse-operate-select">
                         <CheckboxGroup
                             key={Math.random()}
                             defaultValue={datacontrol.selectPointName}
-                            onChange={v => { datacontrol.selectPointName = v }}
+                            onChange={v => { datacontrol.selectPointName = v }
+                            
+                        }
                         >
-                            {monitorpage.pointNameData.map(v => {
+                            {datacontrol.pointNameData.map(v => {
                                 return <Checkbox key={v} value={v}>{v}</Checkbox>;
                             })}
                         </CheckboxGroup>
@@ -72,7 +73,17 @@ class DataControlChart extends Component {
             </div>
         );
     }
+    
     componentDidMount() {       
+        this.initChart();
+    }
+    componentWillUnmount() {
+        monitorpage.monitorTypeName = null;
+        monitorpage.selectPointName = null;
+        monitorpage.pointNameData = [];
+        monitorpage.contrastChartData = [];
+    }
+    initChart(){
         const myChart = echarts.init(this.refs.chart);
         let option = null;
         option = {
@@ -172,11 +183,32 @@ class DataControlChart extends Component {
             myChart.setOption(option, true);
         }
     }
-    componentWillUnmount() {
-        monitorpage.monitorTypeName = null;
-        monitorpage.selectPointName = null;
-        monitorpage.pointNameData = [];
-        monitorpage.contrastChartData = [];
+    setEchartLine(data) {
+        const chart = this.chart;
+
+        let time = [], singleChange = [], totalChange = [], speedChange = [];
+        data.commonDataVOs && data.commonDataVOs.forEach(v => {
+            time.push(v.createDate);
+            singleChange.push(v.singleChange);
+            totalChange.push(v.totalChange);
+            speedChange.push(v.speedChange);
+        });
+        chart && chart.setOption({
+            legend: {
+                data: datacontrol.monitorTypeName,
+                selectedMode: 'single'
+            },
+            xAxis: {
+                data: time
+            },
+            yAxis: {
+                
+            },
+            series: [
+                
+            ]
+        })
+        setTimeout(() => { chart.resize && chart.resize() }, 16);
     }
 }
 

@@ -33,9 +33,14 @@ class DataControlMap extends Component {
                                 </span>
                                 <div className="datacontrol-type-ul" value={this.props.value} onClick={e => {
                                     datacontrol.dataEnlargeVisible = true;
-                                    //this.props.value = e.target.value;
-                                    console.log(this.props.value);
-                                }}>
+                                    datacontrol.monitorType = this.props.typeValue;
+                                    datacontrol.monitorTypeName = this.props.value;
+                                    console.log("test11111111");
+                                    console.log("断点2222222222");
+                                    datacontrol.getControlPointName();
+                                    console.log("test22222222");
+                                }}   
+                                >
                                     <ul>
                                         <li><img className="enlarge" src={enlarge} alt="" /></li>
                                         <li><img className="enlarge2" src={enlarge2} alt="" /></li>
@@ -96,7 +101,6 @@ class DataControlMap extends Component {
                 <div className="datacontrol-enlarge-content" style={{width:'100%',height:'400px',border:'1px dashed #f00',position:'absolute',marginTop:'-364px',display:'none'}}></div>
                 <Modal
                     //title={datacontrol.controlTypeData[index].monitorType}
-                    key='enlarge'
                     visible={datacontrol.dataEnlargeVisible}
                     destroyOnClose={true}
                     keyboard={true}
@@ -113,10 +117,11 @@ class DataControlMap extends Component {
     }
     componentDidMount() {
         this.initChart();
-        datacontrol.getControlPointName();
-        if(datacontrol.controlTypeData!==[]){
-            datacontrol.getControlEchartData();
-        }
+        console.log("断点3333333333");
+        //datacontrol.getControlPointName();
+        // if(datacontrol.controlTypeData!==[]){
+        //     datacontrol.getControlEchartData();
+        // }
         //this.setEchartData();        
     }
     initChart() {
