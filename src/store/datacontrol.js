@@ -33,7 +33,7 @@ class dataControl {
             console.log("连接上ws服务器了");
         }
         ws.onmessage = function(event){
-            console.log("接收服务器发送过来的消息:%o");
+            console.log("接收服务器发送过来的消息:");
             var data = event.data;
             console.log(data);
         }
@@ -45,7 +45,7 @@ class dataControl {
         }
     }
 
-    //数据监控指标
+    //区间数据监控指标
     @action getControlTypeData() {
         this.getControlTypeDataLoading = true;
         axios.get('/common/queryMonitorTypeName', {
@@ -56,7 +56,8 @@ class dataControl {
             const { code, msg, data } = res.data;
             if (code === 0) {
                 this.controlTypeData = data;
-                console.log(data);               
+                console.log(data.monitorType);
+                console.log(pageData.sector.sectorId);               
             } else {
                 this.controlTypeData = [];
                 console.log('/common/queryMonitorTypeName code: ', code, msg);
@@ -69,45 +70,29 @@ class dataControl {
     }
     
     //获取指标下测点数据
+    
     @action getControlPointName() {
         axios.get('/point/queryMonitorPointName', {
             params: {
                 sectorId: pageData.sector.sectorId,
-                monitorType: this.monitorTypeName
+                monitorType: this.controlTypeData.monitorType
             }
         }).then(res => {
             const { code, msg, data } = res.data;
             if (code === 0) {
                 this.pointNameData = data;
+                console.log(data);
+                console.log(pageData.sector.sectorId); 
+                 
             } else {
                 this.pointNameData = [];
                 console.log('/point/queryMonitorPointName code: ', code, msg);
+                console.log(this.controlTypeData.monitorType);
+                console.log(pageData.sector.sectorId); 
             }
         })
     }
 
-    @action getTargetData(){
-        this.getTargetDataLoading = true;
-        axios.get('/point/queryMonitorPointName', {
-            params: {
-                sectorId: pageData.sector.sectorId,
-                monitorType: this.monitorTypeName
-            }
-        }).then(res => {
-            const { code, msg, data } = res.data;
-            if (code === 0) {
-                this.targetData = data;
-                console.log('指标下测点:',data);
-            } else {
-                this.targetData = [];
-                console.log('/point/queryMonitorPointName code: ', code, msg);
-            }
-            this.getTargetDataLoading = false;
-        }).catch(err => {
-            console.log('/point/queryMonitorPointName code: ', err);
-            this.getTargetDataLoading = false;
-        })
-    }
     //获取指标Echart图表
     @action getControlEchartData(){
         axios.get('',{
@@ -130,11 +115,5 @@ class dataControl {
 }
 
 const datacontrol = new dataControl();
-
-autorun(_ => {
-    if (datacontrol.monitorTypeName) {
-        datacontrol.getTargetData();
-    }
-})
 
 export default datacontrol;

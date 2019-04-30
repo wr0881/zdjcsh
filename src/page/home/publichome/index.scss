@@ -1,23 +1,83 @@
-#publichome .loging-content{
-    display: flex;
-    justify-content: center;
+$title-height:48px;
+$cotent-width:1180px;
+
+.allProject {
+    width: 100%;
+    border: 1px solid #ECEAF3;
+    border-radius: 8px;
 }
 
-#publichome .loging-content-item1{
-    width: 939px;
+.allProject-title-wrapper {
+    position: relative;
+    padding: 0 24px;
+    width: $cotent-width;
+    height: $title-height;
+    background: #FAFBFF;
+    border-bottom: 1px solid #ECEAF3;
+
+    .allProject-title {
+        float: left;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        height: $title-height;
+
+        .allProject-title-text {
+            padding-left: 16px;
+            font-size: 18px;
+            color: rgba(18, 21, 33, 1);
+        }
+    }
+
+    .allProject-title-operate {
+        float: right;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        height: $title-height;
+        border-radius: 4px;
+        font-size: 12px;
+        color: rgba(60, 68, 99, 1);
+
+        .allProject-title-operate-active {
+            color: #5D3AB3;
+            border: 1px solid #5D3AB3 !important;
+        }
+
+        &>div {
+            width: 80px;
+            height: 30px;
+            float: left;
+            line-height: 30px;
+            border: 1px solid #D9D8E0;
+            text-align: center;
+            cursor: pointer;
+        }
+    }
+
 }
 
-.projecttype-content4 {
+.allProject-content-wrapper {
+    padding: 0px 0px 25px 19px;
+    width: $cotent-width;
+    background-color: #FFF;
     overflow: hidden;
+
+    .allProject-content-title {
+        margin-top: 34px;
+        margin-bottom: 20px;
+        height: 16px;
+        font-size: 16px;
+        color: rgba(0, 0, 0, 1);
+    }
 }
 
-.projecttype-content4>div {
-    float: left;
-    //margin-right: 23px;
-    margin-right: 24px;
-    margin-bottom: 24px;
-}
+.allProject-item-wrapper {
+    overflow: hidden;
 
-.projecttype-content4>div:nth-child(2n) {
-    margin-right: 0px;
+    &>div {
+        float: left;
+        margin-right: 10px;
+        margin-bottom: 10px;
+    }
 }

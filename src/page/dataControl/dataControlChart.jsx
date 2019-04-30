@@ -16,14 +16,16 @@ class DataControlChart extends Component {
         super(props);
         this.state = {
         };
+        console.log("获得指标名称！！！！！");
     }
 
     render() {
         
         return(
+            
             <div className="control-modal-content">
                 <div className="left-control-modal" style={{backgroundColor:'#FAFBFF'}}>
-                    <div className="dataAnalyse-operate-title">指标</div>
+                    <div className="dataAnalyse-operate-title">{this.props.typeValue}</div>
                     <div className="dataAnalyse-operate-select">
                         <CheckboxGroup
                             key={Math.random()}
@@ -70,13 +72,12 @@ class DataControlChart extends Component {
             </div>
         );
     }
-    componentDidMount() {
-        datacontrol.getControlPointName();
+    componentDidMount() {       
         const myChart = echarts.init(this.refs.chart);
         let option = null;
         option = {
             title: {
-                text: '指标'
+                text: ''
             },
             tooltip: {
                 trigger: 'axis'
