@@ -99,7 +99,7 @@ class Monitor {
                 this.mapEchartData = data;
                 this.isShowMapChart = true;
                 this.timeselectLoading = false;
-                console.log(data);
+                //console.log(data);
                 //内部位移深度
                 if (data.sensorNumbers) {
                     this.selectDeep = data.sensorNumbers[0];
@@ -152,6 +152,7 @@ class Monitor {
             const { code, msg, data } = res.data;
             if (code === 0) {
                 this.monitorTypeData = data;
+                console.log(data);
             } else {
                 this.monitorTypeData = [];
                 console.log('/common/queryMonitorTypeName code: ', code, msg);
@@ -169,6 +170,7 @@ class Monitor {
             const { code, msg, data } = res.data;
             if (code === 0) {
                 this.pointNameData = data;
+                console.log(data);
             } else {
                 this.pointNameData = [];
                 console.log('/point/queryMonitorPointName code: ', code, msg);
@@ -194,6 +196,7 @@ class Monitor {
             if (code === 0 || code === 2) {
                 this.contrastChartData = data.comparisonVO;
                 this.getEchartDataLoading = false;
+                console.log(JSON.stringify(this.selectPointName));
             } else {
                 this.contrastChartData = [];
                 this.getEchartDataLoading = false;
