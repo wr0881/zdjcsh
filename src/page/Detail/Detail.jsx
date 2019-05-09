@@ -54,7 +54,7 @@ const title = [
         enTitle: 'Bim',
         icon_url: require('common/image/bim.png'),
         icon_url_active: require('common/image/bim2.png'),
-        component: ProductComponent,
+        component: Bim,
     },
     {
         title: '数据查询',

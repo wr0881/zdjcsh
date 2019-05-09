@@ -17,6 +17,18 @@
 //     background-color: transparent;
 // }
 
+.ant-modal-mask{
+    background-color:rgba(0, 0, 0, 0.3)!important;
+}
+
+.ant-table-body table tr th div{
+    text-align: center;
+}
+
+.ant-table-body table tr td{
+    text-align: center;
+}
+
 .datacontrol-wrapper{
     background-color: #F4F7FC;
 }
@@ -139,19 +151,19 @@
 
 .control-modal-content{
     width: 100%;
-    height: 600px;
+    height: 700px;
 }
 
 .left-control-modal{
     width:300px;
-    height:600px;
+    height:700px;
     float:left;
     border-radius:4px;
 }
 
 .right-control-modal{
     width:1080px;
-    height: 600px;
+    height: 700px;
     float: right;
     border-radius:4px;
 }

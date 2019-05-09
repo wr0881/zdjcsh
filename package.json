@@ -60,6 +60,7 @@
     "resolve": "1.8.1",
     "sass-loader": "7.1.0",
     "socket.io": "^2.2.0",
+    "stompjs": "^2.3.3",
     "style-loader": "0.23.0",
     "swiper": "^4.4.5",
     "terser-webpack-plugin": "1.1.0",

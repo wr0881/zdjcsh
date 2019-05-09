@@ -1,13 +1,7 @@
 import React, { Component } from 'react';
-import { autorun } from 'mobx';
 import { observer } from 'mobx-react';
-import echarts from 'echarts';
 import './control.scss';
-import { Modal } from 'antd';
 import datacontrol from 'store/datacontrol.js';
-import enlarge from 'common/image/enlarge.png';
-import enlarge2 from 'common/image/enlarge2.png';
-import DataControlChart from './dataControlChart';
 import DataControlMap from './dataControlMap';
 
 @observer
@@ -42,9 +36,7 @@ class DataControl extends Component {
     }
     componentDidMount() {
         //datacontrol.ConnectWithWS();
-        datacontrol.getControlTypeData();
-        console.log("断点1111111111");
-        datacontrol.getControlPointName();
+        datacontrol.getControlTypeData();       
     }
     componentWillUnmount() {
         this.destroyAutorun && this.destroyAutorun();

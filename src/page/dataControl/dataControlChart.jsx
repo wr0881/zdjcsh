@@ -1,73 +1,90 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { Checkbox,Radio } from 'antd';
+import { toJS,autorun } from 'mobx';
+import { Radio,Table } from 'antd';
 import echarts from 'echarts';
-import { autorun } from 'mobx';
-import monitorpage from 'store/monitorpage.js';
 import './control.scss';
 import datacontrol from 'store/datacontrol.js';
+import axios from 'axios';
+import pageData from 'store/page.js';
+import { getTime } from 'common/js/util.js';
 
 const RadioGroup = Radio.Group;
-const CheckboxGroup = Checkbox.Group;
 
 @observer
 class DataControlChart extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            chart: null,
+            tableData:[],
+            //pointName:''
         };
     }
 
     render() {
-        
+        const columns = [
+            // {
+            //     title: '测点名称',
+            //     dataIndex: '{datacontrol.pointName}',
+            // },
+            {
+                title: '测试时间',
+                dataIndex: 'createDate'
+            },
+            {
+                title: '测试值',
+                dataIndex: 'measuredData'
+            },
+            {
+                title: '累计变化量',
+                dataIndex: 'totalChange'
+            },
+            {
+                title: '单次变化量',
+                dataIndex: 'singleChange'
+            },
+            {
+                title: '变化速率',
+                dataIndex: 'speedChange'
+            },
+        ];
         return(
             
             <div className="control-modal-content">
                 <div className="left-control-modal" style={{backgroundColor:'#FAFBFF'}}>
                     <div className="dataAnalyse-operate-title">{datacontrol.monitorTypeName}</div>
-                    <div className="dataAnalyse-operate-select">
-                        <CheckboxGroup
+                    <div className="dataAnalyse-operate-content">
+                        <RadioGroup
                             key={Math.random()}
-                            defaultValue={datacontrol.selectPointName}
-                            onChange={v => { datacontrol.selectPointName = v }
-                            
-                        }
+                            onChange={(e) => { datacontrol.pointName = e.target.value;
+                                this.getPointEchartData();  
+                            }}
+                            value={datacontrol.pointName}                            
                         >
                             {datacontrol.pointNameData.map(v => {
-                                return <Checkbox key={v} value={v}>{v}</Checkbox>;
+                                return <Radio key={v} value={v}>{v}</Radio>;
                             })}
-                        </CheckboxGroup>
+                        </RadioGroup>
                     </div>
+                    
                 </div>
                 <div className="right-control-modal">
-                    <div className="datacontrol-chart" ref='chart' style={{padding:'10px',width:'100%',height:'300px',marginTop:'50px'}}>
+                    <div className="controlChart" style={{width:'100%',height:'350px'}}>
+                        
+                        <div className="datacontrol-chart" ref='chart' value={datacontrol.pointName} style={{padding:'10px',width:'100%',height:'300px',marginTop:'50px'}}>
+                        </div>                        
                     </div>
-                    <div className="datacontrol-table" style={{width:'100%',height:'220px',marginTop:'20px',padding:'10px'}}>
-                        <table style={{width:'100%',height:'100%',border:'1px solid #DFDDEC'}}>
-                            <tbody style={{border:'1px solid #DFDDEC'}}>
-                                <tr>
-                                    <td style={{width:'50%',border:'1px solid #DFDDEC',backgroundColor:'#F4F7FC'}}></td>
-                                    <td style={{width:'50%',border:'1px solid #DFDDEC'}}></td>
-                                </tr>
-                                <tr>
-                                    <td style={{width:'50%',border:'1px solid #DFDDEC',backgroundColor:'#F4F7FC'}}></td>
-                                    <td style={{width:'50%',border:'1px solid #DFDDEC'}}></td>
-                                </tr>
-                                <tr>
-                                    <td style={{width:'50%',border:'1px solid #DFDDEC',backgroundColor:'#F4F7FC'}}></td>
-                                    <td style={{width:'50%',border:'1px solid #DFDDEC'}}></td>
-                                </tr>
-                                <tr>
-                                    <td style={{width:'50%',border:'1px solid #DFDDEC',backgroundColor:'#F4F7FC'}}></td>
-                                    <td style={{width:'50%',border:'1px solid #DFDDEC'}}></td>
-                                </tr>
-                                <tr>
-                                    <td style={{width:'50%',border:'1px solid #DFDDEC',backgroundColor:'#F4F7FC'}}></td>
-                                    <td style={{width:'50%',border:'1px solid #DFDDEC'}}></td>
-                                </tr>
-                            </tbody>
+                    <div className="datacontrol-table" style={{width:'100%',height:'240px',padding:'10px'}}>
+                        
+                        <Table
+                            key={Math.random()}
+                            className='pointNameData'
+                            columns={columns}
+                            bordered={true}
                             
-                        </table>
+                            //dataSource={this.state.tableData}
+                        />
                     </div>
                 </div>
             </div>
@@ -76,116 +93,140 @@ class DataControlChart extends Component {
     
     componentDidMount() {       
         this.initChart();
+        datacontrol.getControlTypeData();
     }
     componentWillUnmount() {
-        monitorpage.monitorTypeName = null;
-        monitorpage.selectPointName = null;
-        monitorpage.pointNameData = [];
-        monitorpage.contrastChartData = [];
+        
+    }
+    getPointEchartData() {
+        const timeType = 'day';
+        const monitorType = this.props.typeValue;
+        let beginTime = '', endTime = '';
+        beginTime = getTime(timeType)[0];
+        endTime = getTime(timeType)[1];
+        console.log(datacontrol.pointName);
+        //console.log(this.pointName);
+        console.log(monitorType);
+        axios.get('/sector/querySensorData', {
+            params: {
+                sectorId: pageData.sector.sectorId,
+                monitorType: monitorType,
+                monitorPointNumber: datacontrol.pointName,
+                beginTime: beginTime,
+                endTime: endTime,
+            }
+        }).then(res => {
+            const { code,data } = res.data;
+            if (code === 0) {
+                this.pointEchartData = data;
+                this.timeselectLoading = false;  
+                console.log(data);
+                this.setEchartLine(this.pointEchartData);
+                // this.pointTableData = data.commonDataVOs.map(v => {
+                //     return { ...v, key: Math.random() };
+                // });
+                // console.log(this.pointTableData); 
+            } else {
+                this.pointTableData = [];
+                this.isShowPointChart = false;
+                this.timeselectLoading = false;
+            }
+        })
+        //this.displayChart();
     }
     initChart(){
-        const myChart = echarts.init(this.refs.chart);
-        let option = null;
-        option = {
-            title: {
-                text: ''
-            },
+        const chart = echarts.init(this.refs.chart);
+        const option = {
+            color: ['#32D184', '#E4B669', '#1890FF'],
             tooltip: {
-                trigger: 'axis'
-            },
-            legend: {
-                data:['测点一','测点二','测点三','测点四','测点五']
+                trigger: 'axis',
+                backgroundColor: 'rgba(0,0,0,0.82)',
+                textStyle: {
+                    fontSize: 13
+                },
+                axisPointer: {
+                    type: 'cross',
+                    label: {
+                        color: '#fff',
+                        backgroundColor: '#5D3AB3'
+                    }
+                }
             },
             grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '3%',
+                top: '30',
+                bottom: '10',
+                left: '0',
+                right: '30',
                 containLabel: true
             },
+            legend: {
+                data: [],
+                //selectedMode: 'single'
+            },
             toolbox: {
+                show: true,
                 feature: {
-                    dataView: { 
-                        show: true,
-                        title: '数据视图',
-                        textColor: 'rgba(0, 0, 0, 0.65)',
-                        textareaBorderColor: '#DFDDEC',
-                        
-                        readOnly: true,
-                        lang:['数据视图','关闭','刷新'],
-                        optionToContent: function (opt) {
-                            let axisData = opt.xAxis[0].data; //坐标数据
-                            let series = opt.series; //折线图数据
-                            let tdHeads = '<td  style="padding: 0 10px">时间</td>'; //表头
-                            let tdBodys = ''; //数据
-                            series.forEach(function (item) {
-                                //组装表头
-                                tdHeads += `<td style="padding: 0 10px">${item.name}</td>`;
-                            });
-                            let table = `<table border="1" style="width:100%;border-collapse:collapse;font-size:14px;text-align:center;border-color:#DFDDEC"><tbody><tr>${tdHeads} </tr>`;
-                            for (let i = 0, l = axisData.length; i < l; i++) {
-                                for (let j = 0; j < series.length; j++) {
-                                    //组装表数据
-                                    tdBodys += `<td>${ series[j].data[i]}</td>`;
-                                }
-                                table += `<tr><td style="padding: 0 10px">${axisData[i]}</td>${tdBodys}</tr>`;
-                                tdBodys = '';
-                            }
-                            table += '</tbody></table>';
-                            return table;
-                        }
-                    },
+                    // dataZoom: {
+                    //     yAxisIndex: 'none'
+                    // },
+                    dataView: { readOnly: false },
+                    // magicType: { type: ['line', 'bar'] },
+                    //restore: {},
                     saveAsImage: {}
                 }
             },
             xAxis: {
                 type: 'category',
                 boundaryGap: false,
-                data: ['2019-04-03','2019-04-04','2019-04-05','2019-04-06','2019-04-07','2019-04-08','2019-04-09']
+                axisLine: {
+                    symbol: ['none', 'arrow'],
+                    onZero: false,
+                    lineStyle: {
+                        color: '#BFBFBF'
+                    }
+                },
+                axisLabel: {
+                    color: '#545454'
+                },
+                data: []
             },
             yAxis: {
-                type: 'value'
+                type: 'value',
+                splitLine: {
+                    show: true,
+                    lineStyle: {
+                        type: 'dashed',
+                        color: '#E9E9E9'
+                    }
+                },
+                axisLabel: {
+                    showMaxLabel: false,
+                    color: '#545454'
+                },
+                axisLine: {
+                    symbol: ['none', 'arrow'],
+                    lineStyle: {
+                        color: '#BFBFBF'
+                    }
+                }
             },
             series: [
-                {
-                    name:'测点一',
-                    type:'line',
-                    stack: '累计变化量',
-                    data:[120, 132, 101, 134, 90, 230, 210]
-                },
-                {
-                    name:'测点二',
-                    type:'line',
-                    stack: '累计变化量',
-                    data:[220, 182, 191, 234, 290, 330, 310]
-                },
-                {
-                    name:'测点三',
-                    type:'line',
-                    stack: '累计变化量',
-                    data:[150, 232, 201, 154, 190, 330, 410]
-                },
-                {
-                    name:'测点四',
-                    type:'line',
-                    stack: '累计变化量',
-                    data:[320, 332, 301, 334, 390, 330, 320]
-                },
-                {
-                    name:'测点五',
-                    type:'line',
-                    stack: '累计变化量',
-                    data:[820, 932, 901, 934, 1290, 1330, 1320]
-                }
+
             ]
         };
-        ;
-        if (option) {
-            myChart.setOption(option, true);
-        }
+        chart.setOption(option);
+        this.chart = chart;
+        window.addEventListener('resize', _ => {
+            chart.resize();
+        });
     }
     setEchartLine(data) {
         const chart = this.chart;
+        // const monitorTypeName = datacontrol.pointName.monitorType;
 
+        // const totalChangeUnit = getUnit(monitorTypeName).unitA;
+        // const singleChangeUnit = getUnit(monitorTypeName).unitB;
+        // const speedChangeUnit = getUnit(monitorTypeName).unitC;
         let time = [], singleChange = [], totalChange = [], speedChange = [];
         data.commonDataVOs && data.commonDataVOs.forEach(v => {
             time.push(v.createDate);
@@ -193,10 +234,12 @@ class DataControlChart extends Component {
             totalChange.push(v.totalChange);
             speedChange.push(v.speedChange);
         });
+        const monitorType = this.props.typeValue;
+        
         chart && chart.setOption({
             legend: {
-                data: datacontrol.monitorTypeName,
-                selectedMode: 'single'
+                data: ['累计变化量', '单次变化量', '变化速率'],
+                //selectedMode: 'single'
             },
             xAxis: {
                 data: time
@@ -205,10 +248,24 @@ class DataControlChart extends Component {
                 
             },
             series: [
-                
+                {
+                    name: '累计变化量',
+                    type: 'line',
+                    data: totalChange
+                },
+                {
+                    name: '单次变化量',
+                    type: 'line',
+                    data: singleChange
+                },
+                {
+                    name: '变化速率',
+                    type: 'line',
+                    data: speedChange
+                }
             ]
         })
-        setTimeout(() => { chart.resize && chart.resize() }, 16);
+        //setTimeout(() => { chart.resize && chart.resize() }, 16);
     }
 }
 
