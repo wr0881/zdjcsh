@@ -154,6 +154,9 @@ class ControlChartNBWY extends Component {
         chart.setOption(option);
 
         this.chart = chart;
+        window.addEventListener('resize', _ => {
+            chart.resize();
+        });
     }
     setEchartData(){
         const chart = this.chart;

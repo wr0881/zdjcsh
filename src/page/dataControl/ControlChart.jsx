@@ -52,7 +52,7 @@ class ControlChart extends Component {
         })
     }
     getControlEchartData(){
-        const timeType = 'week';
+        const timeType = 'day';
         const monitorType = this.props.typeValue;
         
         let beginTime = '', endTime = '';
@@ -66,7 +66,7 @@ class ControlChart extends Component {
             params: {
                 sectorId: pageData.sector.sectorId,
                 monitorType: monitorType,
-                pointNames: JSON.stringify(this.pointNameData),
+                pointNames: JSON.stringify(this.pointNameData.slice(0,5)),
                 beginTime: beginTime,
                 endTime: endTime,
                 dateType: 1
@@ -156,6 +156,9 @@ class ControlChart extends Component {
         chart.setOption(option);
 
         this.chart = chart;
+        window.addEventListener('resize', _ => {
+            chart.resize();
+        });
     }
     setEchartData(){
         const chart = this.chart;
@@ -166,7 +169,6 @@ class ControlChart extends Component {
             return;
         }
         const pointdataType = 'totalChange';
-        const pointdataTypeX = 'totalChangeX';
         const monitorType = this.props.typeValue;
         console.log(monitorType);
         datacontrolChartData.forEach(v => {

@@ -8,6 +8,7 @@ import datacontrol from 'store/datacontrol.js';
 import axios from 'axios';
 import pageData from 'store/page.js';
 import { getTime } from 'common/js/util.js';
+import { getUnit } from 'common/js/util.js';
 
 const RadioGroup = Radio.Group;
 
@@ -75,15 +76,15 @@ class DataControlChart extends Component {
                         <div className="datacontrol-chart" ref='chart' value={datacontrol.pointName} style={{padding:'10px',width:'100%',height:'300px',marginTop:'50px'}}>
                         </div>                        
                     </div>
-                    <div className="datacontrol-table" style={{width:'100%',height:'240px',padding:'10px'}}>
+                    <div className="datacontrol-table" style={{width:'100%',height:'282px',padding:'10px',overflowY:'auto'}}>
                         
                         <Table
                             key={Math.random()}
                             className='pointNameData'
                             columns={columns}
                             bordered={true}
-                            
-                            //dataSource={this.state.tableData}
+                            pagination={false}
+                            dataSource={this.state.TableData}
                         />
                     </div>
                 </div>
@@ -122,17 +123,18 @@ class DataControlChart extends Component {
                 this.timeselectLoading = false;  
                 console.log(data);
                 this.setEchartLine(this.pointEchartData);
-                // this.pointTableData = data.commonDataVOs.map(v => {
-                //     return { ...v, key: Math.random() };
-                // });
-                // console.log(this.pointTableData); 
+                const TableData = data.commonDataVOs.map(v => {
+                    return { ...v, key: Math.random()};
+                });
+                console.log(TableData);
+                this.setState({TableData}); 
             } else {
                 this.pointTableData = [];
+                this.setState({TableData:[]});
                 this.isShowPointChart = false;
                 this.timeselectLoading = false;
             }
         })
-        //this.displayChart();
     }
     initChart(){
         const chart = echarts.init(this.refs.chart);
@@ -166,12 +168,36 @@ class DataControlChart extends Component {
             toolbox: {
                 show: true,
                 feature: {
-                    // dataZoom: {
-                    //     yAxisIndex: 'none'
-                    // },
-                    dataView: { readOnly: false },
-                    // magicType: { type: ['line', 'bar'] },
-                    //restore: {},
+                    dataView: { 
+                        show: true,
+                        title: '数据视图',
+                        textColor: 'rgba(0, 0, 0, 0.65)',
+                        textareaBorderColor: '#DFDDEC',
+                        
+                        readOnly: true,
+                        lang:['数据视图','关闭','刷新'],
+                        optionToContent: function (opt) {
+                            let axisData = opt.xAxis[0].data; //坐标数据
+                            let series = opt.series; //折线图数据
+                            let tdHeads = '<td  style="padding: 0 10px">时间</td>'; //表头
+                            let tdBodys = ''; //数据
+                            series.forEach(function (item) {
+                                //组装表头
+                                tdHeads += `<td style="padding: 0 10px">${item.name}</td>`;
+                            });
+                            let table = `<table border="1" style="width:100%;border-collapse:collapse;font-size:14px;text-align:center;border-color:#DFDDEC"><tbody><tr>${tdHeads} </tr>`;
+                            for (let i = 0, l = axisData.length; i < l; i++) {
+                                for (let j = 0; j < series.length; j++) {
+                                    //组装表数据
+                                    tdBodys += `<td>${ series[j].data[i]}</td>`;
+                                }
+                                table += `<tr><td style="padding: 0 10px">${axisData[i]}</td>${tdBodys}</tr>`;
+                                tdBodys = '';
+                            }
+                            table += '</tbody></table>';
+                            return table;
+                        }
+                    },
                     saveAsImage: {}
                 }
             },
@@ -222,23 +248,22 @@ class DataControlChart extends Component {
     }
     setEchartLine(data) {
         const chart = this.chart;
-        // const monitorTypeName = datacontrol.pointName.monitorType;
+        const monitorTypeName = this.props.typeValue;
 
-        // const totalChangeUnit = getUnit(monitorTypeName).unitA;
-        // const singleChangeUnit = getUnit(monitorTypeName).unitB;
-        // const speedChangeUnit = getUnit(monitorTypeName).unitC;
+        const totalChangeUnit = getUnit(monitorTypeName).unitA;
+        const singleChangeUnit = getUnit(monitorTypeName).unitB;
+        const speedChangeUnit = getUnit(monitorTypeName).unitC;
         let time = [], singleChange = [], totalChange = [], speedChange = [];
+        console.log(data.commonDataVOs);
         data.commonDataVOs && data.commonDataVOs.forEach(v => {
             time.push(v.createDate);
             singleChange.push(v.singleChange);
             totalChange.push(v.totalChange);
             speedChange.push(v.speedChange);
         });
-        const monitorType = this.props.typeValue;
-        
         chart && chart.setOption({
             legend: {
-                data: ['累计变化量', '单次变化量', '变化速率'],
+                data: ['累计变化量'+totalChangeUnit, '单次变化量'+singleChangeUnit, '变化速率'+speedChangeUnit],
                 //selectedMode: 'single'
             },
             xAxis: {
@@ -249,17 +274,17 @@ class DataControlChart extends Component {
             },
             series: [
                 {
-                    name: '累计变化量',
+                    name: '累计变化量'+totalChangeUnit,
                     type: 'line',
                     data: totalChange
                 },
                 {
-                    name: '单次变化量',
+                    name: '单次变化量'+singleChangeUnit,
                     type: 'line',
                     data: singleChange
                 },
                 {
-                    name: '变化速率',
+                    name: '变化速率'+speedChangeUnit,
                     type: 'line',
                     data: speedChange
                 }
