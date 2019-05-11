@@ -25,10 +25,10 @@ class DataControlChart extends Component {
 
     render() {
         const columns = [
-            // {
-            //     title: '测点名称',
-            //     dataIndex: '{datacontrol.pointName}',
-            // },
+            {
+                title: '测点名称',
+                render:()=>datacontrol.pointName,
+            },
             {
                 title: '测试时间',
                 dataIndex: 'createDate'
@@ -50,12 +50,13 @@ class DataControlChart extends Component {
                 dataIndex: 'speedChange'
             },
         ];
+        
         return(
             
             <div className="control-modal-content">
                 <div className="left-control-modal" style={{backgroundColor:'#FAFBFF'}}>
                     <div className="dataAnalyse-operate-title">{datacontrol.monitorTypeName}</div>
-                    <div className="dataAnalyse-operate-content">
+                    <div className="dataAnalyse-operate-content" style={{paddingTop:'30px'}}>
                         <RadioGroup
                             key={Math.random()}
                             onChange={(e) => { datacontrol.pointName = e.target.value;
@@ -71,13 +72,11 @@ class DataControlChart extends Component {
                     
                 </div>
                 <div className="right-control-modal">
-                    <div className="controlChart" style={{width:'100%',height:'350px'}}>
-                        
-                        <div className="datacontrol-chart" ref='chart' value={datacontrol.pointName} style={{padding:'10px',width:'100%',height:'300px',marginTop:'50px'}}>
+                    <div className="controlChart" style={{width:'100%',height:'350px'}}>                        
+                        <div className="datacontrol-chart" ref='chart2' value={datacontrol.pointName} style={{padding:'10px',width:'100%',height:'300px',marginTop:'50px'}}>
                         </div>                        
                     </div>
-                    <div className="datacontrol-table" style={{width:'100%',height:'282px',padding:'10px',overflowY:'auto'}}>
-                        
+                    <div className="datacontrol-table" style={{width:'100%',height:'282px',padding:'10px',overflowY:'auto'}}>                        
                         <Table
                             key={Math.random()}
                             className='pointNameData'
@@ -95,23 +94,21 @@ class DataControlChart extends Component {
     componentDidMount() {       
         this.initChart();
         datacontrol.getControlTypeData();
+        
     }
     componentWillUnmount() {
         
     }
+    
     getPointEchartData() {
         const timeType = 'day';
-        const monitorType = this.props.typeValue;
         let beginTime = '', endTime = '';
         beginTime = getTime(timeType)[0];
         endTime = getTime(timeType)[1];
-        console.log(datacontrol.pointName);
-        //console.log(this.pointName);
-        console.log(monitorType);
         axios.get('/sector/querySensorData', {
             params: {
                 sectorId: pageData.sector.sectorId,
-                monitorType: monitorType,
+                monitorType: datacontrol.monitorType,
                 monitorPointNumber: datacontrol.pointName,
                 beginTime: beginTime,
                 endTime: endTime,
@@ -121,7 +118,6 @@ class DataControlChart extends Component {
             if (code === 0) {
                 this.pointEchartData = data;
                 this.timeselectLoading = false;  
-                console.log(data);
                 this.setEchartLine(this.pointEchartData);
                 const TableData = data.commonDataVOs.map(v => {
                     return { ...v, key: Math.random()};
@@ -129,15 +125,15 @@ class DataControlChart extends Component {
                 console.log(TableData);
                 this.setState({TableData}); 
             } else {
-                this.pointTableData = [];
                 this.setState({TableData:[]});
+                this.pointTableData = [];
                 this.isShowPointChart = false;
                 this.timeselectLoading = false;
             }
         })
     }
     initChart(){
-        const chart = echarts.init(this.refs.chart);
+        const chart = echarts.init(this.refs.chart2);
         const option = {
             color: ['#32D184', '#E4B669', '#1890FF'],
             tooltip: {
@@ -240,6 +236,7 @@ class DataControlChart extends Component {
 
             ]
         };
+        chart.showLoading();
         chart.setOption(option);
         this.chart = chart;
         window.addEventListener('resize', _ => {
@@ -261,6 +258,7 @@ class DataControlChart extends Component {
             totalChange.push(v.totalChange);
             speedChange.push(v.speedChange);
         });
+        chart.hideLoading();
         chart && chart.setOption({
             legend: {
                 data: ['累计变化量'+totalChangeUnit, '单次变化量'+singleChangeUnit, '变化速率'+speedChangeUnit],

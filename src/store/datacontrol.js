@@ -2,7 +2,8 @@ import { observable,action,toJS } from 'mobx';
 import axios from 'axios';
 import pageData from 'store/page.js';
 import { getTime } from 'common/js/util.js';
-import echarts from 'echarts';
+import SockJs from 'sockjs-client';
+import Stomp from 'stompjs';
 
 class dataControl {
     /* 用户选择数据 */
@@ -20,6 +21,7 @@ class dataControl {
     @observable datacontrolChartData = [];
     @observable dataModalChartData = [];
     @observable pointTableData = [];
+    @observable realtimeValue = '';
     /* 接口状态 */
     @observable getControlTypeDataLoading = false;
     @observable isShowPointChart = false;
@@ -75,38 +77,6 @@ class dataControl {
         })
         
     }
-    //获取测点数据信息
-    // @action getPointEchartData() {
-    //     let beginTime = '', endTime = '';
-    //     beginTime = getTime(this.timeType)[0];
-    //     endTime = getTime(this.timeType)[1];
-    //     console.log(this.pointName);
-    //     axios.get('/sector/querySensorData', {
-    //         params: {
-    //             sectorId: pageData.sector.sectorId,
-    //             monitorType: this.monitorType,
-    //             monitorPointNumber: this.pointName,
-    //             beginTime: beginTime,
-    //             endTime: endTime,
-    //         }
-    //     }).then(res => {
-    //         const { code,data } = res.data;
-    //         if (code === 0) {
-    //             this.pointEchartData = data;
-    //             this.timeselectLoading = false;  
-    //             console.log(data);
-    //             // this.pointTableData = data.commonDataVOs.map(v => {
-    //             //     return { ...v, key: Math.random() };
-    //             // });
-    //             // console.log(this.pointTableData); 
-    //         } else {
-    //             this.pointTableData = [];
-    //             this.isShowPointChart = false;
-    //             this.timeselectLoading = false;
-    //         }
-    //     })
-    //     //this.displayChart();
-    // }
     //获取指标Echart图表
     @action getControlEchartData(){
         let beginTime = '', endTime = '';
@@ -166,141 +136,59 @@ class dataControl {
             }
         })
     }
-    // //图表初始化
-    // @action initChart(){
-    //     const chart = echarts.init(this.refs.chart);
-    //     const option = {
-    //         color: ['#32D184', '#E4B669', '#1890FF'],
-    //         tooltip: {
-    //             trigger: 'axis',
-    //             backgroundColor: 'rgba(0,0,0,0.82)',
-    //             textStyle: {
-    //                 fontSize: 13
-    //             },
-    //             axisPointer: {
-    //                 type: 'cross',
-    //                 label: {
-    //                     color: '#fff',
-    //                     backgroundColor: '#5D3AB3'
-    //                 }
-    //             }
-    //         },
-    //         grid: {
-    //             top: '30',
-    //             bottom: '10',
-    //             left: '0',
-    //             right: '30',
-    //             containLabel: true
-    //         },
-    //         legend: {
-    //             data: [],
-    //             //selectedMode: 'single'
-    //         },
-    //         toolbox: {
-    //             show: true,
-    //             feature: {
-    //                 // dataZoom: {
-    //                 //     yAxisIndex: 'none'
-    //                 // },
-    //                 dataView: { readOnly: false },
-    //                 // magicType: { type: ['line', 'bar'] },
-    //                 //restore: {},
-    //                 saveAsImage: {}
-    //             }
-    //         },
-    //         xAxis: {
-    //             type: 'category',
-    //             boundaryGap: false,
-    //             axisLine: {
-    //                 symbol: ['none', 'arrow'],
-    //                 onZero: false,
-    //                 lineStyle: {
-    //                     color: '#BFBFBF'
-    //                 }
-    //             },
-    //             axisLabel: {
-    //                 color: '#545454'
-    //             },
-    //             data: []
-    //         },
-    //         yAxis: {
-    //             type: 'value',
-    //             splitLine: {
-    //                 show: true,
-    //                 lineStyle: {
-    //                     type: 'dashed',
-    //                     color: '#E9E9E9'
-    //                 }
-    //             },
-    //             axisLabel: {
-    //                 showMaxLabel: false,
-    //                 color: '#545454'
-    //             },
-    //             axisLine: {
-    //                 symbol: ['none', 'arrow'],
-    //                 lineStyle: {
-    //                     color: '#BFBFBF'
-    //                 }
-    //             }
-    //         },
-    //         series: [
+    @action establishConnection = () => {
+        this.mywebsocket();
+    }    
+    @action mywebsocket = () => {
+        const socket = new SockJs(`http://123.207.88.210:8180/webSocket`)
+    
+        /**
+         * 建立成功的回调函数
+         */
+        socket.onopen = () => {
+            console.log('websocket连接成功！')
 
-    //         ]
-    //     };
-
-    //     chart.setOption(option);
-
-    //     this.chart = chart;
-
-    //     window.addEventListener('resize', _ => {
-    //         chart.resize();
-    //     });
-    // }
-    //图表生成
-    @action setEchartLine(data) {
-        const chart = this.chart;
-        // const monitorTypeName = datacontrol.pointName.monitorType;
-
-        // const totalChangeUnit = getUnit(monitorTypeName).unitA;
-        // const singleChangeUnit = getUnit(monitorTypeName).unitB;
-        // const speedChangeUnit = getUnit(monitorTypeName).unitC;
-        let time = [], singleChange = [], totalChange = [], speedChange = [];
-        data.commonDataVOs && data.commonDataVOs.forEach(v => {
-            time.push(v.createDate);
-            singleChange.push(v.singleChange);
-            totalChange.push(v.totalChange);
-            speedChange.push(v.speedChange);
-        });
-        chart && chart.setOption({
-            legend: {
-                data: ['累计变化量', '单次变化量', '变化速率'],
-                //selectedMode: 'single'
-            },
-            xAxis: {
-                data: time
-            },
-            yAxis: {
-                
-            },
-            series: [
-                {
-                    name: '累计变化量',
-                    type: 'line',
-                    data: totalChange
-                },
-                {
-                    name: '单次变化量',
-                    type: 'line',
-                    data: singleChange
-                },
-                {
-                    name: '变化速率',
-                    type: 'line',
-                    data: speedChange
-                }
-            ]
+        }
+    
+        /**
+         * 服务器有消息返回的回调函数
+         */
+        socket.onmessage = e => {
+            console.log('服务器返回的消息', e.data)
+        }
+    
+        /**
+         * websocket链接关闭的回调函数
+         */
+        socket.onclose = () => {
+            console.log('websocket连接关闭！')
+        }
+    
+        const stompClient = Stomp.over(socket)
+        // let info=[];
+        // let sensor=[];
+        // let error=[];
+        stompClient.connect({}, frame => {
+            // 向后台发送数据
+            // stompClient.send(`/pushdata/dtudata`,data => {
+            //     console.log();
+            // })
+            console.log('Connected:' + frame)
+            // 接受后台返回的消息
+            stompClient.subscribe(`/pushdata/dtudata`, data => {
+                console.log(data);
+                const getData1 = JSON.parse(data.body);
+                console.log(getData1.data);  
+                //this.realtimeValue = getData1.data[0];             
+            })
         })
-        //setTimeout(() => { chart.resize && chart.resize() }, 16);
+        // //重新连接
+        // stompClient.socket.onclose = () => {
+        //     stompClient.connect();
+        // }
+        // stompClient.socket.onerror = () => {
+        //     stompClient.connect();
+        // }
     }
 }
 

@@ -3,6 +3,7 @@ import { observer } from 'mobx-react';
 import './control.scss';
 import datacontrol from 'store/datacontrol.js';
 import DataControlMap from './dataControlMap';
+import DataNone from './datanone';
 
 @observer
 class DataControl extends Component {
@@ -20,9 +21,10 @@ class DataControl extends Component {
     render() { 
         let list = datacontrol.controlTypeData && datacontrol.controlTypeData.map((v,index)=>(
             <li className="datacontrol-ul-li" key={index} value={v.monitorType}>
-                <div>
-                    <DataControlMap typeValue={v.monitorType} value={v.monitorTypeName} />
-                </div>                
+                {(v.monitorType === 26 || v.monitorType === 66 )? 
+                    <DataNone />:
+                    <DataControlMap typeValue={v.monitorType} value={v.monitorTypeName} />                        
+                }                
             </li>
         ))
         return (

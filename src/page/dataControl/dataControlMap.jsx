@@ -8,8 +8,6 @@ import datacontrol from 'store/datacontrol.js';
 import enlarge from 'common/image/enlarge.png';
 import enlarge2 from 'common/image/enlarge2.png';
 import DataControlChart from './dataControlChart';
-import SockJs from 'sockjs-client';
-import Stomp from 'stompjs';
 import ControlChart from './ControlChart';
 import ControlChartNBWY from './ControlChartNBWY';
 
@@ -61,7 +59,7 @@ class DataControlMap extends Component {
                             <div className="datacontrol-table">
                                 <div className="datacontrol-table-item">
                                     <span>实时值</span>
-                                    <span>{this.props.value || '暂无数据'}</span>
+                                    <span>{datacontrol.realtimeValue || '暂无数据'}</span>
                                 </div>
                                 <div className="datacontrol-table-item">
                                     <span>累计值</span>
@@ -73,7 +71,7 @@ class DataControlMap extends Component {
                                 </div>
                                 <div className="datacontrol-table-item">
                                     <span>速率值</span>
-                                    <span>{this.props.typeValue || '暂无数据'}</span>
+                                    <span>{datacontrol.maxValue || '暂无数据'}</span>
                                 </div>
                                 <div className="datacontrol-table-item">
                                     <span>最大值</span>
@@ -117,49 +115,12 @@ class DataControlMap extends Component {
         );
     }
     componentDidMount() {                               
-        //this.mywebsocket();      
+        //this.mywebsocket();
+        //datacontrol.establishConnection();      
     }
     componentWillUnmount() {
-        //this.destroyAutorun && this.destroyAutorun();
     }
-    establishConnection = () => {
-        this.mywebsocket();
-    }    
-    mywebsocket = () => {
-        const socket = new SockJs(`http://123.207.88.210:8180/webSocket`)
     
-        /**
-         * 建立成功的回调函数
-         */
-        socket.onopen = () => {
-            console.log('open a connection')
-        }
-    
-        /**
-         * 服务器有消息返回的回调函数
-         */
-        socket.onmessage = e => {
-            console.log('message', e.data)
-        }
-    
-        /**
-         * websocket链接关闭的回调函数
-         */
-        socket.onclose = () => {
-            console.log('close')
-        }
-    
-        const stompClient = Stomp.over(socket)
-        // let info=[];
-        // let sensor=[];
-        // let error=[];
-        stompClient.connect({}, frame => {
-            console.log('Connected:' + frame)
-            stompClient.subscribe(`/pushdata/dtudata`, data => {
-                console.log(data);
-            })
-        })
-    }
 }
 
 export default DataControlMap;

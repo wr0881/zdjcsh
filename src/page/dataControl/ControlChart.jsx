@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import echarts from 'echarts';
-import { autorun,toJS } from 'mobx';
+import { toJS } from 'mobx';
 import './control.scss';
-import datacontrol from 'store/datacontrol.js';
 import axios from 'axios';
 import pageData from 'store/page.js';
 import { getTime } from 'common/js/util.js';
@@ -25,7 +24,6 @@ class ControlChart extends Component {
     
     componentDidMount() {       
         this.getControlPointName();
-        //this.getControlEchartData();
         this.initChart();
     }
     componentWillUnmount() {
@@ -43,7 +41,6 @@ class ControlChart extends Component {
             const { code, data } = res.data;
             if (code === 0) {
                 this.pointNameData = data;
-                console.log(data);
                 this.getControlEchartData();              
             } else {
                 this.pointNameData = [];
@@ -58,10 +55,6 @@ class ControlChart extends Component {
         let beginTime = '', endTime = '';
         beginTime = getTime(timeType)[0];
         endTime = getTime(timeType)[1];
-        console.log(beginTime);
-        console.log(monitorType);
-        
-        console.log(JSON.stringify(this.pointNameData));
         axios.get('/sector/queryComparisonData', {
             params: {
                 sectorId: pageData.sector.sectorId,
@@ -76,8 +69,6 @@ class ControlChart extends Component {
             if (code === 0 || code === 2) {
                 this.datacontrolChartData = data.comparisonVO;
                 this.getControlEchartDataLoading = false;
-                console.log(data.comparisonVO);
-                console.log('/sector/queryComparisonData code: ', code, msg);
                 this.setEchartData();
             } else {
                 this.datacontrolChartData = [];
@@ -152,9 +143,9 @@ class ControlChart extends Component {
             },
             series:[]
         };
+        chart.showLoading();
         chart.clear();
         chart.setOption(option);
-
         this.chart = chart;
         window.addEventListener('resize', _ => {
             chart.resize();
@@ -162,15 +153,13 @@ class ControlChart extends Component {
     }
     setEchartData(){
         const chart = this.chart;
+        
         let legend = [], dataAry = [];
         const datacontrolChartData = toJS(this.datacontrolChartData);
-        console.log(datacontrolChartData);
         if(!datacontrolChartData){
             return;
         }
         const pointdataType = 'totalChange';
-        const monitorType = this.props.typeValue;
-        console.log(monitorType);
         datacontrolChartData.forEach(v => {
             legend.push(v.monitorPointNumber);
             dataAry.push({
@@ -183,6 +172,7 @@ class ControlChart extends Component {
             
         });
         console.log(legend);
+        chart.hideLoading();
         chart.setOption({
             legend:{
                 data:legend.slice(0,10)
@@ -196,8 +186,15 @@ class ControlChart extends Component {
             },
             series:dataAry.slice(0,10)
         });
-        console.log(this.props.value);
-        console.log("生成图表！！！");
+        
+        console.log(this.props.value+"生成图表！！！");
+    }
+    onChartReadyCallBack = () =>{
+        setTimeout(()=>{
+            this.setState({
+                loadingChart:false
+            });
+        },2000);
     }
 }
 
