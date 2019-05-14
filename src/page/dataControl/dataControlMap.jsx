@@ -31,7 +31,7 @@ class DataControlMap extends Component {
                             <div className="datacontrol-type-wrapper">                           
                                 <span className="datacontrol-type-title"> {this.props.value}                           
                                 </span>
-                                <div className="datacontrol-type-ul" value={this.props.value} onClick={e => {
+                                <div className="datacontrol-type-ul" key={this.props.value} value={this.props.value} onClick={e => {
                                     datacontrol.dataEnlargeVisible = true;
                                     datacontrol.monitorType = this.props.typeValue;
                                     datacontrol.monitorTypeName = this.props.value;
@@ -49,8 +49,8 @@ class DataControlMap extends Component {
                                 marginLeft:'22px'
                             }}>
                                 {monitorType === 26 || monitorType === 66 ?
-                                    <ControlChartNBWY value={this.props.value} typeValue={this.props.typeValue} /> :
-                                    <ControlChart value={this.props.value} typeValue={this.props.typeValue} />
+                                    <ControlChartNBWY key={this.props.value} value={this.props.value} typeValue={this.props.typeValue} /> :
+                                    <ControlChart key={this.props.value} value={this.props.value} typeValue={this.props.typeValue} />
                                 }                                
                                 {/* <ControlChart value={this.props.value} typeValue={this.props.typeValue} />                                */}
                             </div>
@@ -100,6 +100,7 @@ class DataControlMap extends Component {
                 <div className="datacontrol-enlarge-content" style={{width:'100%',height:'400px',border:'1px dashed #f00',position:'absolute',marginTop:'-364px',display:'none'}}></div>
                 <Modal
                     //title={datacontrol.controlTypeData[index].monitorType}
+                    //key={this.props.value}
                     visible={datacontrol.dataEnlargeVisible}
                     destroyOnClose={true}
                     keyboard={true}
@@ -109,14 +110,14 @@ class DataControlMap extends Component {
                     bodyStyle={{ padding: '0px' }}
                     onCancel={_ => { datacontrol.dataEnlargeVisible = false }}
                 >
-                    <DataControlChart value={this.props.value} typeValue={this.props.typeValue} />
+                    <DataControlChart key={this.props.value} value={this.props.value} typeValue={this.props.typeValue} />
                 </Modal>
             </div>
         );
     }
     componentDidMount() {                               
         //this.mywebsocket();
-        //datacontrol.establishConnection();      
+        datacontrol.establishConnection();      
     }
     componentWillUnmount() {
     }

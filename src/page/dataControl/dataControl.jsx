@@ -23,7 +23,7 @@ class DataControl extends Component {
             <li className="datacontrol-ul-li" key={index} value={v.monitorType}>
                 {(v.monitorType === 26 || v.monitorType === 66 )? 
                     <DataNone />:
-                    <DataControlMap typeValue={v.monitorType} value={v.monitorTypeName} />                        
+                    <DataControlMap key={v.monitorTypeName} typeValue={v.monitorType} value={v.monitorTypeName} />                        
                 }                
             </li>
         ))

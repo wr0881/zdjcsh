@@ -58,10 +58,12 @@ class DataControlChart extends Component {
                     <div className="dataAnalyse-operate-title">{datacontrol.monitorTypeName}</div>
                     <div className="dataAnalyse-operate-content" style={{paddingTop:'30px'}}>
                         <RadioGroup
-                            key={Math.random()}
+                            key={datacontrol.pointName}
                             onChange={(e) => { datacontrol.pointName = e.target.value;
-                                this.getPointEchartData();  
+                                this.getPointEchartData();
+                                console.log(datacontrol.pointName);  
                             }}
+                            //defaultValue={datacontrol.pointNameData[0]}
                             value={datacontrol.pointName}                            
                         >
                             {datacontrol.pointNameData.map(v => {
@@ -72,9 +74,11 @@ class DataControlChart extends Component {
                     
                 </div>
                 <div className="right-control-modal">
-                    <div className="controlChart" style={{width:'100%',height:'350px'}}>                        
+                    <div className="controlChart" style={{width:'100%',height:'350px'}}>
+                                                
                         <div className="datacontrol-chart" ref='chart2' value={datacontrol.pointName} style={{padding:'10px',width:'100%',height:'300px',marginTop:'50px'}}>
-                        </div>                        
+                        </div>  
+                                             
                     </div>
                     <div className="datacontrol-table" style={{width:'100%',height:'282px',padding:'10px',overflowY:'auto'}}>                        
                         <Table
@@ -93,11 +97,9 @@ class DataControlChart extends Component {
     
     componentDidMount() {       
         this.initChart();
-        datacontrol.getControlTypeData();
-        
+        datacontrol.getControlTypeData();       
     }
     componentWillUnmount() {
-        
     }
     
     getPointEchartData() {
