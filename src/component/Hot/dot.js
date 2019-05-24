@@ -10,6 +10,7 @@ class Dot extends Component {
     render() {
         const { picX, picY, dotColor, monitorPointNumber, monitorTypeName, terminalNumber } = this.props.value;
         const { onClick } = this.props;
+        //console.log('value', this.props.value);
         const content = (
             <div>
                 <div>监测指标 : {monitorTypeName ? monitorTypeName : '无'}</div>

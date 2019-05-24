@@ -5,7 +5,6 @@ import echarts from 'echarts';
 import { DatePicker, Select, Button } from 'antd';
 import monitorpage from 'store/monitorpage.js';
 import { getUnit } from 'common/js/util.js';
-import $ from  'jquery';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -29,8 +28,6 @@ class PointDetail extends Component {
                     <RangePicker showTime format={dateFormat} defaultValue={monitorpage.selsectTime}
                         onOk={v => {
                             monitorpage.selsectTime = v;
-                            monitorpage.timeselectLoading = true;
-                            monitorpage.getMapEchartData();
                         }}
                     />
                     <Button
@@ -48,7 +45,13 @@ class PointDetail extends Component {
                             monitorpage.dataContrastVisible = true;
                         }}
                     >数据对比</Button>
-                    <div style={{ flex: "1 1 auto" }}>
+                    <div style={{
+                        flex: '1 1 auto',
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                        alignItems: 'center'
+                    }}>
+                        <div style={{ marginRight: '10px' }}>选择测点: </div>
                         <Select
                             showSearch
                             style={{ width: 200, float: 'right' }}
@@ -106,7 +109,9 @@ class PointDetail extends Component {
                     <div className="point-detail-chart-wrapper" style={{
                         display: monitorpage.isShowMapChart ? 'block' : 'none'
                     }}>
-                        <div className="point-detail-chart" ref='chart' style={{padding:'5px'}}></div>
+                        <div>
+                            <div className="point-detail-chart" ref='chart'></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -158,29 +163,30 @@ class PointDetail extends Component {
             },
             toolbox: {
                 show: true,
-                right: '10px',
                 feature: {
-                    //dataZoom: {
-                    //    yAxisIndex: 'none'
-                    //},
+                    dataZoom: {
+                        yAxisIndex: 'none'
+                    },
                     dataView: { 
                         show: true,
                         title: '数据视图',
                         textColor: 'rgba(0, 0, 0, 0.65)',
                         textareaBorderColor: '#DFDDEC',
-                        
+                        buttonColor: '#5D3AB3',
                         readOnly: true,
                         lang:['数据视图','关闭','刷新'],
                         optionToContent: function (opt) {
                             let axisData = opt.xAxis[0].data; //坐标数据
+                            console.log(opt.xAxis[0]);
                             let series = opt.series; //折线图数据
-                            let tdHeads = '<td  style="padding: 0 10px">时间</td>'; //表头
+                            let tdHeads = '<td  style="padding: 0 10px">测试时间</td>'; //表头
                             let tdBodys = ''; //数据
                             series.forEach(function (item) {
                                 //组装表头
                                 tdHeads += `<td style="padding: 0 10px">${item.name}</td>`;
                             });
                             let table = `<table border="1" style="width:100%;border-collapse:collapse;font-size:14px;text-align:center;border-color:#DFDDEC"><tbody><tr>${tdHeads} </tr>`;
+                            console.log(axisData.length);
                             for (let i = 0, l = axisData.length; i < l; i++) {
                                 for (let j = 0; j < series.length; j++) {
                                     //组装表数据
@@ -193,11 +199,9 @@ class PointDetail extends Component {
                             return table;
                         }
                     },
-                    //magicType: { type: ['line', 'bar'] },
-                    //restore: {},
-                    saveAsImage: {
-                        title: '保存图片'
-                    }
+                    magicType: { type: ['line', 'bar'] },
+                    restore: {},
+                    saveAsImage: {}
                 }
             },
             xAxis: {

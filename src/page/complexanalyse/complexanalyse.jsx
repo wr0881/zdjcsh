@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
-import { Checkbox, Radio, Button } from 'antd';
+import { Checkbox, Radio, Button, InputNumber } from 'antd';
 import Chart from './chart';
+import Status from 'component/Status/status';
 import analyse from 'store/complexanalyse';
 import './complexanalyse.scss';
 
@@ -47,18 +48,64 @@ class ComplexAnalyse extends Component {
                             <RadioButton value="singleChange">单次变化量</RadioButton>
                             <RadioButton value="speedChange">变化速率</RadioButton>
                         </RadioGroup>
+                        <div style={{ float: 'right' }}>
+                            <span>上边缘: </span>
+                            <InputNumber size='small' defaultValue={analyse.upperEdge} onChange={v => { analyse.upperEdge = v; }} />
+                            <span>下边缘: </span>
+                            <InputNumber size='small' defaultValue={analyse.lowerEdge} onChange={v => { analyse.lowerEdge = v; }} />
+                        </div>
                     </div>
 
-                    {analyse.chartData.length ?
+                    {analyse.getEchartDataLoading ?
                         <div className="complexanalyse-chart">
-                            <div className='complexanalyse-chartitem-wrapper'>
-                                <Chart charttype='line' />
-                                <Chart charttype='scatter' />
-                                <Chart charttype='scatter' />
-                                <Chart charttype='line' />
-                            </div>
+                            <Status loading text='加载中...' />
                         </div>
-                        : '没数据'
+                        :
+                        <div className="complexanalyse-chart">
+                            {analyse.chartData.length ?
+                                <div className='complexanalyse-chartitem-wrapper'>
+                                    <div className='complexanalyse-chartitem'>
+                                        <div className='complexanalyse-chartitem-title'>
+                                            <div></div>
+                                            <span>原数据</span>
+                                        </div>
+                                        <div className='complexanalyse-chartitem-chart'><Chart charttype='line' /></div>
+                                    </div>
+                                    <div className='complexanalyse-chartitem'>
+                                        <div className='complexanalyse-chartitem-title'>
+                                            <div></div>
+                                            <span>离散分析图</span>
+                                        </div>
+                                        <div className='complexanalyse-chartitem-chart'><Chart charttype='scatter' /></div>
+                                    </div>
+                                    {analyse.chartData_boxplot.length ?
+                                        <div className='complexanalyse-chartitem'>
+                                            <div className='complexanalyse-chartitem-title'>
+                                                <div></div>
+                                                <span>箱型分析</span>
+                                            </div>
+                                            <div className='complexanalyse-chartitem-chart'><Chart charttype='boxplot' /></div>
+                                        </div>
+                                        :
+                                        <div className='complexanalyse-chartitem'>
+                                            <div className='complexanalyse-chartitem-title'>
+                                                <div></div>
+                                                <span>箱型分析</span>
+                                            </div>
+                                            <div className='complexanalyse-chartitem-chart'><Status text='暂无分析' /></div>
+                                        </div>
+                                    }
+                                    <div className='complexanalyse-chartitem'>
+                                        <div className='complexanalyse-chartitem-title'>
+                                            <div></div>
+                                            <span>趋势分析图</span>
+                                        </div>
+                                        <div className='complexanalyse-chartitem-chart'><Chart charttype='line' /></div>
+                                    </div>
+                                </div>
+                                : <Status text='暂无数据' />
+                            }
+                        </div>
                     }
 
                 </div>
@@ -77,15 +124,15 @@ class ComplexAnalyse extends Component {
                     </div>
                     <div>选择测点</div>
                     <div className="complexanalyse-operate-point">
-                        <CheckboxGroup
+                        <RadioGroup
                             key={Math.random()}
                             defaultValue={analyse.pointName}
-                            onChange={v => { analyse.pointName = v }}
+                            onChange={v => { analyse.pointName = v.target.value; }}
                         >
                             {analyse.pointData.map(v => {
-                                return <Checkbox key={v} value={v}>{v}</Checkbox>;
+                                return <Radio key={v} value={v}>{v}</Radio>;
                             })}
-                        </CheckboxGroup>
+                        </RadioGroup>
                     </div>
                     <div className="complexanalyse-operate-btn">
                         <Button

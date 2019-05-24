@@ -8,7 +8,7 @@ import { getUnit } from 'common/js/util.js';
 
 const { RangePicker } = DatePicker;
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
-const Option = Select.Option;
+const { Option } = Select;
 
 @observer
 class PointDetail extends Component {
@@ -52,6 +52,25 @@ class PointDetail extends Component {
                             monitorpage.dataContrastVisible = true;
                         }}
                     >数据对比</Button>
+                    <div style={{
+                        flex: '1 1 auto',
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                        alignItems: 'center'
+                    }}>
+                        <div style={{ marginRight: '10px' }}>选择测点: </div>
+                        <Select
+                            showSearch
+                            style={{ width: 200, float: 'right' }}
+                            placeholder="选择测点"
+                            value={monitorpage.selectPoint.monitorPointNumber}
+                            onChange={v => { monitorpage.selectPoint = JSON.parse(v) }}
+                        >
+                            {toJS(monitorpage.selectPointList).map(v => {
+                                return <Option key={v.monitorPointNumber} value={JSON.stringify(v)}>{v.monitorPointNumber}</Option>
+                            })}
+                        </Select>
+                    </div>
                 </div>
                 <div style={{ display: JSON.stringify(toJS(monitorpage.selectPoint)) === '{}' ? 'block' : 'none', height: '400px' }}>
                     <div style={{ height: '50px' }}></div>
@@ -105,7 +124,7 @@ class PointDetail extends Component {
                         display: monitorpage.isShowMapChart ? 'block' : 'none'
                     }}>
                         <div>
-                            <div className="point-detail-chart" ref='chart1' style={{padding:'5px'}}></div>
+                            <div className="point-detail-chart" ref='chart1'></div>
                         </div>
                     </div>
                     <div className="point-detail-chart-wrapper" style={{
@@ -131,7 +150,7 @@ class PointDetail extends Component {
                             })} */}
                         </Select>
                         <div>
-                            <div className="point-detail-chart" ref='chart2' style={{padding:'5px'}}></div>
+                            <div className="point-detail-chart" ref='chart2'></div>
                         </div>
                     </div>
                 </div>
@@ -186,50 +205,6 @@ class PointDetail extends Component {
             legend: {
                 data: [],
                 //selectedMode: 'single'
-            },
-            toolbox: {
-                show: true,
-                right: '10px',
-                feature: {
-                    //dataZoom: {
-                    //    yAxisIndex: 'none'
-                    //},
-                    dataView: { 
-                        show: true,
-                        title: '数据视图',
-                        textColor: 'rgba(0, 0, 0, 0.65)',
-                        textareaBorderColor: '#DFDDEC',
-                        
-                        readOnly: true,
-                        lang:['数据视图','关闭','刷新'],
-                        optionToContent: function (opt) {
-                            let axisData = opt.xAxis[0].data; //坐标数据
-                            let series = opt.series; //折线图数据
-                            let tdHeads = '<td  style="padding: 0 10px">时间</td>'; //表头
-                            let tdBodys = ''; //数据
-                            series.forEach(function (item) {
-                                //组装表头
-                                tdHeads += `<td style="padding: 0 10px">${item.name}</td>`;
-                            });
-                            let table = `<table border="1" style="width:100%;border-collapse:collapse;font-size:14px;text-align:center;border-color:#DFDDEC"><tbody><tr>${tdHeads} </tr>`;
-                            for (let i = 0, l = axisData.length; i < l; i++) {
-                                for (let j = 0; j < series.length; j++) {
-                                    //组装表数据
-                                    tdBodys += `<td>${ series[j].data[i]}</td>`;
-                                }
-                                table += `<tr><td style="padding: 0 10px">${axisData[i]}</td>${tdBodys}</tr>`;
-                                tdBodys = '';
-                            }
-                            table += '</tbody></table>';
-                            return table;
-                        }
-                    },
-                    //magicType: { type: ['line', 'bar'] },
-                    //restore: {},
-                    saveAsImage: {
-                        title: '保存图片'
-                    }
-                }
             },
             xAxis: {
                 type: 'category',
@@ -303,50 +278,6 @@ class PointDetail extends Component {
             legend: {
                 data: ['深度X通道', '深度Y通道'],
                 //selectedMode: 'single'
-            },
-            toolbox: {
-                show: true,
-                right: '10px',
-                feature: {
-                    //dataZoom: {
-                    //    yAxisIndex: 'none'
-                    //},
-                    dataView: { 
-                        show: true,
-                        title: '数据视图',
-                        textColor: 'rgba(0, 0, 0, 0.65)',
-                        textareaBorderColor: '#DFDDEC',
-                        
-                        readOnly: true,
-                        lang:['数据视图','关闭','刷新'],
-                        optionToContent: function (opt) {
-                            let axisData = opt.xAxis[0].data; //坐标数据
-                            let series = opt.series; //折线图数据
-                            let tdHeads = '<td  style="padding: 0 10px">时间</td>'; //表头
-                            let tdBodys = ''; //数据
-                            series.forEach(function (item) {
-                                //组装表头
-                                tdHeads += `<td style="padding: 0 10px">${item.name}</td>`;
-                            });
-                            let table = `<table border="1" style="width:100%;border-collapse:collapse;font-size:14px;text-align:center;border-color:#DFDDEC"><tbody><tr>${tdHeads} </tr>`;
-                            for (let i = 0, l = axisData.length; i < l; i++) {
-                                for (let j = 0; j < series.length; j++) {
-                                    //组装表数据
-                                    tdBodys += `<td>${ series[j].data[i]}</td>`;
-                                }
-                                table += `<tr><td style="padding: 0 10px">${axisData[i]}</td>${tdBodys}</tr>`;
-                                tdBodys = '';
-                            }
-                            table += '</tbody></table>';
-                            return table;
-                        }
-                    },
-                    //magicType: { type: ['line', 'bar'] },
-                    //restore: {},
-                    saveAsImage: {
-                        title: '保存图片'
-                    }
-                }
             },
             xAxis: {
                 type: 'category',

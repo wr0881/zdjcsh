@@ -41,7 +41,6 @@ class Layout extends Component {
             const { code, data, msg } = res.data;
             unit.unit = data;
             console.log(data);
-            console.log(data.slice(0,10));
         })
     }
 }

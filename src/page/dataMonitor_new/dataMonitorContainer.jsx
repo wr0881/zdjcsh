@@ -24,18 +24,19 @@ class DataMonitorContainer extends Component {
     render() {
         const monitorTypeName = monitorpage.selectPoint.monitorTypeName;
         const monitorType = monitorpage.selectPoint.monitorType;
-        //console.log(monitorType);
         return (
             <div className='dataMonitor-wrapper'>
-                {/* <div className='pointmap-explain'>
-                    <Badge status="success" text="监测中" />
-                    <Badge status="error" text="监测异常" />
-                    <Badge status="default" text="监测完毕" />
+                <div className='pointmap-explain'>
+                    <Badge color="green" text="正常" />
+                    <Badge color="yellow" text="一级告警" />
+                    <Badge color="orange" text="二级告警" />
+                    <Badge color="red" text="三级告警" />
+                    <Badge color="gray" text="监测完毕" />
                     <span style={{ color: '#faad14' }}>
                         <Icon type="exclamation-circle" />
                         <span style={{ marginLeft: '8px', color: 'rgba(0, 0, 0, 0.65)' }}>点击下图圆点查看测点数据信息!</span>
                     </span>
-                </div> */}
+                </div>
                 <PointMap />
                 {monitorTypeName === '' ?
                     <PointDetail_SLYL /> :
@@ -43,17 +44,17 @@ class DataMonitorContainer extends Component {
                         <PointDetail_GTGC /> :
                         monitorTypeName === '' ?
                             <PointDetail_KSW /> :
-                            monitorTypeName === '' ?
+                            monitorTypeName === '降雨量' ?
                                 <PointDetail_YL /> :
                                 // monitorTypeName === '水平位移' ?
                                 //     <PointDetail_SPWY /> :
-                                    // monitorTypeName === '深部位移' ?
-                                    //     <PointDetail_SBWY /> :
-                                    monitorType === 52 ?
-                                        <PointDetail_GPS /> :
-                                        monitorType === 66 || monitorType === 26 || monitorType === 80 ?
-                                            <PointDetail_NBWY /> :
-                                            <PointDetail_NM />
+                                // monitorTypeName === '深部位移' ?
+                                //     <PointDetail_SBWY /> :
+                                monitorType === 52 ?
+                                    <PointDetail_GPS /> :
+                                    monitorType === 66 || monitorType === 26 || monitorType === 80 ?
+                                        <PointDetail_NBWY /> :
+                                        <PointDetail_NM />
                 }
                 <Modal
                     key='dataAnalyse'

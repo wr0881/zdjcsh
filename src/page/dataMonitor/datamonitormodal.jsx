@@ -3,8 +3,8 @@ import { observer } from 'mobx-react';
 import { toJS,autorun } from 'mobx';
 import { Radio,Table } from 'antd';
 import echarts from 'echarts';
-import './control.scss';
-import datacontrol from 'store/datacontrol.js';
+import './monitor.scss';
+import datamonitor from 'store/datamonitor.js';
 import axios from 'axios';
 import pageData from 'store/page.js';
 import { getTime } from 'common/js/util.js';
@@ -13,7 +13,7 @@ import { getUnit } from 'common/js/util.js';
 const RadioGroup = Radio.Group;
 
 @observer
-class DataControlChart extends Component {
+class DataMonitorModal extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -27,7 +27,7 @@ class DataControlChart extends Component {
         const columns = [
             {
                 title: '测点名称',
-                render:()=>datacontrol.pointName,
+                render:()=>datamonitor.pointName,
             },
             {
                 title: '测试时间',
@@ -53,36 +53,32 @@ class DataControlChart extends Component {
         
         return(
             
-            <div className="control-modal-content">
-                <div className="left-control-modal" style={{backgroundColor:'#FAFBFF'}}>
-                    <div className="dataAnalyse-operate-title">{datacontrol.monitorTypeName}</div>
-                    <div className="dataAnalyse-operate-content" style={{paddingTop:'30px'}}>
+            <div className="monitor-modal-content">
+                <div className="left-monitor-modal" style={{backgroundColor:'#FAFBFF'}}>
+                    <div className="dataAnalyse-operate-title">{datamonitor.monitorTypeName}</div>
+                    <div className="dataAnalyse-operate-content" style={{marginTop:'30px',height:'324px',overflowY:'auto'}}>
                         <RadioGroup
-                            key={datacontrol.pointName}
-                            onChange={(e) => { datacontrol.pointName = e.target.value;
-                                this.getPointEchartData();
-                                console.log(datacontrol.pointName);  
+                            //key={datamonitor.pointName}
+                            onChange={(e) => { datamonitor.pointName = e.target.value;
+                                this.getPointEchartData();  
                             }}
-                            //defaultValue={datacontrol.pointNameData[0]}
-                            value={datacontrol.pointName}                            
+                            value={datamonitor.pointName}                            
                         >
-                            {datacontrol.pointNameData.map(v => {
+                            {datamonitor.pointNameData.map(v => {
                                 return <Radio key={v} value={v}>{v}</Radio>;
                             })}
                         </RadioGroup>
                     </div>
-                    
+
                 </div>
-                <div className="right-control-modal">
-                    <div className="controlChart" style={{width:'100%',height:'350px'}}>
-                                                
-                        <div className="datacontrol-chart" ref='chart2' value={datacontrol.pointName} style={{padding:'10px',width:'100%',height:'300px',marginTop:'50px'}}>
-                        </div>  
-                                             
+                <div className="right-monitor-modal">
+                    <div className="monitorChart" style={{width:'100%',height:'350px'}}>
+                            <div className="datamonitor-chart" ref='chart2' value={datamonitor.pointName} style={{padding:'10px',width:'100%',height:'300px',marginTop:'50px'}}>
+                            </div>  
                     </div>
-                    <div className="datacontrol-table" style={{width:'100%',height:'282px',padding:'10px',overflowY:'auto'}}>                        
+                    <div className="datamonitor-table" style={{width:'100%',height:'282px',padding:'10px',overflowY:'auto'}}>                        
                         <Table
-                            key={Math.random()}
+                            //key={Math.random()}
                             className='pointNameData'
                             columns={columns}
                             bordered={true}
@@ -95,23 +91,23 @@ class DataControlChart extends Component {
         );
     }
     
-    componentDidMount() {       
-        this.initChart();
-        datacontrol.getControlTypeData();       
+    componentDidMount() {    
+        this.initChart();                      
     }
     componentWillUnmount() {
+          
     }
-    
     getPointEchartData() {
         const timeType = 'day';
         let beginTime = '', endTime = '';
         beginTime = getTime(timeType)[0];
         endTime = getTime(timeType)[1];
+        console.log(datamonitor.pointName);
         axios.get('/sector/querySensorData', {
             params: {
                 sectorId: pageData.sector.sectorId,
-                monitorType: datacontrol.monitorType,
-                monitorPointNumber: datacontrol.pointName,
+                monitorType: datamonitor.monitorType,
+                monitorPointNumber: datamonitor.pointName,
                 beginTime: beginTime,
                 endTime: endTime,
             }
@@ -119,7 +115,8 @@ class DataControlChart extends Component {
             const { code,data } = res.data;
             if (code === 0) {
                 this.pointEchartData = data;
-                this.timeselectLoading = false;  
+                this.timeselectLoading = false;
+                console.log(this.pointEchartData.commonDataVOs.length);  
                 this.setEchartLine(this.pointEchartData);
                 const TableData = data.commonDataVOs.map(v => {
                     return { ...v, key: Math.random()};
@@ -134,6 +131,7 @@ class DataControlChart extends Component {
             }
         })
     }
+    
     initChart(){
         const chart = echarts.init(this.refs.chart2);
         const option = {
@@ -142,7 +140,8 @@ class DataControlChart extends Component {
                 trigger: 'axis',
                 backgroundColor: 'rgba(0,0,0,0.82)',
                 textStyle: {
-                    fontSize: 13
+                    fontSize: 13,
+
                 },
                 axisPointer: {
                     type: 'cross',
@@ -161,6 +160,46 @@ class DataControlChart extends Component {
             },
             legend: {
                 data: [],
+                //selectedMode: 'single'
+            },
+            
+            xAxis: {
+                data: []
+            },
+            yAxis: {
+            },
+            series: [
+                
+            ]
+        };
+        chart.showLoading({color:'#fff',text:'请选择测点!!!',textStyle:{fontSize:20}});
+        window.addEventListener('resize', _ => {
+            chart.resize();
+        });
+        chart.clear();
+        chart.setOption(option);
+        this.chart = chart;
+        
+    }
+    setEchartLine(data) {
+        const chart = this.chart;
+        const monitorTypeName = this.props.typeValue;
+
+        const totalChangeUnit = getUnit(monitorTypeName).unitA;
+        const singleChangeUnit = getUnit(monitorTypeName).unitB;
+        const speedChangeUnit = getUnit(monitorTypeName).unitC;
+        let time = [], singleChange = [], totalChange = [], speedChange = [];
+        console.log(data.commonDataVOs);
+        data.commonDataVOs && data.commonDataVOs.forEach(v => {
+            time.push(v.createDate);
+            singleChange.push(v.singleChange);
+            totalChange.push(v.totalChange);
+            speedChange.push(v.speedChange);
+        });
+        chart.hideLoading();
+        chart && chart.setOption({
+            legend: {
+                data: ['累计变化量'+totalChangeUnit, '单次变化量'+singleChangeUnit, '变化速率'+speedChangeUnit],
                 //selectedMode: 'single'
             },
             toolbox: {
@@ -212,7 +251,7 @@ class DataControlChart extends Component {
                 axisLabel: {
                     color: '#545454'
                 },
-                data: []
+                data: time
             },
             yAxis: {
                 type: 'value',
@@ -233,44 +272,6 @@ class DataControlChart extends Component {
                         color: '#BFBFBF'
                     }
                 }
-            },
-            series: [
-
-            ]
-        };
-        chart.showLoading();
-        chart.setOption(option);
-        this.chart = chart;
-        window.addEventListener('resize', _ => {
-            chart.resize();
-        });
-    }
-    setEchartLine(data) {
-        const chart = this.chart;
-        const monitorTypeName = this.props.typeValue;
-
-        const totalChangeUnit = getUnit(monitorTypeName).unitA;
-        const singleChangeUnit = getUnit(monitorTypeName).unitB;
-        const speedChangeUnit = getUnit(monitorTypeName).unitC;
-        let time = [], singleChange = [], totalChange = [], speedChange = [];
-        console.log(data.commonDataVOs);
-        data.commonDataVOs && data.commonDataVOs.forEach(v => {
-            time.push(v.createDate);
-            singleChange.push(v.singleChange);
-            totalChange.push(v.totalChange);
-            speedChange.push(v.speedChange);
-        });
-        chart.hideLoading();
-        chart && chart.setOption({
-            legend: {
-                data: ['累计变化量'+totalChangeUnit, '单次变化量'+singleChangeUnit, '变化速率'+speedChangeUnit],
-                //selectedMode: 'single'
-            },
-            xAxis: {
-                data: time
-            },
-            yAxis: {
-                
             },
             series: [
                 {
@@ -294,4 +295,4 @@ class DataControlChart extends Component {
     }
 }
 
-export default DataControlChart;
+export default DataMonitorModal;

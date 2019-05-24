@@ -1,7 +1,7 @@
 @import '../dataMonitor_old/dataMonitor.scss';
 @import '../dataMonitor_old/dataAnalyse.scss';
 
-.control-operate {
+.monitor-operate {
     display: flex;
     flex-flow: row nowrap;
     justify-content: flex-start;
@@ -21,7 +21,7 @@
     background-color:rgba(0, 0, 0, 0.3)!important;
 }
 
-.ant-table-body table tr th div{
+.ant-table-body table tr th{
     text-align: center;
 }
 
@@ -29,57 +29,57 @@
     text-align: center;
 }
 
-.datacontrol-wrapper{
+.datamonitor-wrapper{
     background-color: #F4F7FC;
 }
 
-.datacontrol-top{
+.datamonitor-top{
     width: 100%;
     height: 10px;
     margin-top: -20px;
     background-color:#F4F7FC;
 }
 
-.datacontrol-ul-li{
+.datamonitor-ul-li{
     list-style: none;
     margin-top: 20px;
 }
 
-.datacontrol-box{
+.datamonitor-box{
     width:100%;
     height:364px;
     background-color:#fff;
     border-radius:8px;
 }
 
-.datacontrol-content-wrapper{
+.datamonitor-content-wrapper{
     height: 364px;
 }
 
-.datacontrol-content{
+.datamonitor-content{
     float:left;
     width:100%;
     height:364px;
 }
 
-.datacontrol-ul{
+.datamonitor-ul{
     margin: 0;
     padding: 0;
 }
 
-.datacontrol-chart-wrapper{
-    width:80%;
+.datamonitor-chart-wrapper{
+    width:100%;
     height:364px;
     float:left;
 }
 
-.datacontrol-type-wrapper{
+.datamonitor-type-wrapper{
     height:45px;
     border-left:4px solid #29CF7F;
     border-bottom:1px solid #ECEAF3;
 }
 
-.datacontrol-type-title{
+.datamonitor-type-title{
     float: left;
     width:200px;
     height:30px;
@@ -91,7 +91,7 @@
     color:#121521;
 }
 
-.datacontrol-type-ul ul{
+.datamonitor-type-ul ul{
     position: relative;
     margin: 0;
     padding: 0;
@@ -103,38 +103,38 @@
     margin-top: 10px;
 }
 
-.datacontrol-type-ul ul li:nth-child(1){
+.datamonitor-type-ul ul li:nth-child(1){
     position: absolute;
 }
 
-.datacontrol-type-ul ul li:nth-child(2){
+.datamonitor-type-ul ul li:nth-child(2){
     position: absolute;
     display: none;
 }
 
-.datacontrol-type-ul ul:hover li:nth-child(2){
+.datamonitor-type-ul ul:hover li:nth-child(2){
     display: block;
 }
 
-.datacontrol-table-wrapper{
+.datamonitor-table-wrapper{
     width:20%;
     height:364px;
     float:right;
     padding:20px;
 }
 
-.datacontrol-table {
+.datamonitor-table {
     overflow: hidden;
 }
 
-.datacontrol-table-item {
+.datamonitor-table-item {
     float: left;
     width: 100%;
     border: 1px solid #DFDDEC;
     overflow: hidden;
 }
 
-.datacontrol-table-item>span {
+.datamonitor-table-item>span {
     float: left;
     display: block;
     width: 50%;
@@ -143,25 +143,25 @@
     text-align: center;
 }
 
-.datacontrol-table-item>span:nth-child(1) {
+.datamonitor-table-item>span:nth-child(1) {
     background-color: #F4F7FC;
     border-right: 1px solid #DFDDEC;
 }
 
 
-.control-modal-content{
+.monitor-modal-content{
     width: 100%;
     height: 700px;
 }
 
-.left-control-modal{
+.left-monitor-modal{
     width:300px;
     height:700px;
     float:left;
     border-radius:4px;
 }
 
-.right-control-modal{
+.right-monitor-modal{
     width:1080px;
     height: 700px;
     float: right;

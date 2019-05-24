@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import { autorun, toJS } from 'mobx';
 import { observer } from 'mobx-react';
 import echarts from 'echarts';
-import { DatePicker, Button } from 'antd';
+import { DatePicker, Select, Button } from 'antd';
 import monitorpage from 'store/monitorpage.js';
 import { getUnit } from 'common/js/util.js';
 
 const { RangePicker } = DatePicker;
+const { Option } = Select;
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
 
 @observer
@@ -26,6 +27,8 @@ class PointDetail extends Component {
                     <RangePicker showTime format={dateFormat} defaultValue={monitorpage.selsectTime}
                         onOk={v => {
                             monitorpage.selsectTime = v;
+                            monitorpage.timeselectLoading = true;
+                            monitorpage.getMapEchartData();
                         }}
                     />
                     <Button
@@ -43,6 +46,25 @@ class PointDetail extends Component {
                             monitorpage.dataContrastVisible = true;
                         }}
                     >数据对比</Button>
+                    <div style={{
+                        flex: '1 1 auto',
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                        alignItems: 'center'
+                    }}>
+                        <div style={{ marginRight: '10px' }}>选择测点: </div>
+                        <Select
+                            showSearch
+                            style={{ width: 200, float: 'right' }}
+                            placeholder="选择测点"
+                            value={monitorpage.selectPoint.monitorPointNumber}
+                            onChange={v => { monitorpage.selectPoint = JSON.parse(v) }}
+                        >
+                            {toJS(monitorpage.selectPointList).map(v => {
+                                return <Option key={v.monitorPointNumber} value={JSON.stringify(v)}>{v.monitorPointNumber}</Option>
+                            })}
+                        </Select>
+                    </div>
                 </div>
                 <div style={{ display: JSON.stringify(toJS(monitorpage.selectPoint)) === '{}' ? 'block' : 'none', height: '400px' }}>
                     <div style={{ height: '50px' }}></div>
@@ -199,18 +221,20 @@ class PointDetail extends Component {
     setEchartLine(data) {
         const chart = this.chart;
         const monitorTypeName = monitorpage.selectPoint.monitorTypeName;
-        const singleChangeUnit = getUnit(monitorTypeName).unitB;
-        const speedChangeUnit = getUnit(monitorTypeName).unitC;
-        let time = [], singleChange = [], speedChange = [];
+        const measuredDataUnit = getUnit(monitorTypeName).unitD;
+        // const speedChangeUnit = getUnit(monitorTypeName).unitC;
+        let time = [], measuredData = [], singleChange = [], speedChange = [];
         data.commonDataVOs.forEach(v => {
             time.push(v.createDate);
+            measuredData.push(v.measuredData);
             singleChange.push(v.singleChange);
             speedChange.push(v.speedChange);
         });
-        console.log(time);
+        // console.log(time);
         chart && chart.setOption({
             legend: {
-                data: ['单次变化量' + singleChangeUnit, '变化速率' + speedChangeUnit],
+                // data: ['单次变化量' + singleChangeUnit, '变化速率' + speedChangeUnit],
+                data: ['实时值' + measuredDataUnit],
                 selectedMode: 'single'
             },
             xAxis: {
@@ -218,15 +242,20 @@ class PointDetail extends Component {
             },
             series: [
                 {
-                    name: '单次变化量' + singleChangeUnit,
+                    name: '实时值' + measuredDataUnit,
                     type: 'line',
-                    data: singleChange
+                    data: measuredData
                 },
-                {
-                    name: '变化速率' + speedChangeUnit,
-                    type: 'line',
-                    data: speedChange
-                }
+                // {
+                //     name: '单次变化量' + singleChangeUnit,
+                //     type: 'line',
+                //     data: singleChange
+                // },
+                // {
+                //     name: '变化速率' + speedChangeUnit,
+                //     type: 'line',
+                //     data: speedChange
+                // }
             ]
         })
         setTimeout(() => { chart.resize && chart.resize() }, 16);

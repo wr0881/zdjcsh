@@ -53,9 +53,63 @@
     right: 0px;
 }
 
-.complexanalyse-chartitem-wrapper>div{
+.complexanalyse-chartitem {
     float: left;
-    padding: 24px;
     width: 50%;
     height: 50%;
+}
+
+.complexanalyse-operate-point{
+    max-height: 324px;
+    overflow-y: auto;
+    margin-top: 10px;
+}
+
+.complexanalyse-chartitem {
+    display: flex;
+    flex-flow: column nowrap;
+    border: 0.5px dashed #ECEAF3;
+
+    .complexanalyse-chartitem-title {
+        flex: 0 0 48px;
+        display: flex;
+        align-items: center;
+        background-color: rgba(236, 234, 243,.5);
+        // border-bottom: 1px solid #ECEAF3;
+
+        &>div {
+            flex: 0 0 55px;
+            height: 100%;
+            position: relative;
+
+            &::before {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+
+                background-color: #32D184;
+            }
+        }
+
+        &>span {
+            flex: 1 1 auto;
+            font-size: 20px;
+            font-weight: 400;
+            color: rgba(18, 21, 33, 1);
+        }
+    }
+
+    .complexanalyse-chartitem-chart {
+        flex: 1 1 auto;
+
+        &>div {
+            width: 100%;
+            height: 100%;
+        }
+    }
 }

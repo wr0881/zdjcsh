@@ -29,7 +29,6 @@ class DataContrast extends Component {
     }
     render() {
         const monitorTypeName = toJS(monitorpage.monitorTypeName);
-        console.log(monitorTypeName)
         return (
             <div className="dataAnalyse-wrapper">
                 {
@@ -43,7 +42,7 @@ class DataContrast extends Component {
                                     <DataContrastChart_YL /> :
                                     monitorTypeName === 21 ?
                                         <DataContrastChart_SPWY /> :
-                                        monitorTypeName === 52 ?
+                                        monitorTypeName == 52 ?
                                             <DataContrastChart_GPS /> :
                                             // monitorTypeName === 26 ?
                                             //     <DataContrastChart_SBWY /> :
@@ -113,7 +112,6 @@ class DataContrast extends Component {
         monitorpage.monitorTypeName = null;
         monitorpage.selectPointName = null;
         monitorpage.pointNameData = [];
-        monitorpage.contrastChartData = [];
     }
 }
 

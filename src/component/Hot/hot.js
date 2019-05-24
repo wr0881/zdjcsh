@@ -62,7 +62,15 @@ class Hot extends Component {
             const { dataSource, imgInfo } = this.props;
             const { scaleWidth, scaleHeight } = this.computedImgWH();
             const ary = dataSource.map((v, i) => {
-                const dotColor = v.status ? 'red' : '#32D184';
+                let dotColor;
+                switch (v.status) {
+                    case 0: dotColor = 'green'; break;
+                    case 1: dotColor = 'yellow'; break;
+                    case 2: dotColor = 'orange'; break;
+                    case 3: dotColor = 'red'; break;
+                    case -1: dotColor = 'gray'; break;
+                    default: dotColor = 'green'; break;
+                }
                 return {
                     ...v,
                     dotColor,

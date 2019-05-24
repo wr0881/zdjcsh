@@ -19,6 +19,16 @@ class Loging extends Component {
                         </div>
                     </div>
                 </div>
+                <div style={{
+                    position: 'fixed',
+                    bottom: '0px',
+                    width: '100%',
+                    height: '50px',
+                    lineHeight: '50px',
+                    textAlign: 'center'
+                }}>
+                    <a href="http://www.miitbeian.gov.cn" target="__blank" style={{ color: '#000' }}>湘ICP备18005958号</a>
+                </div>
             </div>
         );
     }

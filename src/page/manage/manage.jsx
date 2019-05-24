@@ -32,7 +32,6 @@ class Manage extends Component {
                         return <div
                             key={Math.random()}
                             className='k-select'
-                            style={{textDecoration:'none'}}
                             onClick={_ => {
                                 pagedata.sector = { sectorId: row.sectorId[i], sectorName: row.sectorName[i] };
                                 this.props.history.push('/project/manage/detail');

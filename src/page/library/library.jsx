@@ -74,7 +74,7 @@ class Library extends Component {
                         <Form.Item
                             label="文档时间"
                         >
-                            {getFieldDecorator('time', { initialValue: [moment().subtract(1, 'days'), moment()] })(<RangePicker />)}
+                            {getFieldDecorator('time', { initialValue: [moment().subtract(7, 'days'), moment()] })(<RangePicker />)}
                         </Form.Item>
                         <Form.Item>
                             <Button type="primary" htmlType="submit">搜索</Button>

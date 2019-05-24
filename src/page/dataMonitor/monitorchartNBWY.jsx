@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import echarts from 'echarts';
-import { toJS } from 'mobx';
-import './control.scss';
+import { autorun,toJS } from 'mobx';
+import './monitor.scss';
+import datamonitor from 'store/datamonitor.js';
 import axios from 'axios';
 import pageData from 'store/page.js';
 import { getTime } from 'common/js/util.js';
 
 @observer
-class ControlChart extends Component {
+class MonitorChartNBWY extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -17,19 +18,20 @@ class ControlChart extends Component {
 
     render() {        
         return(
-            <div className="datacontrol-chart" ref={this.props.typeValue} style={{padding:'5px',width:'100%',height:'290px'}}>
+            <div className="datamonitor-chart" ref={this.props.typeValue} style={{padding:'5px',width:'100%',height:'290px'}}>
             </div>
         );
     }
     
     componentDidMount() {       
-        this.getControlPointName();
+        this.getMonitorPointName();
+        //this.getMonitorEchartData();
         this.initChart();
     }
     componentWillUnmount() {
         
     }
-    getControlPointName() {
+    getMonitorPointName() {
         const monitorType = this.props.typeValue;
         console.log("指标类型:",monitorType);
         axios.get('/point/queryMonitorPointName', {
@@ -41,25 +43,28 @@ class ControlChart extends Component {
             const { code, data } = res.data;
             if (code === 0) {
                 this.pointNameData = data;
-                this.getControlEchartData();              
+                console.log(data);
+                this.getMonitorEchartData();              
             } else {
                 this.pointNameData = [];
                 //console.log('/point/queryMonitorPointName code: ', code, msg);
             }
         })
     }
-    getControlEchartData(){
-        const timeType = 'day';
+    getMonitorEchartData(){
+        const timeType = datamonitor.timeType;
         const monitorType = this.props.typeValue;
-        
         let beginTime = '', endTime = '';
         beginTime = getTime(timeType)[0];
         endTime = getTime(timeType)[1];
+        console.log(monitorType);
+        
+        console.log(JSON.stringify(this.pointNameData));
         axios.get('/sector/queryComparisonData', {
             params: {
                 sectorId: pageData.sector.sectorId,
                 monitorType: monitorType,
-                pointNames: JSON.stringify(this.pointNameData.slice(0,5)),
+                pointNames: JSON.stringify(this.pointNameData),
                 beginTime: beginTime,
                 endTime: endTime,
                 dateType: 1
@@ -67,12 +72,14 @@ class ControlChart extends Component {
         }).then(res => {
             const { code, msg, data } = res.data;
             if (code === 0 || code === 2) {
-                this.datacontrolChartData = data.comparisonVO;
-                this.getControlEchartDataLoading = false;
+                this.datamonitorChartData = data.comparisonVO;
+                this.getMonitorEchartDataLoading = false;
+                console.log(data.comparisonVO);
+                console.log('/sector/queryComparisonData code: ', code, msg);
                 this.setEchartData();
             } else {
-                this.datacontrolChartData = [];
-                this.getControlEchartDataLoading = false;
+                this.datamonitorChartData = [];
+                this.getMonitorEchartDataLoading = false;
                 //console.log('/sector/queryComparisonData code: ', code, msg);
             }
         })
@@ -112,7 +119,7 @@ class ControlChart extends Component {
                 }
             },
             xAxis: {
-                type: 'time',
+                type: 'value',
                 boundaryGap: false,
                 axisLine: {
                     lineStyle: {
@@ -143,9 +150,9 @@ class ControlChart extends Component {
             },
             series:[]
         };
-        chart.showLoading();
         chart.clear();
         chart.setOption(option);
+
         this.chart = chart;
         window.addEventListener('resize', _ => {
             chart.resize();
@@ -153,26 +160,26 @@ class ControlChart extends Component {
     }
     setEchartData(){
         const chart = this.chart;
-        
-        let legend = [], dataAry = [];
-        const datacontrolChartData = toJS(this.datacontrolChartData);
-        if(!datacontrolChartData){
+        let legend = [], dataAry = [], Depth = [];
+        const datamonitorChartData = toJS(this.datamonitorChartData);
+        console.log(datamonitorChartData);
+        if(!datamonitorChartData){
             return;
         }
-        const pointdataType = 'totalChange';
-        datacontrolChartData.forEach(v => {
+        const pointdataTypeX = 'totalChangeX';
+        const monitorType = this.props.typeValue;
+        console.log(monitorType);
+        datamonitorChartData.forEach(v => {
             legend.push(v.monitorPointNumber);
             dataAry.push({
                 name: v.monitorPointNumber,
                 type: 'line',
                 smooth: true,
                 symbol: "none",
-                data: v[pointdataType]
+                data: v[pointdataTypeX]
             });
-            
         });
         console.log(legend);
-        chart.hideLoading();
         chart.setOption({
             legend:{
                 data:legend.slice(0,10)
@@ -186,16 +193,9 @@ class ControlChart extends Component {
             },
             series:dataAry.slice(0,10)
         });
-        
-        console.log(this.props.value+"生成图表！！！");
-    }
-    onChartReadyCallBack = () =>{
-        setTimeout(()=>{
-            this.setState({
-                loadingChart:false
-            });
-        },2000);
+        console.log(this.props.value);
+        console.log("生成图表！！！");
     }
 }
 
-export default ControlChart;
+export default MonitorChartNBWY;
