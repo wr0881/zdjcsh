@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import echarts from 'echarts';
 import { toJS } from 'mobx';
-import {Checkbox,Button, Modal} from 'antd';
+import {Checkbox,Button, Modal,Empty} from 'antd';
 import './monitor.scss';
 import axios from 'axios';
 import pageData from 'store/page.js';
@@ -19,33 +19,48 @@ class MonitorChart extends Component {
         super(props);
         this.state = {
             pointNameData:[],
-            wsmeasuredData:[]
+            wsmeasuredData:[],
+            dataPointVisible:false
         };
     }
-
+    showModal = () =>{
+        this.setState({
+            dataPointVisible:true
+        })
+    }
+    handleOk = e =>{
+        this.setState({
+            dataPointVisible:false
+        })
+    }
+    handleCancel = e =>{
+        this.setState({
+            dataPointVisible:false
+        })
+    }
     render() {      
         return(
             <div className="monitorchart">
-                <div className="dataMonitor-operate-title"style={{marginTop:'-26px',marginLeft:'90%'}} onClick={_=>{datamonitor.dataEnlargeVisible = true}}>选择测点:</div>
+                <div className="dataMonitor-operate-title"style={{marginTop:'-26px',marginLeft:'90%',cursor:'pointer'}} onClick={this.showModal}>选择测点</div>
                 <div className="datamonitor-chart" ref={this.props.typeValue} style={{padding:'5px',width:'100%',height:'320px',float:'left'}}>
                 </div>
                 <Modal
-                    visible={datamonitor.dataEnlargeVisible}
+                    visible={this.state.dataPointVisible}
                     destroyOnClose={true}
                     keyboard={true}
                     footer={null}
                     width='700px'
-                    height='700px'
+                    height='540px'
                     bodyStyle={{ padding: '0px' }}
-                    onCancel={_ => { datamonitor.dataEnlargeVisible = false }}
+                    onOk={this.handleOk}
+                    onCancel={this.handleCancel}
                 >
-                    <div style={{height:'700px'}}>                    
-                        <div className="dataMonitor-operate-select" style={{float:'left',marginTop:'50px',marginLeft:'75px',marginRight:'75px',maxHeight:'400px',overflowY:'scroll'}}>
+                    <div style={{height:'540px'}}>                    
+                        <div className="dataMonitor-operate-select" style={{float:'left',marginTop:'50px',marginLeft:'75px',marginRight:'75px',height:'400px',overflowY:'auto'}}>
                             <CheckboxGroup
                                 key={Math.random()}
                                 defaultValue={this.pointName}
-                                onChange={v => { this.pointName = v
-                                    console.log(this.pointName) }}
+                                onChange={v => { this.pointName = v }}
                             >
                                 {this.state.pointNameData}
                             </CheckboxGroup>
@@ -54,12 +69,10 @@ class MonitorChart extends Component {
                             <Button
                                 style={{ float:'left',marginLeft:'310px', marginTop:'40px',width: '80px', height: '24px' }}
                                 type='primary'
-                                //loading={this.getEchartDataLoading}
                                 onClick={() => {
-                                    //this.getEchartDataLoading = true;
                                     this.initChart();
                                     this.getMonitorEchartData();
-                                    datamonitor.dataEnlargeVisible = false
+                                    this.handleOk();
                                 }}
                             >确认</Button>
                         </div>                    
@@ -68,22 +81,22 @@ class MonitorChart extends Component {
             </div>
         );
     }
-    handleResize = () =>{
-        this.getMonitorEchartData();
-        this.setEchartData();
-    }
+    // handleResize = () =>{
+    //     this.getMonitorEchartData();
+    //     this.setEchartData();
+    // }
     componentDidMount() {       
         this.getMonitorPointName();
-        //this.mywebsocket();
+        // this.mywebsocket();
         this.initChart();
-        this.timer = setInterval(() => this.handleResize(),600000);
+        // this.timer = setInterval(() => this.handleResize(),600000);
     } 
     componentWillUnmount() {
-        this.timer && clearTimeout(this.timer);//清除定时器  
+        // this.timer && clearTimeout(this.timer);//清除定时器  
     }
     getMonitorPointName() {
         const monitorType = this.props.typeValue;
-        //console.log("指标类型:",monitorType, monitorTypeName);
+        // console.log("指标类型:",monitorType, monitorTypeName);
         axios.get('/point/queryMonitorPointName', {
             params: {
                 sectorId: pageData.sector.sectorId,
@@ -129,15 +142,12 @@ class MonitorChart extends Component {
             if (code === 0 || code === 2) {
                 this.datamonitorChartData = data.comparisonVO;
                 console.log(data.comparisonVO);
-                
-                this.getMonitorEchartDataLoading = false;
                 this.mywebsocket();
                 this.setEchartData();
             } else {
                 this.datamonitorChartData = [];
                 chart.hideLoading();
                 chart.showLoading({color:'#fff',text:msg,textStyle:{fontSize:20}});
-                this.getMonitorEchartDataLoading = false;
                 //console.log('/sector/queryComparisonData code: ', code, msg);
             }
         })
@@ -160,15 +170,16 @@ class MonitorChart extends Component {
                 console.log(this.wssensorNumber);
                 console.log(this.wsmeasuredData);                
                 for(let i=0,l=this.datamonitorChartData.length; i<l; i++){
-                    console.log(this.datamonitorChartData);
+                    console.log(this.datamonitorChartData[i].sensorNumber);
+                    console.log(this.datamonitorChartData[i].measuredData);
                     console.log(this.wssensorNumber);
                     console.log(this.wsmeasuredData);
                     //接收的数据中sensorNumber和echart图表数据中的sensorNumber相等时，在echart图表的measuredData加上接收的数据wsmeasuredData
                     if(this.wssensorNumber === this.datamonitorChartData[i].sensorNumber){
                         console.log("test1111");
                         this.datamonitorChartData[i].measuredData.push(this.wsmeasuredData);
-                        console.log(this.datamonitorChartData[i].measuredData);
-                        
+                        console.log(this.datamonitorChartData[i].measuredData); 
+                        this.setEchartData();                       
                     }
                 }
             })
@@ -315,12 +326,7 @@ class MonitorChart extends Component {
                 data: v[pointdataType]
             });            
         });
-        //this.mywebsocket();
         console.log(dataAry);
-        // console.log(this.state.wsmeasuredData);
-        for(let i=0;i<dataAry.length;i++){
-            //console.log(dataAry[i].sensorNumber);
-        }
         chart.hideLoading();        
         chart.setOption({
             legend:{
