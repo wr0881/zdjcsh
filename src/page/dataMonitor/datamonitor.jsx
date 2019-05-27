@@ -29,8 +29,8 @@ class DataMonitor extends Component {
         ))
         return (
             <div className='datamonitor-wrapper'>
-                <div className='datamonitor-top'></div>
-                <ul className="datamonitor-ul">
+                {/* <div className='datamonitor-top'></div> */}
+                <ul className="datamonitor-ul" style={{width:'100%'}}>
                 {list}
                 </ul>                                                      
             </div>            

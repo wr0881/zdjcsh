@@ -26,8 +26,8 @@ class MonitorChart extends Component {
     render() {      
         return(
             <div className="monitorchart">
-                <div className="dataMonitor-operate-title" key={this.props.value} value={this.props.value} style={{marginTop:'-26px',marginLeft:'90%'}} onClick={_=>{datamonitor.dataEnlargeVisible = true}}>选择测点:</div>
-                <div className="datamonitor-chart" ref={this.props.typeValue} key={this.props.typeValue} style={{padding:'5px',width:'100%',height:'320px',float:'left'}}>
+                <div className="dataMonitor-operate-title"style={{marginTop:'-26px',marginLeft:'90%'}} onClick={_=>{datamonitor.dataEnlargeVisible = true}}>选择测点:</div>
+                <div className="datamonitor-chart" ref={this.props.typeValue} style={{padding:'5px',width:'100%',height:'320px',float:'left'}}>
                 </div>
                 <Modal
                     visible={datamonitor.dataEnlargeVisible}
@@ -38,10 +38,8 @@ class MonitorChart extends Component {
                     height='700px'
                     bodyStyle={{ padding: '0px' }}
                     onCancel={_ => { datamonitor.dataEnlargeVisible = false }}
-                    key={this.props.value} 
-                    value={this.props.value}
                 >
-                    <div style={{height:'700px'}} key={this.props.value} value={this.props.value}>                    
+                    <div style={{height:'700px'}}>                    
                         <div className="dataMonitor-operate-select" style={{float:'left',marginTop:'50px',marginLeft:'75px',marginRight:'75px',maxHeight:'400px',overflowY:'scroll'}}>
                             <CheckboxGroup
                                 key={Math.random()}
@@ -133,7 +131,7 @@ class MonitorChart extends Component {
                 console.log(data.comparisonVO);
                 
                 this.getMonitorEchartDataLoading = false;
-                //this.mywebsocket();
+                this.mywebsocket();
                 this.setEchartData();
             } else {
                 this.datamonitorChartData = [];
@@ -155,15 +153,24 @@ class MonitorChart extends Component {
                 let wsmeasuredData = [];
                 this.websocketData = data;
                 const getwsbodyData = JSON.parse(this.websocketData.body);
-                console.log(getwsbodyData); 
-                //console.log(getwsbodyData.sensorNumber);
-                //console.log(getwsbodyData.data[0]);
                 this.wssensorNumber = getwsbodyData.sensorNumber;  
                 wsmeasuredData = [getwsbodyData.createDate,getwsbodyData.data[0]];
-                //this.setEchartData();
                 this.setState(wsmeasuredData);
-                console.log(wsmeasuredData);
-
+                this.wsmeasuredData = wsmeasuredData;
+                console.log(this.wssensorNumber);
+                console.log(this.wsmeasuredData);                
+                for(let i=0,l=this.datamonitorChartData.length; i<l; i++){
+                    console.log(this.datamonitorChartData);
+                    console.log(this.wssensorNumber);
+                    console.log(this.wsmeasuredData);
+                    //接收的数据中sensorNumber和echart图表数据中的sensorNumber相等时，在echart图表的measuredData加上接收的数据wsmeasuredData
+                    if(this.wssensorNumber === this.datamonitorChartData[i].sensorNumber){
+                        console.log("test1111");
+                        this.datamonitorChartData[i].measuredData.push(this.wsmeasuredData);
+                        console.log(this.datamonitorChartData[i].measuredData);
+                        
+                    }
+                }
             })
         })
         // socket.onopen = () => {
@@ -310,7 +317,6 @@ class MonitorChart extends Component {
         });
         //this.mywebsocket();
         console.log(dataAry);
-        console.log(dataAry[0].key);
         // console.log(this.state.wsmeasuredData);
         for(let i=0;i<dataAry.length;i++){
             //console.log(dataAry[i].sensorNumber);
