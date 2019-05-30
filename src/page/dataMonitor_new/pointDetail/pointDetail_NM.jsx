@@ -28,6 +28,7 @@ class PointDetail extends Component {
                     <RangePicker showTime format={dateFormat} defaultValue={monitorpage.selsectTime}
                         onOk={v => {
                             monitorpage.selsectTime = v;
+                            monitorpage.getMapEchartData();
                         }}
                     />
                     <Button

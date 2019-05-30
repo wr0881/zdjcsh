@@ -153,7 +153,8 @@ class MonitorChart extends Component {
         })
     }
     mywebsocket(){
-        const socket = new SockJs(`http://123.207.88.210:8180/webSocket`)               
+        const socket = new SockJs(`http://123.207.88.210:8180/webSocket`);
+        // const socket = new SockJs(`http://192.168.10.18:8180/webSocket`);               
         const stompClient = Stomp.over(socket);        
         stompClient.connect({}, frame => {
             console.log('Connected:' + frame);
@@ -229,6 +230,10 @@ class MonitorChart extends Component {
             },
             toolbox: {
                 feature: {
+                    dataZoom: {
+                        yAxisIndex: 'none'
+                    },
+                    restore:{},
                     dataView: { 
                         show: true,
                         title: '数据视图',
