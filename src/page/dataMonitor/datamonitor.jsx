@@ -4,6 +4,7 @@ import './monitor.scss';
 import datamonitor from 'store/datamonitor.js';
 import DataMonitorMap from './datamonitormap';
 import DataNone from './datanone';
+import SockJs from 'sockjs-client';
 
 @observer
 class DataMonitor extends Component {
@@ -24,7 +25,8 @@ class DataMonitor extends Component {
                 {(v.monitorType === 26 || v.monitorType === 66 )? 
                     <DataNone />:
                     <DataMonitorMap key={v.monitorTypeName} typeValue={v.monitorType} value={v.monitorTypeName} />                        
-                }                
+                }
+                {/* <DataMonitorMap key={v.monitorTypeName} typeValue={v.monitorType} value={v.monitorTypeName} />                 */}
             </li>
         ))
         return (

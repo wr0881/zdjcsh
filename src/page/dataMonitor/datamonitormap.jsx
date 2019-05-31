@@ -1,11 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { Modal } from 'antd';
 import './monitor.scss';
-import datamonitor from 'store/datamonitor.js';
-import enlarge from 'common/image/enlarge.png';
-import enlarge2 from 'common/image/enlarge2.png';
-import DataMonitorModal from './datamonitormodal';
 import MonitorChart from './monitorchart';
 import MonitorChartNBWY from './monitorchartNBWY';
 
@@ -44,12 +39,7 @@ class DataMonitorMap extends Component {
                                     </ul>                                   
                                 </div> */}
                             </div>
-                            <div className="datamonitor-chart-wrapper1" style={{
-                                height:'320px',
-                                width:'100%',
-                                paddingLeft:'22px',
-                                float:'left'
-                            }}>
+                            <div className="datamonitor-chart-wrapper1">
                                 {monitorType === 26 || monitorType === 66 ?
                                     <MonitorChartNBWY key={this.props.value} value={this.props.value} typeValue={this.props.typeValue} /> :
                                     <MonitorChart key={this.props.value} value={this.props.value} typeValue={this.props.typeValue} />

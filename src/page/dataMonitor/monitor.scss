@@ -80,6 +80,13 @@
     border-bottom:1px solid #ECEAF3;
 }
 
+.datamonitor-chart-wrapper1{
+    height: 320px;
+    width: 100%;
+    padding-left: 22px;
+    float: left;
+}
+
 .datamonitor-type-title{
     float: left;
     width:200px;
@@ -149,6 +156,35 @@
     border-right: 1px solid #DFDDEC;
 }
 
+.dataMonitor-operate-title{
+    margin-top: -26px;
+    margin-left: 90%;
+    cursor: pointer;
+}
+
+.datamonitor-chart{
+    padding: 5px;
+    width: 100%;
+    height: 320px;
+    float: left;
+}
+
+.dataMonitor-operate-select{
+    float: left;
+    margin-top: 50px;
+    margin-left: 75px;
+    margin-right: 75px;
+    max-height: 360px;
+    overflow-y: auto;
+}
+
+.dataMonitor-operate-button{
+    float: left;
+    margin-left: 310px;
+    margin-top: 40px;
+    width: 80px;
+    height: 24px;
+}
 
 .monitor-modal-content{
     width: 100%;
