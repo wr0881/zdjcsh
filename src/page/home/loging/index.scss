@@ -41,6 +41,8 @@ $title-height:48px;
     height: $title-height;
     background: #FAFBFF;
     border-bottom: 1px solid #ECEAF3;
+    border-top-left-radius:8px;
+    border-top-right-radius:8px;
 }
 
 .projecttype-title {
@@ -96,6 +98,8 @@ $title-height:48px;
     //padding-left:24px;
     background-color: #FFF;
     overflow: hidden;
+    border-bottom-left-radius:8px;
+    border-bottom-right-radius:8px;
 }
 
 .projecttype-content-title {

@@ -18,7 +18,6 @@ const CheckboxGroup = Checkbox.Group;
 class MonitorChart extends Component {
     constructor(props) {
         super(props);
-        this.mounted = true;
         this.state = {
             pointNameData:[],
             wsmeasuredData:[],
@@ -88,7 +87,6 @@ class MonitorChart extends Component {
         this.initChart();
     } 
     componentWillUnmount() {
-        this.mounted = false;
         this.disconnectWebsocket();
     }
     getMonitorPointName() {
@@ -167,15 +165,10 @@ class MonitorChart extends Component {
                 for(let i=0,l=this.datamonitorChartData.length; i<l; i++){                                    
                     const measuredLen = this.datamonitorChartData[i].measuredData.length;
                     const lastmeasuredData = this.datamonitorChartData[i].measuredData[measuredLen-1];
-                    // console.log(this.datamonitorChartData[i].measuredData);
-                    // console.log(this.datamonitorChartData[i].measuredData.length);
-                    // console.log(lastmeasuredData);
-                    // console.log(this.wsmeasuredData);
                     //接收的数据中sensorNumber和echart图表数据中的sensorNumber相等时，在echart图表的measuredData追加接收的数据wsmeasuredData
                     if(this.wssensorNumber === this.datamonitorChartData[i].sensorNumber && this.wsmeasuredData !== lastmeasuredData){                        
-                        this.datamonitorChartData[i].measuredData.push(this.wsmeasuredData);                     
-                        this.setEchartData();
-                        // console.log(this.datamonitorChartData[i].measuredData.length);                        
+                        this.datamonitorChartData[i].measuredData.push(this.wsmeasuredData);                    
+                        this.setEchartData();                      
                     }
                 }
             });

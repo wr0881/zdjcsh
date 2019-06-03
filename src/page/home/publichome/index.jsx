@@ -14,9 +14,7 @@ class Loging extends Component {
                 <Header />
                 <div className="loging-wrapper">
                     <div className="loging-content">
-                        <div className='loging-content-item1'>
-                            <ProjectType />
-                        </div>
+                        <ProjectType />
                     </div>
                 </div>
                 <div style={{
